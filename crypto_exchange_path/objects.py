@@ -1,5 +1,5 @@
 from secrets import token_hex
-from crypto_exchange_path.utils_db import (get_withdraw_fee, fx_exchange,
+from crypto_exchange_path.utils_db import (calc_withdraw_fee, fx_exchange,
                                            round_amount)
 from crypto_exchange_path.utils import num_2_str
 
@@ -129,8 +129,7 @@ class Location:
         self.exchange = exchange
         self.amount = amount
         self.coin = coin
-        self.withdraw_fee = get_withdraw_fee(self.exchange.id,
-                                             self.coin.id)
+        self.withdraw_fee = calc_withdraw_fee(exchange.id, coin.id, amount)
         self.amount_str = self.calc_amt_str()
 
     def calc_amt_str(self):

@@ -3,8 +3,9 @@ from crypto_exchange_path import db
 from crypto_exchange_path.config import Params
 
 
-def get_active_coins(type=None):
+def get_active_coins(type=None, price_id=False):
     """Returns the complete list of active coins available in 'Coin' table.
+    By default, it returns its symbols, unless 'price_id' is set to True.
     If type is given, only those coins are retrieved (Cryptos o Fiat)
     """
     if type:
@@ -12,8 +13,12 @@ def get_active_coins(type=None):
     else:
         coin_in_db = Coin.query.filter_by(status="Active").all()
     coin_list = []
-    for coin in coin_in_db:
-        coin_list.append(coin.id)
+    if price_id:
+        for coin in coin_in_db:
+            coin_list.append(coin.price_id)
+    else:
+        for coin in coin_in_db:
+            coin_list.append(coin.id)
     return coin_list
 
 
@@ -31,10 +36,17 @@ def get_coin_by_longname(longname):
     return coin
 
 
+def get_coin_by_price_id(price_id):
+    """Returns a Coin object given its 'price_id'.
+    """
+    coin = Coin.query.filter_by(price_id=price_id).first()
+    return coin
+
+
 def round_amount(amount, coin):
     """Returns a rounded amount depending on the valuation of the coin.
     """
-    if not amount:
+    if amount is None:
         return "-"
     if coin in Params.FIAT_COINS:
         try:
@@ -70,15 +82,15 @@ def round_amount(amount, coin):
 
 def get_exchange(id):
     """Returns the exchange object with the given 'name'.
-    If it was not found (it shouldn't happen), returns the generic wallet.
     """
     exchange = Exchange.query.filter_by(id=id).first()
     if exchange:
         return exchange
     else:
-        id = Params.GENERIC_WALLET
-        exchange = Exchange.query.filter_by(id=id).first()
-        return exchange
+        return None
+        # id = Params.GENERIC_WALLET
+        # exchange = Exchange.query.filter_by(id=id).first()
+        # return exchange
 
 
 def get_exchanges(type=None):
@@ -147,14 +159,23 @@ def get_exch_by_pair(coin, base_coin, logger):
     return set()
 
 
-def get_withdraw_fee(exchange, coin):
+def calc_withdraw_fee(exchange, coin, amt):
     """Gets the withdraw fee of 'exchange'/'coin'.
     """
-    withdraw_fee_1 = Fee.query.filter_by(exchange=exchange,
-                                         action="Withdraw",
-                                         scope=coin).first()
-    if withdraw_fee_1:
-        return withdraw_fee_1.amount
+    withdraw_fee = Fee.query.filter_by(exchange=exchange,
+                                       action="Withdrawal",
+                                       scope=coin).first()
+    if withdraw_fee:
+        # If Type == 'Absolute', just return value
+        if withdraw_fee.type == 'Absolute':
+            return withdraw_fee.amount
+        # If Type == 'Percentage', calc fee and check minimum quantity
+        elif withdraw_fee.type == 'Percentage':
+            wd_fee = withdraw_fee.amount / 100 * amt
+            if withdraw_fee.min_amount:
+                return max(wd_fee, withdraw_fee.min_amount)
+            else:
+                return wd_fee
     return None
 
 

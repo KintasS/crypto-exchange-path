@@ -33,7 +33,7 @@
 
             <nav class="navbar navbar-expand-sm navbar-dark fixed-top scrolling-navbar">
                 <div class="container">
-                    <a class="navbar-brand" href="{{ url_for('main') }}">Crypto Exchange Path</a>
+                    <a class="navbar-brand" href="{{ url_for('main') }}">Crypto Exchange Path<span class="badge badge-light ml-2">Beta</span></a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -45,8 +45,6 @@
                         <div id="currency-btn" class="btn-group">
                             {% if curr == 'USD' %}
                                 <button class="btn btn-dark-grey dropdown-toggle" data-currency="USD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-dollar mx-2" aria-hidden="true"></i>USD</b></button>
-                            {% elif curr == 'CNY' %}
-                                <button class="btn btn-dark-grey dropdown-toggle" data-currency="CNY" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-cny mx-2" aria-hidden="true"></i>CNY</b></button>
                             {% elif curr == 'GBP' %}
                                 <button class="btn btn-dark-grey dropdown-toggle" data-currency="GBP" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-gbp mx-2" aria-hidden="true"></i>GBP</b></button>
                             {% elif curr == 'JPY' %}
@@ -59,7 +57,6 @@
                             </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" data-currency="USD" href="#"><i class="fa fa-dollar mx-2" aria-hidden="true"></i>USD</a>
-                                <a class="dropdown-item" data-currency="CNY" href="#"><i class="fa fa-cny mx-2" aria-hidden="true"></i>CNY</a>
                                 <a class="dropdown-item" data-currency="GBP" href="#"><i class="fa fa-gbp mx-2" aria-hidden="true"></i>GBP</a>
                                 <a class="dropdown-item" data-currency="JPY" href="#"><i class="fa fa-jpy mx-2" aria-hidden="true"></i>JPY</a>
                                 <a class="dropdown-item" data-currency="EUR" href="#"><i class="fa fa-euro mx-2" aria-hidden="true"></i>EUR</a>
@@ -360,7 +357,7 @@
                         <!-- Description -->
                         <h3 class="display-5 text-center white-text my-4">Find the cheapest way to exchange two cryptoassets</h3>
                         <hr class="hr-light mb-4">
-                        <p class="lead white-text my-3">New sites and exciting functionalities added to our engine every week</p>
+                        <p class="lead white-text my-3">New exchange sites and exciting functionalities added to our engine every week</p>
                         <p class="lead white-text my-3">Enjoy it!</p>
                     </div>
                 </div>
@@ -812,28 +809,26 @@
                         <div class="py-3 flex-center">
                             <!-- Facebook -->
                             <a class="fb-ic">
-                          <i class="fa fa-facebook fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
-                        </a>
+                                <i class="fa fa-facebook fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+                            </a>
                             <!-- Twitter -->
                             <a class="tw-ic">
-                          <i class="fa fa-twitter fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
-                        </a>
-                            <!--Linkedin -->
-                            <a class="li-ic">
-                          <i class="fa fa-linkedin fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
-                        </a>
+                              <i class="fa fa-twitter fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+                            </a>
                             <!--Instagram-->
                             <a class="ins-ic">
-                          <i class="fa fa-instagram fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
-                        </a>
-                            <!--Pinterest-->
-                            <a class="pin-ic">
-                          <i class="fa fa-pinterest fa-lg white-text fa-2x"> </i>
-                        </a>
+                              <i class="fa fa-instagram fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- Copyright -->
+            <div class="footer-copyright text-center py-3">© 2018 Copyright:
+              <a href="#"> CryptoExchangePath.com</a>
+            </div>
+            <!-- Copyright -->
+
         </footer>
             <!-- Footer Elements -->
 

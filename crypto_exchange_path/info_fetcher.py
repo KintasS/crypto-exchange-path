@@ -4,13 +4,14 @@ from urllib.request import urlopen
 from crypto_exchange_path import db
 from crypto_exchange_path.models import Coin, TradePair, Exchange, Price, Fee
 from crypto_exchange_path.config import Params
-from crypto_exchange_path.utils_db import get_active_coins, get_exch_by_coin
+from crypto_exchange_path.utils_db import (get_active_coins, get_exch_by_coin,
+                                           get_coin_by_price_id)
 from crypto_exchange_path.utils import generate_file_path, resize_image
 
 
 def update_coins(logger):
     """Gets all the coins available in Provider.
-    DISABLED TO UPDATE MANUALLY.
+    ONLY TO BE USED IN TEST DATABASES TO LATER DOWNLOAD AND EDIT COINS.
     """
     return None
     logger.info("update_coins(): Starting process")
@@ -112,7 +113,7 @@ def store_coin_images(logger):
                 resize_image(path_300, dest_path, size)
             except Exception as e:
                 logger.warning("store_coin_images: Could not store images "
-                               "for '{}'".format(coin.id))
+                               "for '{}'".format(coin.symbol))
                 continue
         if index % 100 == 0:
             logger.info("store_coin_images: Processed {} of {} coins"
@@ -122,7 +123,9 @@ def store_coin_images(logger):
 
 
 def update_pairs(logger):
-    """Gets the pairs available in each exchange from Provider.
+    """
+    *** DEPRECATED. WILL BE UPDATED MANUALLY ***
+    Gets the pairs available in each exchange from Provider.
     """
     # Get information from the source
     logger.info("get_pair_info(): Starting process...")
@@ -178,6 +181,7 @@ def update_pairs(logger):
 
 def update_trading_vol(logger):
     """Updates the trading volume of table 'TradePair' for all the pairs.
+    *** DEPRECATED. WILL BE UPDATED MANUALLY ***
     """
     # Get pairs in DB
     pairs = db.session.query(TradePair.coin, TradePair.base_coin)\
@@ -233,9 +237,9 @@ def update_prices(logger):
     # File where prices will be temporaly stored
     dest_file = generate_file_path('static/imports', 'prices')
     # Get cryptos and Fiat to fetch prices from
-    cryptos = get_active_coins("Crypto")
+    cryptos = get_active_coins("Crypto", True)
     # Get Coins to request prices against and generate string
-    fiats = get_active_coins("Fiat")
+    fiats = get_active_coins("Fiat", True)
     currencies = "BTC,ETH"
     for fiat in fiats:
         currencies += "," + fiat
@@ -271,10 +275,15 @@ def update_prices(logger):
                     try:
                         for currency in prices[crypto]:
                             prc = prices[crypto][currency]
-                            f.write(("{};{};{}\n").format(crypto,
-                                                          currency,
-                                                          prc))
-
+                            crypto_id = get_coin_by_price_id(crypto)
+                            if crypto_id:
+                                f.write(("{};{};{}\n").format(crypto_id.id,
+                                                              currency,
+                                                              prc))
+                            else:
+                                logger.warning("update_prices: No coin found "
+                                               "in DB for price_id={}"
+                                               .format(crypto))
                         next_coins_lst.remove(crypto)
                     except KeyError as e:
                         logger.warning("update_prices: Bad JSON format for "
@@ -335,8 +344,8 @@ def update_coins_file(file):
     result_list = []
     coins = Coin.query.filter_by(status='Active')
     for coin in coins:
-        coin_dic = {"id": coin.id,
-                    "name": coin.id,
+        coin_dic = {"id": coin.symbol,
+                    "name": coin.symbol,
                     "long_name": coin.long_name,
                     "img": coin.local_fn,
                     "ranking": coin.ranking}
@@ -347,13 +356,13 @@ def update_coins_file(file):
 
 
 def generate_exchs_file(file):
-    """Updates the JSON file that is used by Javascript for tests..
+    """Updates the JSON file that is used by Javascript for tests.
     """
     result_dict = {}
     coins = Coin.query.filter_by(status='Active')
     for coin in coins:
         try:
-            exchs = list(get_exch_by_coin(coin.id))
+            exchs = list(get_exch_by_coin(coin.symbol))
             exchs.append('Wallet')
             result_dict[coin.long_name] = exchs
         except Exception as e:
@@ -364,7 +373,7 @@ def generate_exchs_file(file):
 
 
 def import_exchanges(logger, file):
-    """Import 'Exchange' table from file.
+    """Imports 'Exchange' table from file.
     Example: import_exchanges(logger, "./.../static/inputs/exchanges.txt")
     """
     try:
@@ -396,7 +405,7 @@ def import_exchanges(logger, file):
 
 
 def import_fees(logger, file):
-    """Import 'Exchange' table from file.
+    """Imports 'Exchange' table from file.
     Example: import_fees(logger, "./.../static/inputs/fees.txt")
     """
     try:
@@ -414,22 +423,25 @@ def import_fees(logger, file):
                        " '{}' Vs '{}'.".format(len(f_contents), len(db_fee)))
     # Loop for each line
     for line in f_contents:
-        exch, action, scope, amt, fee_coin, type = line.replace("\n", "")\
-                                                       .split("¬")
+        exch, action, scope, amt, min_amt, fee_coin, type = line\
+            .replace("\n", "").split("¬")
+        if min_amt == '':
+            min_amt = None
         fee = Fee(exchange=exch,
                   action=action,
                   scope=scope,
                   amount=amt,
+                  min_amount=min_amt,
                   fee_coin=fee_coin,
                   type=type)
         db.session.add(fee)
-    db.session.commit()
+        db.session.commit()
     logger.info("import_fees: {} rows inserted".format(len(f_contents)))
     return
 
 
 def import_coins(logger, file):
-    """Import 'Coin' table from file.
+    """Imports 'Coin' table from file.
     Example: import_coins(logger, "./.../static/inputs/coins.txt")
     """
     try:
@@ -447,11 +459,12 @@ def import_coins(logger, file):
                        " '{}' Vs '{}'.".format(len(f_contents), len(db_coin)))
     # Loop for each line
     for line in f_contents:
-        id, symbol, ln, rank, url, loc_fn, type, stat = line.replace("\n", "")\
-            .split("¬")
+        id, symbol, ln, prc_id, rank, url, loc_fn, type, stat = line\
+            .replace("\n", "").split("¬")
         coin = Coin(id=id,
                     symbol=symbol,
                     long_name=ln,
+                    price_id=prc_id,
                     ranking=rank,
                     image_url=url,
                     local_fn=loc_fn,
@@ -460,4 +473,35 @@ def import_coins(logger, file):
         db.session.add(coin)
     db.session.commit()
     logger.info("import_coins: {} rows inserted".format(len(f_contents)))
+    return
+
+
+def import_pairs(logger, file):
+    """Imports 'TradePair' table from file.
+    Example: import_coins(logger, "./.../static/inputs/pairs.txt")
+    """
+    try:
+        with open(file, "r", encoding='utf-8') as f:
+            f_contents = f.readlines()
+    except Exception as e:
+        logger.error("import_pairs: Could not read file '{}'".format(file))
+        return 1
+    # Delete previous records
+    db_pair = TradePair.query.all()
+    if len(f_contents) > len(db_pair) * 0.8:
+        TradePair.query.delete()
+    else:
+        logger.warning("import_pairs: Much less rows in new version."
+                       " '{}' Vs '{}'.".format(len(f_contents),
+                                               len(db_pair)))
+    # Loop for each line
+    for line in f_contents:
+        exchange, coin, base_coin, volume = line.replace("\n", "").split("¬")
+        pair = TradePair(exchange=exchange,
+                         coin=coin,
+                         base_coin=base_coin,
+                         volume=volume)
+        db.session.add(pair)
+    db.session.commit()
+    logger.info("import_pairs: {} rows inserted".format(len(f_contents)))
     return

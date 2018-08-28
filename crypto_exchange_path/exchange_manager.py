@@ -77,7 +77,7 @@ class ExchangeManager(object):
         fee_amt_perc, fee_coin = self.get_trade_fee(sell_amt,
                                                     sell_coin,
                                                     buy_coin)
-        if not fee_amt_perc:
+        if fee_amt_perc is None:
             self.logger.warning("perform_trade: No trade fee for '{}[{}/{}]'."
                                 "Skipping trade calculation."
                                 .format(self.exchange.id,
@@ -89,6 +89,14 @@ class ExchangeManager(object):
                               buy_coin.id,
                               sell_amt * (1 - fee_amt_perc / 100),
                               self.logger)
+        if buy_amt is None:
+            self.logger.warning("perform_trade [2]: Trade could not be "
+                                "performed '{}[{}/{}]'. "
+                                "Skipping trade calculation."
+                                .format(self.exchange.id,
+                                        sell_coin.id,
+                                        buy_coin.id))
+            return None
         # Fees calculated by default in 'sell_coin'
         fee_amt = fee_amt_perc / 100 * sell_amt
         # If 'FeeCoin' has a value, calculate fees in 'FeeCoin'
@@ -101,7 +109,7 @@ class ExchangeManager(object):
         else:
             fee_coin = sell_coin
         # Return calculated trade
-        self.logger.debug("perform_trade: Trade for '{}[{}/{}]:"
+        self.logger.debug("perform_trade [3]: Trade for '{}[{}/{}]:"
                           " Sell={} {} / Buy={} {} / Fee={} {}'"
                           "".format(self.exchange.id, sell_coin.id,
                                     buy_coin.id, sell_amt, sell_coin.id,

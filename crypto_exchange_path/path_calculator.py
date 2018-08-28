@@ -1,6 +1,6 @@
 from crypto_exchange_path.utils_db import (get_exch_by_pair, get_exch_by_coin,
-                                           get_withdraw_fee, get_coin,
-                                           get_exchange)
+                                           get_coin, get_exchange,
+                                           calc_withdraw_fee)
 from crypto_exchange_path.utils import generate_paths_file
 from crypto_exchange_path.exchange_manager import ExchangeManager
 from crypto_exchange_path.objects import Location, Hop, Path
@@ -66,8 +66,8 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
         # Calc Withdraw fee and modify destination amount
         withdraw_fee_1 = None
         if exch != dest_loc.id:
-            withdraw_fee_1 = get_withdraw_fee(exch,
-                                              trade_1.buy_coin.id)
+            withdraw_fee_1 = calc_withdraw_fee(exch, trade_1.buy_coin.id,
+                                               trade_1.buy_amt)
             if withdraw_fee_1 is not None:
                 dest_amt -= withdraw_fee_1
             else:
@@ -196,7 +196,8 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
         # Calc Withdraw fee and modify destination amount
         withdraw_fee_2 = None
         if exch != dest_loc.id:
-            withdraw_fee_2 = get_withdraw_fee(exch, trade_2.buy_coin.id)
+            withdraw_fee_2 = calc_withdraw_fee(exch, trade_2.buy_coin.id,
+                                               trade_2.buy_amt)
             if withdraw_fee_2 is not None:
                 dest_amt -= withdraw_fee_2
             else:
@@ -286,9 +287,9 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                         # Calc destination amount
                         in_amt_2 = trade_1.buy_amt
                         # Calc Withdraw fee and modify destination amount
-                        withdraw_fee_1 = get_withdraw_fee(exch_A.exchange.id,
-                                                          trade_1
-                                                          .buy_coin.id)
+                        withdraw_fee_1 = calc_withdraw_fee(exch_A.exchange.id,
+                                                           trade_1.buy_coin.id,
+                                                           trade_1.buy_amt)
                         if withdraw_fee_1 is not None:
                             in_amt_2 -= withdraw_fee_1
                         else:
@@ -319,10 +320,11 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                         # Calc Withdraw fee and modify destination amount
                         withdraw_fee_2 = None
                         if exch_B.exchange.id != dest_loc.id:
-                            withdraw_fee_2 = get_withdraw_fee(exch_B
-                                                              .exchange.id,
-                                                              trade_2
-                                                              .buy_coin.id)
+                            withdraw_fee_2 = calc_withdraw_fee(exch_B.exchange
+                                                               .id,
+                                                               trade_2
+                                                               .buy_coin.id,
+                                                               trade_2.buy_amt)
                             if withdraw_fee_2 is not None:
                                 dest_amt -= withdraw_fee_2
                             else:

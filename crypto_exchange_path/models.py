@@ -57,6 +57,7 @@ class Coin(db.Model):
     id = db.Column(db.String(10), primary_key=True, nullable=False)
     symbol = db.Column(db.String(10), nullable=False)
     long_name = db.Column(db.String(50), nullable=False)
+    price_id = db.Column(db.String(10), nullable=False)
     ranking = db.Column(db.Float)
     image_url = db.Column(db.String(100))
     local_fn = db.Column(db.String(100))
@@ -64,10 +65,11 @@ class Coin(db.Model):
     status = db.Column(db.String(10))
 
     def __repr__(self):
-        return ("Coin({} [{}]: symbol={} type={} status={})"
+        return ("Coin({} [{}]: symbol={} price_id={} type={} status={})"
                 .format(self.id,
-                        self.symbol,
                         self.long_name,
+                        self.symbol,
+                        self.price_id,
                         self.type,
                         self.status))
 
@@ -93,6 +95,7 @@ class Fee(db.Model):
     action = db.Column(db.String(30), primary_key=True, nullable=False)
     scope = db.Column(db.String(30), primary_key=True, nullable=False)
     amount = db.Column(db.Float)
+    min_amount = db.Column(db.Float)
     fee_coin = db.Column(db.String(10))
     type = db.Column(db.String(10))
 
