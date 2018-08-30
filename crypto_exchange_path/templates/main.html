@@ -370,7 +370,7 @@
 
                 <div class="container">
                     <div class="row no-gutters d-flex justify-content-center">
-                        <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+                        <div class="col-12 col-md-10 col-lg-8 col-xl-7 px-1 px-md-0">
 
                             {% if paths %}
                                 <h5 class="text-white mt-3 mb-2">Crypto Exchange Paths <small class="">({{ path_results }} results)</small></h5>
@@ -519,7 +519,7 @@
                                                                             {% if path.origin.exchange.id != gen_wallet %}
                                                                                 <span class="text-right">{{ path.origin.amount_str }}</span>
                                                                             {% else %}
-                                                                                <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-placement="top" title="Consider your wallet fees when choosing to right amount to transfer.">{{ path.origin.amount_str }}</a>
+                                                                                <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-placement="top" title="Consider your wallet fees when choosing the exact amount to transfer.">{{ path.origin.amount_str }}</a>
                                                                             {% endif %}
                                                                         </div>
                                                                     </div>
