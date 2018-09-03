@@ -391,13 +391,14 @@ def import_exchanges(logger, file):
                        " '{}' Vs '{}'.".format(len(f_contents), len(db_exch)))
     # Loop for each line
     for line in f_contents:
-        id, name, type, img, url, geo = (line.replace("\n", "")).split("¬")
+        id, name, type, img, url, af, lan = (line.replace("\n", "")).split("¬")
         exch = Exchange(id=id,
                         name=name,
                         type=type,
                         img_fn=img,
                         site_url=url,
-                        geography=geo)
+                        affiliate=af,
+                        language=lan)
         db.session.add(exch)
     db.session.commit()
     logger.info("import_exchanges: {} rows inserted".format(len(f_contents)))

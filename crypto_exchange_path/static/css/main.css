@@ -103,6 +103,10 @@ body {
     background-size: cover;
 }
 
+a, a.disabled:hover, a:disabled:hover {
+    color: #5c5c5c;
+}
+
 .light-grey-color {
     color: #DCDCDC;
 }
@@ -214,13 +218,13 @@ body {
     color: #3e3e3e;
 }
 
-#results .path-format {
+/* #results .path-format {
     color: #737373;
-}
+} */
 
-#results .details-format {
+/* #results .details-format {
     color: #404040;
-}
+} */
 
 #results .card-header {
     background-color: #ffffff
@@ -244,6 +248,25 @@ body {
 
 .smaller-font {
     font-size: 90%;
+}
+
+@media (min-width: 768px) {
+    #select-btn {
+        font-size: 0.8rem;
+        font-weight: bold;
+        padding: .4rem 0.8rem;
+        margin: .2rem 0rem;
+    }
+}
+
+@media (max-width: 767px) {
+    #select-btn {
+        font-size: 0.8rem;
+        font-weight: bold;
+        padding: .4rem 0.6rem;
+        margin: .2rem 0rem;
+        text-transform: none;
+    }
 }
 
 /* /////////////////////////////////////////////////////////

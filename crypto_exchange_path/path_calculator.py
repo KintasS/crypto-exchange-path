@@ -19,10 +19,10 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
     ***************************************************************************
     *********************************************************************** """
 
-    logger.info("STARTING CALCULATION FOR: \norig_amt = {} \norig_coin = {}"
-                "\norig_loc = {} \ndest_coin = {} \ndest_loc = {} "
-                "\nconnection_type = {} \nuser_exchanges = {}"
-                "\ncurrency = {} \nfee_settings = {}"
+    logger.info("\n\nSTARTING CALCULATION FOR: \norig_amt = {}\n"
+                "orig_coin = {}\norig_loc = {}\ndest_coin = {}\ndest_loc = {}"
+                "\nconnection_type = {}\nuser_exchanges = {}"
+                "\ncurrency = {}\nfee_settings = {}"
                 .format(orig_amt, orig_coin, orig_loc, dest_coin, dest_loc,
                         connection_type, user_exchanges, currency,
                         fee_settings))

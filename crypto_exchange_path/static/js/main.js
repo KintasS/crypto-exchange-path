@@ -118,9 +118,6 @@ $(document).ready(function() {
     $('#currency-btn .dropdown-item').on('click', function() {
         currentCurrency = $('#currency-btn button').attr('data-currency');
         selectedCurrency = $(this).attr('data-currency');
-        console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-        console.log("currentCurrency")
-        console.log("selectedCurrency")
         if (currentCurrency != selectedCurrency) {
             // Replace selected currency
             $('#currency-btn button').attr('data-currency', selectedCurrency);
@@ -135,6 +132,31 @@ $(document).ready(function() {
     });
 
 
+    ///////////////////////////////////////////////////////////////////////////
+    /////   BLOCK LINKS
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    console.log("control 5")
+
+    // Show URL on Mouse Hover
+    // Open in new window
+    $(".block-link").click(function() {
+        window.open($(this).find("a:first").attr("href"));
+        return false;
+    });
+    $(".block-link").hover(function() {
+        $(this).find("a:first").css({
+            color: '#4285F4'
+        });
+        return false;
+    }, function() {
+        $(this).find("a:first").css({
+            color: '#212529'
+        });
+        return false;
+    });
+
 
     ///////////////////////////////////////////////////////////////////////////
     /////   OTHER ACTIONS
@@ -148,7 +170,5 @@ $(document).ready(function() {
     if (cond == "True") {
         $('#modalFeedbackForm').modal('show');
     }
-
-
 
 });

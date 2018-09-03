@@ -80,7 +80,8 @@ class Exchange(db.Model):
     type = db.Column(db.String(30), nullable=False)
     img_fn = db.Column(db.String(50))
     site_url = db.Column(db.String(100))
-    geography = db.Column(db.String(30))
+    affiliate = db.Column(db.String(10), nullable=False)
+    language = db.Column(db.String(50))
     trade_pairs = db.relationship('TradePair', backref='exchange_trade',
                                   lazy=True)
     fees = db.relationship('Fee', backref='exchange_fee', lazy=True)
