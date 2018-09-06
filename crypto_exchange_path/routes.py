@@ -41,7 +41,6 @@ def home(session_id=None):
     feedback_form = FeedbackForm()
     exchanges = get_exchanges('Exchange')
     user_exchanges = exchanges
-    gen_wallet = Params.GENERIC_WALLET
     curr = Params.DEFAULT_CURRENCY
     open_feedback_modal = False
     # Actions if Feedback Form was filled
@@ -55,10 +54,9 @@ def home(session_id=None):
             return redirect(url_for('home'))
     return render_template('home.html', form=input_form, curr=curr,
                            exchanges=exchanges, user_exchanges=user_exchanges,
-                           gen_wallet=gen_wallet,
+                           session_id=session_id,
                            feedback_form=feedback_form,
-                           open_feedback_modal=open_feedback_modal,
-                           session_id=session_id)
+                           open_feedback_modal=open_feedback_modal)
 
 
 @app.route("/exchanges/results/<session_id>/<orig_coin>/<dest_coin>",
@@ -83,7 +81,6 @@ def exch_results(session_id=None, orig_coin=None, dest_coin=None):
     feedback_form = FeedbackForm()
     exchanges = get_exchanges('Exchange')
     user_exchanges = exchanges
-    gen_wallet = Params.GENERIC_WALLET
     curr = Params.DEFAULT_CURRENCY
     path_results = None
     open_feedback_modal = False
@@ -169,11 +166,10 @@ def exch_results(session_id=None, orig_coin=None, dest_coin=None):
             return redirect(url_for('exch_results'))
     return render_template('exch_results.html', form=input_form, curr=curr,
                            exchanges=exchanges, user_exchanges=user_exchanges,
-                           paths=sorted_paths, gen_wallet=gen_wallet,
+                           paths=sorted_paths, session_id=session_id,
                            path_results=path_results, auto_search=auto_search,
                            feedback_form=feedback_form,
-                           open_feedback_modal=open_feedback_modal,
-                           session_id=session_id)
+                           open_feedback_modal=open_feedback_modal)
 
 
 @app.route("/update/slfjh23hk353mh4567df")

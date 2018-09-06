@@ -51,9 +51,6 @@ def get_exchange(id):
         return exchange
     else:
         return None
-        # id = Params.GENERIC_WALLET
-        # exchange = Exchange.query.filter_by(id=id).first()
-        # return exchange
 
 
 def get_exchanges(type=None):
@@ -68,14 +65,13 @@ def get_exchanges(type=None):
         return sorted(exchanges)
 
 
-def get_exchange_choices(type=None):
+def get_exchange_choices(types=[]):
     """Returns the list of exchanges available in 'Exchange' table,
     but in tuples so that it works with Input form choices.
     """
-    if type:
-        exchanges = Exchange.query.filter_by(type=type).all()
-    else:
-        exchanges = Exchange.query.all()
+    exchanges = []
+    for type in types:
+        exchanges += Exchange.query.filter_by(type=type).all()
     choices = []
     for exch in exchanges:
         choices.append((exch.id, exch.name))
@@ -177,7 +173,7 @@ def get_exch_by_withdrawal_coin(coin):
 def is_crypto(crypto):
     """Checks whether a coin is a crypto(True) or a fiat coin(False).
     """
-    coin = Coin.query.filter_by(symbol=crypto).first()
+    coin = Coin.query.filter_by(id=crypto).first()
     if coin and coin.type == 'Crypto':
         return True
     else:

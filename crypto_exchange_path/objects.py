@@ -1,5 +1,7 @@
 from secrets import token_hex
-from crypto_exchange_path.utils_db import calc_withdraw_fee, fx_exchange
+from crypto_exchange_path.config import Params
+from crypto_exchange_path.utils_db import (calc_withdraw_fee, fx_exchange,
+                                           is_crypto, get_exchange)
 from crypto_exchange_path.utils import (num_2_str, round_amount,
                                         round_amount_by_price)
 
@@ -125,7 +127,7 @@ class Location:
 
     def __init__(self, type, exchange, amount, coin):
         self.type = type
-        self.exchange = exchange
+        self.exchange = self.set_exchange(exchange, coin)
         self.amount = amount
         self.coin = coin
         self.withdraw_fee = None
@@ -151,6 +153,18 @@ class Location:
                     self.coin.symbol,
                     lit)
         return literal
+
+    def set_exchange(self, exchange, coin):
+        """If the auxiliar exchange 'Wallet / Bank' was provided,
+        it transforms it to the appropriate one.
+        """
+        if exchange.id != Params.AUX_EXCHANGE:
+            return exchange
+        else:
+            if is_crypto(coin.id):
+                return get_exchange('Wallet')
+            else:
+                return get_exchange('Bank')
 
     def __repr__(self):
         return "Location({}: {} [{} {}]').".format(self.type,

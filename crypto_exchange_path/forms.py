@@ -20,20 +20,20 @@ class SearchForm(FlaskForm):
                            validators=[DataRequired()],
                            default='USD')
     orig_loc = SelectField('Origin location',
-                           choices=get_exchange_choices())
+                           choices=get_exchange_choices(['Auxiliar', 'Exchange']))
     orig_coin = StringField('Origin coin')
     orig_amt = StringField('Origin amount')
     dest_loc = SelectField('Destination location',
-                           choices=get_exchange_choices(),
+                           choices=get_exchange_choices(['Auxiliar', 'Exchange']),
                            validators=[DataRequired()])
     dest_coin = StringField('Destination coin')
     connection_type = RadioField('Connections',
                                  choices=Params.CONNECTIONS_CHOICES,
                                  default='2')
     exchanges = SelectMultipleField('Exchanges',
-                                    choices=get_exchange_choices('Exchange'),
+                                    choices=get_exchange_choices(['Exchange']),
                                     default=[exch[0] for exch in
-                                             get_exchange_choices('Exchange')])
+                                             get_exchange_choices(['Exchange'])])
     cep_promos = RadioField('CEP promos',
                             choices=Params.CEP_CHOICES,
                             default='(CEP)')
@@ -67,7 +67,7 @@ class SearchForm(FlaskForm):
 
     def validate_orig_loc(self, orig_loc):
         # If 'orig_loc' is 'Wallet', then any coin will be available
-        if orig_loc.data == Params.GENERIC_WALLET:
+        if orig_loc.data == Params.AUX_EXCHANGE:
             return
         else:
             coin = get_coin_by_longname(self.orig_coin.data)
@@ -77,9 +77,9 @@ class SearchForm(FlaskForm):
                 if coin.id in valid_coins:
                     valid_exchs = get_exch_by_withdrawal_coin(coin.id)
                     if valid_exchs:
-                        valid_exchs.add(Params.GENERIC_WALLET)
+                        valid_exchs.add(Params.AUX_EXCHANGE)
                     else:
-                        valid_exchs = (Params.GENERIC_WALLET)
+                        valid_exchs = (Params.AUX_EXCHANGE)
                     if orig_loc.data not in valid_exchs:
                         raise ValidationError("'{}' not available in '{}'"
                                               .format(coin.id, orig_loc.data))
@@ -99,7 +99,7 @@ class SearchForm(FlaskForm):
 
     def validate_dest_loc(self, dest_loc):
         # If 'dest_loc' is 'Wallet', then any coin will be available
-        if dest_loc.data == Params.GENERIC_WALLET:
+        if dest_loc.data == Params.AUX_EXCHANGE:
             return
         else:
             coin = get_coin_by_longname(self.dest_coin.data)
@@ -109,9 +109,9 @@ class SearchForm(FlaskForm):
                 if coin.id in valid_coins:
                     valid_exchs = get_exch_by_coin(coin.id)
                     if valid_exchs:
-                        valid_exchs.add(Params.GENERIC_WALLET)
+                        valid_exchs.add(Params.AUX_EXCHANGE)
                     else:
-                        valid_exchs = (Params.GENERIC_WALLET)
+                        valid_exchs = (Params.AUX_EXCHANGE)
                     if dest_loc.data not in valid_exchs:
                         raise ValidationError("'{}' not available in '{}'"
                                               .format(coin.id, dest_loc.data))

@@ -192,13 +192,15 @@
                                                 <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true"></i>
                                             </div>
                                             <div class="col-3 pl-2">
-                                                {% if path.origin.exchange.id == gen_wallet %}
+                                                {% if path.origin.exchange.id == 'Wallet' %}
                                                     <span>Transfer your <b>{{ path.origin.coin.symbol }}</b> from <b>your wallet</b> to <b>{{ path.hop_1.exchange.name }}</b>.</span>
+                                                {% elif path.origin.exchange.id == 'Bank' %}
+                                                    <span>Transfer your <b>{{ path.origin.coin.symbol }}</b> from <b>your bank</b> to <b>{{ path.hop_1.exchange.name }}</b>.</span>
                                                 {% else %}
                                                     <span>Transfer your <b>{{ path.origin.coin.symbol }}</b> from <b>{{ path.origin.exchange.name }}</b> to <b>{{ path.hop_1.exchange.name }}</b>.</span>
                                                 {% endif %}
-                                                {% if path.origin.exchange.id == gen_wallet %}
-                                                    <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-placement="top" title="Specific withdrawal fees will apply depending on the wallet you use. Please, consider those fees when planning the operation.">
+                                                {% if (path.origin.exchange.id == 'Wallet') or (path.origin.exchange.id == 'Bank') %}
+                                                    <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-placement="top" title="Specific withdrawal fees will apply depending on the wallet or bank you use. Please, consider those fees when planning the operation.">
                                                         <i class="fa fa-info-circle" aria-hidden="true"></i>
                                                     </a>
                                                 {% else %}
@@ -237,7 +239,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-2 border-left">
-                                                {% if path.origin.exchange.id != gen_wallet %}
+                                                {% if (path.origin.exchange.id != 'Wallet') and (path.origin.exchange.id != 'Bank') %}
                                                 <div class="row no-gutters pr-2">
                                                     <div class="col d-flex justify-content-end">
                                                         <span class="mb-0 font-weight-bold text-right">{{ path.origin.withdraw_fee }} {{ path.origin.coin.symbol }}</span>
@@ -319,8 +321,10 @@
                                             {% set step2b_dest_amt = path.hop_2.trade.sell_amt_str %}
                                         {% endif %}
                                         {% set step2b_dest_name = step2b_dest.name %}
-                                        {% if step2b_dest.id == gen_wallet %}
+                                        {% if step2b_dest.id == 'Wallet' %}
                                             {% set step2b_dest_name = 'your wallet' %}
+                                        {% elif step2b_dest.id == 'Bank' %}
+                                            {% set step2b_dest_name = 'your bank' %}
                                         {% endif %}
                                         <div class="row no-gutters pl-3 mb-4 smaller-font path-format">
                                             <div class="col-auto px-1">
@@ -440,8 +444,10 @@
                                                 <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true"></i>
                                             </div>
                                             <div class="col-3 pl-2">
-                                                {% if path.destination.exchange.id == gen_wallet %}
+                                                {% if path.destination.exchange.id == 'Wallet' %}
                                                     <span>Transfer your <b>{{ path.hop_2.trade.buy_coin.symbol }}</b> from <b>{{ path.hop_2.exchange.name }}</b> to <b>your wallet</b>.</span>
+                                                {% elif path.destination.exchange.id == 'Bank' %}
+                                                    <span>Transfer your <b>{{ path.hop_2.trade.buy_coin.symbol }}</b> from <b>{{ path.hop_2.exchange.name }}</b> to <b>your bank</b>.</span>
                                                 {% else %}
                                                     <span>Transfer your <b>{{ path.hop_2.trade.buy_coin.symbol }}</b> from <b>{{ path.hop_2.exchange.name }}</b> to <b>{{ path.destination.exchange.name }}</b>.</span>
                                                 {% endif %}
