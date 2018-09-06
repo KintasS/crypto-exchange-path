@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="{{ url_for('static', filename='img/Bitcoin_logo.png') }}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="{{ url_for('static', filename='css/mdb.min.css') }}" rel="stylesheet">
+    <!-- Your custom styles (optional) -->
+    <link href="{{ url_for('static', filename='css/home.css') }}" rel="stylesheet">
+    {% block styles %}
+    {% endblock %}
+
+    {% if title %}
+        <title>Crypto Exchange Path - {{ title }}</title>
+    {% else %}
+        <title>Crypto Exchange</title>
+    {% endif %}
+</head>
+
+
+
+<body>
+
+    <!-- <div class="mask rgba-black-strong"> -->
+
+        <!--Main Navigation-->
+        <header class="site-header">
+
+            <nav class="navbar navbar-expand-md navbar-light fixed-top">
+                <div class="container">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                              </button>
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                        <a class="navbar-brand font-weight-bold" href="{{ url_for('home', session_id=session_id) }}">Crypto Exchange Path<span class="badge badge-light ml-2">Beta</span></a>
+                        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="{{ url_for('home', session_id=session_id) }}">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link no-link-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Comming soon">Exchanges</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link no-link-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Comming soon">Wallets</a>
+                            </li>
+                        </ul>
+                        <!-- Navbar Right Side -->
+                        <div class="navbar-nav ml-auto mr-3">
+                            <a class="nav-item nav-link" href="#" data-toggle="modal" data-target="#modalFeedbackForm">Feedback</a>
+                        </div>
+                        <div id="currency-btn" class="btn-group">
+                            {% if curr == 'USD' %}
+                                <button class="btn btn-dark-grey dropdown-toggle" data-currency="USD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-dollar mx-2" aria-hidden="true"></i>USD</b></button>
+                            {% elif curr == 'GBP' %}
+                                <button class="btn btn-dark-grey dropdown-toggle" data-currency="GBP" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-gbp mx-2" aria-hidden="true"></i>GBP</b></button>
+                            {% elif curr == 'JPY' %}
+                                <button class="btn btn-dark-grey dropdown-toggle" data-currency="JPY" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-jpy mx-2" aria-hidden="true"></i>JPY</b></button>
+                            {% elif curr == 'EUR' %}
+                                <button class="btn btn-dark-grey dropdown-toggle" data-currency="EUR" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-eur mx-2" aria-hidden="true"></i>EUR</b></button>
+                            {% else %}
+                                <button class="btn btn-dark-grey dropdown-toggle" data-currency="WON" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-won mx-2" aria-hidden="true"></i>WON</b></button>
+                            {% endif %}
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" data-currency="USD" href="#"><i class="fa fa-dollar mx-2" aria-hidden="true"></i>USD</a>
+                                <a class="dropdown-item" data-currency="GBP" href="#"><i class="fa fa-gbp mx-2" aria-hidden="true"></i>GBP</a>
+                                <a class="dropdown-item" data-currency="JPY" href="#"><i class="fa fa-jpy mx-2" aria-hidden="true"></i>JPY</a>
+                                <a class="dropdown-item" data-currency="EUR" href="#"><i class="fa fa-euro mx-2" aria-hidden="true"></i>EUR</a>
+                                <a class="dropdown-item" data-currency="KRW" href="#"><i class="fa fa-won ml-2 mr-1" aria-hidden="true"></i>KRW</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+        </header>
+
+
+        <!--Main layout-->
+        <main role="main">
+
+        {% block main %}
+        {% endblock %}
+
+        </main>
+
+
+        <!-- Footer -->
+        <footer class="page-footer font-small mt-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 py-2">
+                        <div class="py-3 flex-center">
+                            <!-- Facebook -->
+                            <a class="fb-ic">
+                                <i class="fa fa-facebook fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+                            </a>
+                            <!-- Twitter -->
+                            <a class="tw-ic">
+                              <i class="fa fa-twitter fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+                            </a>
+                            <!--Instagram-->
+                            <a class="ins-ic">
+                              <i class="fa fa-instagram fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Copyright -->
+            <div class="footer-copyright text-center py-3">© 2018 Copyright:
+              <a href="#"> CryptoExchangePath.com</a>
+            </div>
+            <!-- Copyright -->
+
+        </footer>
+            <!-- Footer Elements -->
+
+
+
+        <!-- MODALS -->
+
+        {% block modals %}
+        {% endblock %}
+
+        <!-- Feedback Modal -->
+        <div class="modal fade" id="modalFeedbackForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-modal-open={{open_feedback_modal}}>
+            <div class="modal-dialog modal-lg modal-notify modal-info" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-center" style="background-color: #212121;">
+                        <p class="heading lead font-weight-bold">Feedback</p>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" class="white-text">&times;</span>
+                        </button>
+                    </div>
+                    <form id="feedback-form" method="POST" action="">
+                        {{ feedback_form.hidden_tag() }}
+                        <div class="modal-body mx-0 mx-sm-3">
+                            <h2 class="font-weight-bold text-center mt-2 mb-4" style="color: #212529;">We are listening</h2>
+                            <p class="grey-text text-center mx-0 mx-md-5">Let us know what you think about our platform. We are working hard to improve it every day,
+                                and your feedback is priceless to us... We are listening to you and will do our best to add the functionality you miss or to
+                                fix the bugs you might encounter.</p>
+                            <p class="grey-text text-center mx-5">Keep in touch!</p>
+                            <div class="form-group mb-3">
+                                <!-- <i class="fa fa-user fa-lg prefix grey-text d-inline"></i> -->
+                                <!-- {{ feedback_form.topic.label(class="form-control-label text-bigger") }} -->
+                                {% if feedback_form.topic.errors %}
+                                    {{ feedback_form.topic(class="form-control d-inline is-invalid", type="text", autocomplete="off") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in feedback_form.topic.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ feedback_form.topic(class="form-control d-inline", type="text", placeholder="Location", autocomplete="off") }}
+                                {% endif %}
+                            </div>
+                            <div class="md-form mb-5">
+                                <i class="fa fa-tag prefix grey-text"></i>
+                                {% if feedback_form.subject.errors %}
+                                    {{ feedback_form.subject(id="form32", class="form-control is-invalid", type="text", autocomplete="off") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in feedback_form.subject.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ feedback_form.subject(id="form32", class="form-control", type="text", autocomplete="off") }}
+                                {% endif %}
+                                <label data-error="wrong" data-success="right" for="form32">Subject</label>
+                            </div>
+                            <div class="md-form">
+                                <i class="fa fa-pencil prefix grey-text"></i>
+                                {% if feedback_form.detail.errors %}
+                                    {{ feedback_form.detail(class="form-control is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in feedback_form.detail.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ feedback_form.detail(id="form8", class="md-textarea form-control", rows="4", type="text") }}
+                                {% endif %}
+                                <label data-error="wrong" data-success="right" for="form8">Your feedback</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <div class="form-group">
+                                {{ feedback_form.feedback_submit(class="btn btn-dark-grey") }}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+    <!-- </div> -->
+
+    <!-- SCRIPTS -->
+    <!-- JQuery -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/mdb.min.js') }}"></script>
+    {% block scripts %}
+    {% endblock %}
+
+
+</body>
+</html>

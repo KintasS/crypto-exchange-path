@@ -23,9 +23,23 @@ class ExchangeManager(object):
         except KeyError as e:
             return None
 
+    def calc_fee_literal(self, fee, scope):
+        """Auxiliar function for 'get_trade_fee'.
+        Calcs the fee literal to be later shown in the website.
+        """
+        if scope == "(Maker)":
+            scope_str = "(for Market Makers)"
+        elif scope == "(Taker)":
+            scope_str = "(for Market Takers)"
+        elif scope == "(BNB)":
+            scope_str = "(when paid in BNB)"
+        else:
+            scope_str = "({} trades)".format(scope)
+        return "{}% {}".format(fee, scope_str)
+
     def get_trade_fee(self, sell_amt, sell_coin, buy_coin):
         """Get the trade fee to be applied.
-        Returns a tuple: [<amount%>, <coin_object>].
+        Returns a tuple: [<amount%>, <coin_object>, <fee_literal>].
         """
         # Get trading fees for the exchange
         exch_trade_fees = Fee.query.filter_by(exchange=self.exchange.id,
@@ -51,22 +65,26 @@ class ExchangeManager(object):
             # First look for our promos
             if fee.scope == self.cep_promo:
                 cep_promo_found = True
-                return_fee = [fee.amount, fee.fee_coin]
+                fee_literal = self.calc_fee_literal(fee.amount, fee.scope)
+                return_fee = [fee.amount, fee.fee_coin, fee_literal]
             # Then look for special fees of the exchange
             elif fee.scope == self.special_fee:
                 if not cep_promo_found:
                     special_fee_found = True
-                    return_fee = [fee.amount, fee.fee_coin]
+                    fee_literal = self.calc_fee_literal(fee.amount, fee.scope)
+                    return_fee = [fee.amount, fee.fee_coin, fee_literal]
             # Then look for special fees for given pairs
             elif fee.scope in trade_pair:
                 if not cep_promo_found and not special_fee_found:
                     pair_fee_found = True
-                    return_fee = [fee.amount, fee.fee_coin]
+                    fee_literal = self.calc_fee_literal(fee.amount, fee.scope)
+                    return_fee = [fee.amount, fee.fee_coin, fee_literal]
             # Finally, look for the default fee
             elif fee.scope == self.default_fee:
                 if (not cep_promo_found and not special_fee_found
                         and not pair_fee_found):
-                    return_fee = [fee.amount, fee.fee_coin]
+                    fee_literal = self.calc_fee_literal(fee.amount, fee.scope)
+                    return_fee = [fee.amount, fee.fee_coin, fee_literal]
         return return_fee
 
     def perform_trade(self, sell_amt, sell_coin, buy_coin):
@@ -74,9 +92,9 @@ class ExchangeManager(object):
         Returns a 'Trade' object
         """
         # Find the trading fee for the given pair
-        fee_amt_perc, fee_coin = self.get_trade_fee(sell_amt,
-                                                    sell_coin,
-                                                    buy_coin)
+        fee_amt_perc, fee_coin, fee_literal = self.get_trade_fee(sell_amt,
+                                                                 sell_coin,
+                                                                 buy_coin)
         if fee_amt_perc is None:
             self.logger.warning("perform_trade: No trade fee for '{}[{}/{}]'."
                                 "Skipping trade calculation."
@@ -117,7 +135,7 @@ class ExchangeManager(object):
                                     fee_amt, fee_coin.id))
         return Trade(sell_amt, sell_coin,
                      buy_amt, buy_coin,
-                     fee_amt, fee_coin)
+                     fee_amt, fee_coin, fee_literal)
 
     def get_all_coinZs(self, coin):
         """Gets all the coins (cryptos & fiat) that trade in the exchange

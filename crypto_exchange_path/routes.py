@@ -1,32 +1,91 @@
 import datetime
+import math
+import traceback
 from secrets import token_hex
 from flask import render_template, url_for, redirect
-from crypto_exchange_path import app, db
+from crypto_exchange_path import app, db, mail
 from crypto_exchange_path.config import Params
 from crypto_exchange_path.forms import SearchForm, FeedbackForm
 from crypto_exchange_path.path_calculator import calc_paths
-from crypto_exchange_path.utils import set_logger
+from crypto_exchange_path.utils import set_logger, error_notifier
 from crypto_exchange_path.utils_db import (get_exchange, get_exchanges,
-                                           get_coin_by_longname)
+                                           get_coin_by_longname, get_coin,
+                                           fx_exchange)
 from crypto_exchange_path.models import Feedback, QueryRegister
+from crypto_exchange_path.info_fetcher import update_prices
 
 # Start logging
 logger = set_logger('Main', 'INFO')
 
 
+def manage_feedback_form(feedback_form):
+    date = datetime.datetime.now()
+    topic = feedback_form.topic.data
+    subject = feedback_form.subject.data
+    detail = feedback_form.detail.data
+    feedback = Feedback(datetime=date,
+                        topic=topic,
+                        subject=subject,
+                        detail=detail)
+    db.session.add(feedback)
+    db.session.commit()
+
+
 @app.route("/", methods=['GET', 'POST'])
-@app.route("/<session_id>", methods=['GET', 'POST'])
-def main(session_id=None):
+@app.route("/home", methods=['GET', 'POST'])
+@app.route("/home/<session_id>", methods=['GET', 'POST'])
+def home(session_id=None):
     if not session_id or len(session_id) != 32:
         session_id = token_hex(16)
-    sorted_paths = []
     input_form = SearchForm()
     feedback_form = FeedbackForm()
     exchanges = get_exchanges('Exchange')
     user_exchanges = exchanges
     gen_wallet = Params.GENERIC_WALLET
     curr = Params.DEFAULT_CURRENCY
-    path_results = -1
+    open_feedback_modal = False
+    # Actions if Feedback Form was filled
+    if feedback_form.feedback_submit.data:
+        # If form was filled, but with errors, open modal again
+        open_feedback_modal = True
+        if feedback_form.validate():
+            # If form was properly filled, close modal again
+            open_feedback_modal = False
+            manage_feedback_form(feedback_form)
+            return redirect(url_for('home'))
+    return render_template('home.html', form=input_form, curr=curr,
+                           exchanges=exchanges, user_exchanges=user_exchanges,
+                           gen_wallet=gen_wallet,
+                           feedback_form=feedback_form,
+                           open_feedback_modal=open_feedback_modal,
+                           session_id=session_id)
+
+
+@app.route("/exchanges/results/<session_id>/<orig_coin>/<dest_coin>",
+           methods=['GET', 'POST'])
+@app.route("/exchanges/results/<session_id>", methods=['GET', 'POST'])
+def exch_results(session_id=None, orig_coin=None, dest_coin=None):
+    if not session_id or len(session_id) != 32:
+        session_id = token_hex(16)
+    sorted_paths = []
+    input_form = SearchForm()
+    # If 'orig_coin' and 'dest_coin' where provided, fill form
+    auto_search = False
+    if orig_coin and dest_coin:
+        orig_coin = get_coin(orig_coin)
+        dest_coin = get_coin(dest_coin)
+        if orig_coin and dest_coin:
+            input_form.orig_coin.data = orig_coin.long_name
+            input_form.dest_coin.data = dest_coin.long_name
+            amt = fx_exchange("USD", orig_coin.id, 3000, logger)
+            input_form.orig_amt.data = str(math.ceil(amt))
+            auto_search = True
+    feedback_form = FeedbackForm()
+    exchanges = get_exchanges('Exchange')
+    user_exchanges = exchanges
+    gen_wallet = Params.GENERIC_WALLET
+    curr = Params.DEFAULT_CURRENCY
+    path_results = None
     open_feedback_modal = False
     # Actions if Search Form was filled
     if input_form.search_submit.data and input_form.validate():
@@ -45,9 +104,19 @@ def main(session_id=None):
                         "Default": input_form.default_fee.data,
                         "Binance": input_form.binance_fee.data}
         start_time = datetime.datetime.now()
-        paths = calc_paths(orig_loc, orig_coin, orig_amt,
-                           dest_loc, dest_coin, connection_type,
-                           user_exchanges, curr, fee_settings, logger)
+        try:
+            paths = calc_paths(orig_loc, orig_coin, orig_amt,
+                               dest_loc, dest_coin, connection_type,
+                               user_exchanges, curr, fee_settings, logger)
+            path_results = len(paths)
+        # Catch generic exception just in case anything went wront in logic
+        except Exception as e:
+            error_notifier(type(e).__name__,
+                           traceback.format_exc(),
+                           mail,
+                           logger)
+            paths = []
+            path_results = -1
         # Register query
         finish_time = datetime.datetime.now()
         results = len(paths)
@@ -67,15 +136,20 @@ def main(session_id=None):
                               results=results,
                               start_time=start_time,
                               finish_time=finish_time)
-        db.session.add(query)
-        db.session.commit()
+        try:
+            db.session.add(query)
+            db.session.commit()
+        except Exception as e:
+            error_notifier(type(e).__name__,
+                           traceback.format_exc(),
+                           mail,
+                           logger)
         # Select all Exchanges if no partial selection was made
         if not user_exchanges:
             user_exchanges = exchanges
         # Return capped list of results
         sorted_paths = sorted(paths, key=lambda x: x.total_fees)
         sorted_paths = sorted_paths[0:Params.MAX_PATHS]
-        path_results = len(paths)
     # Actions if Feedback Form was filled
     elif feedback_form.feedback_submit.data:
         # If form was filled, but with errors, open modal again
@@ -92,14 +166,20 @@ def main(session_id=None):
                                 detail=detail)
             db.session.add(feedback)
             db.session.commit()
-            return redirect(url_for('main'))
-    return render_template('main.html', form=input_form, curr=curr,
+            return redirect(url_for('exch_results'))
+    return render_template('exch_results.html', form=input_form, curr=curr,
                            exchanges=exchanges, user_exchanges=user_exchanges,
                            paths=sorted_paths, gen_wallet=gen_wallet,
-                           path_results=path_results,
+                           path_results=path_results, auto_search=auto_search,
                            feedback_form=feedback_form,
                            open_feedback_modal=open_feedback_modal,
                            session_id=session_id)
+
+
+@app.route("/update/slfjh23hk353mh4567df")
+def update_prcs():
+    update_prices(logger)
+    return "ok"
 
 
 @app.route("/landing")

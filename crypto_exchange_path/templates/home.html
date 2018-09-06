@@ -1,0 +1,229 @@
+{% extends "layout.html" %}
+
+{% block styles %}
+{% endblock styles %}
+
+{% block main %}
+
+    {% include '_search_canvas.html' %}
+
+
+    <!--Section: Top-Coins-->
+    <section id="top-coins" class="text-center">
+
+        <!-- Heading -->
+        <h2 class="mt-4 mt-sm-5 mb-3 mb-sm-4 font-weight-bold">Trending Searches</h2>
+
+        <div class="container px-2">
+
+            <div class="row no-gutters mt-4 mt-lg-5">
+
+                <div class="col-3 px-2 px-lg-3">
+                    <div class="d-inline-block d-flex justify-content-center align-items-center">
+                        <img class="img-trending-coin" src="/static/img/coins/60/19633_btc.jpg" height="60" width="60">
+                        <i class="fa fa-lg fa-exchange px-1 px-md-3" aria-hidden="true"></i>
+                        <img class="img-trending-coin" src="/static/img/coins/60/19969_xmr.jpg" height="60" width="60">
+                    </div>
+                    <h5 class="font-weight-bold pt-3 m-0">Bitcoin to Monero</h5>
+                </div>
+
+                <div class="col-3 px-2 px-lg-3">
+                    <div class="d-inline-block d-flex justify-content-center align-items-center">
+                        <img class="img-trending-coin" src="/static/img/coins/60/dollar.jpg" height="60" width="60">
+                        <i class="fa fa-lg fa-exchange px-1 px-md-3" aria-hidden="true"></i>
+                        <img class="img-trending-coin" src="/static/img/coins/60/cardano.jpg" height="60" width="60">
+                    </div>
+                    <h5 class="font-weight-bold pt-3 m-0">US Dollar to Cardano</h5>
+                </div>
+
+                <div class="col-3 px-2 px-lg-3">
+                    <div class="d-inline-block d-flex justify-content-center align-items-center">
+                        <img class="img-trending-coin" src="/static/img/coins/60/20646_eth_logo.jpg" height="60" width="60">
+                        <i class="fa fa-lg fa-exchange px-1 px-md-3" aria-hidden="true"></i>
+                        <img class="img-trending-coin" src="/static/img/coins/60/1383858_neo.jpg" height="60" width="60">
+                    </div>
+                    <h5 class="font-weight-bold pt-3 m-0">Ethereum to NEO</h5>
+                </div>
+
+                <div class="col-3 px-2 px-lg-3">
+                    <div class="d-inline-block d-flex justify-content-center align-items-center">
+                        <img class="img-trending-coin" src="/static/img/coins/60/19633_btc.jpg" height="60" width="60">
+                        <i class="fa fa-lg fa-exchange px-2 px-md-3" aria-hidden="true"></i>
+                        <img class="img-trending-coin" src="/static/img/coins/60/1383947_bnb.jpg" height="60" width="60">
+                    </div>
+                    <h5 class="font-weight-bold pt-3 m-0">Bitcoin to Binance Coin</h5>
+                </div>
+
+            </div>
+            <!-- Links -->
+            <div class="row no-gutters pb-0 pb-md-5">
+                <div class="col-3 px-2 px-lg-3">
+                    <a id="select-btn" class="btn btn-indigo mt-3" href="{{ url_for('exch_results', session_id=session_id, orig_coin='BTC', dest_coin='XMR') }}" role="button">Search</a>
+                </div>
+                <div class="col-3 px-2 px-lg-3">
+                    <a id="select-btn" class="btn btn-indigo mt-3" href="{{ url_for('exch_results', session_id=session_id, orig_coin='USD', dest_coin='ADA') }}" role="button">Search</a>
+                </div>
+
+                <div class="col-3 px-2 px-lg-3">
+                    <a id="select-btn" class="btn btn-indigo mt-3" href="{{ url_for('exch_results', session_id=session_id, orig_coin='ETH', dest_coin='NEO') }}" role="button">Search</a>
+                </div>
+                <div class="col-3 px-2 px-lg-3">
+                    <a id="select-btn" class="btn btn-indigo mt-3" href="{{ url_for('exch_results', session_id=session_id, orig_coin='BTC', dest_coin='BNB') }}" role="button">Search</a>
+                </div>
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+
+    <hr class="my-5">
+
+    <!--Section: Popular Exchanges-->
+    <section id="popular-exchanges" class="text-center">
+
+        <!-- Heading -->
+        <h2 class="mt-4 mt-md-5 mb-3 mb-md-4 font-weight-bold">Popular Exchange Sites</h2>
+
+        <div class="container">
+
+            <div class="row d-flex justify-content-center mb-4">
+                <div class="col-md-8">
+                    <p class="grey-text mb-1 mb-md-3">Crypto exchange sites operate in a highly unregulated environment. Always proceed with caution and do your own research before starting to operate with any platform. These are currently the 3 top sites picked by our users.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-4 px-2 px-md-3">
+                    <img class="img-popular-services" src="/static/img/exchanges/60/Coinbase.jpg" height="60" width="60">
+                    <h4 class="my-3 font-weight-bold">Coinbase PRO</h4>
+                    <p class="grey-text">Coinbase is the most popular site to buy cryptocurrencies with USD or EUR. It currently supports BTC, BCH, ETH, LTC and ETC.</p>
+                </div>
+
+                <div class="col-4 px-2 px-md-3">
+                    <img class="img-popular-services" src="/static/img/exchanges/60/Binance.jpg" height="60" width="60">
+                    <h4 class="my-3 font-weight-bold">Binance</h4>
+                    <p class="grey-text">Binance is currently the exchange site with highest volume. Its trading fees are very competitive and supperts a very wide range of cryptoassets.</p>
+                </div>
+
+                <div class="col-4 px-2 px-md-3">
+                    <img class="img-popular-services" src="/static/img/exchanges/60/Huobi.jpg" height="60" width="60">
+                    <h4 class="my-3 font-weight-bold">Huobi</h4>
+                    <p class="grey-text">The Singapore-based exchange already ranks among the top-three sites in trading volume, and offers its services worldwide in up to 15 different languages.</p>
+                </div>
+            </div>
+            <!-- Links -->
+            <div class="row">
+                <div class="col-4 px-2 px-md-3 mb-0 mb-md-5">
+                    <a id="select-btn" class="btn btn-indigo" href="https://pro.coinbase.com" target="_blank" role="button">Sign up</a>
+                </div>
+
+                <div class="col-4 px-2 px-md-3 mb-0 mb-md-5">
+                    <a id="select-btn" class="btn btn-indigo" href="https://www.binance.com/" target="_blank" role="button">Sign up</a>
+                </div>
+
+                <div class="col-4 px-2 px-md-3 mb-0 mb-md-5">
+                    <a id="select-btn" class="btn btn-indigo" href="https://www.huobi.pro" target="_blank" role="button">Sign up</a>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+
+
+    <hr class="my-5">
+
+    <!--Section: Recommended Wallets-->
+    <section id="recommended-wallets" class="text-center">
+
+        <!-- Heading -->
+        <h2 class="mt-4 mt-md-5 mb-3 mb-md-4 font-weight-bold">Recommended Wallets</h2>
+
+        <div class="container">
+
+            <div class="row d-flex justify-content-center mb-4">
+                <div class="col-md-8">
+                    <p class="grey-text mb-1 mb-md-3">Cryptoassets are all about keeping your financial freedom, and hardware wallets are regarded today as the safest way to store your funds. To avoid unnecessary risks, always buy your wallet from the official site (links below), and double-check the authenticity of the website on the top-left area of your browser.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-4 px-2 px-md-3">
+                    <img class="img-popular-services" src="/static/img/wallets/Ledger.jpg" height="60" width="60">
+                    <h4 class="my-3 font-weight-bold">Ledger</h4>
+                    <p class="grey-text">The most popular and trusted hardware manufacture of wallets to store cryptocurrency on.</p>
+                </div>
+
+                <div class="col-4 px-2 px-md-3">
+                    <img class="img-popular-services" src="/static/img/wallets/Trezor.png" height="60" width="60">
+                    <h4 class="my-3 font-weight-bold">Trezor</h4>
+                    <p class="grey-text">The original Bitcoin (BTC) and ERC-20 token wallet. hardware wallet on the market.</p>
+                </div>
+
+                <div class="col-4 px-2 px-md-3">
+                    <img class="img-popular-services" src="/static/img/wallets/Keepkey.jpg" height="60" width="60">
+                    <h4 class="my-3 font-weight-bold">KeepKeey</h4>
+                    <p class="grey-text">KeepKey is a new kid on the block when it comes to crypto hardware wallets.</p>
+                </div>
+            </div>
+            <!-- Links -->
+            <div class="row">
+                <div class="col-4 mb-3 mb-sm-5">
+                    <a id="select-btn" class="btn btn-indigo" href="https://www.ledger.com/" target="_blank" role="button">Check webiste</a>
+                </div>
+
+                <div class="col-4 mb-3 mb-sm-5">
+                    <a id="select-btn" class="btn btn-indigo" href="https://trezor.io/" target="_blank" role="button">Check webiste</a>
+                </div>
+
+                <div class="col-4 mb-3 mb-sm-5">
+                    <a id="select-btn" class="btn btn-indigo" href="https://www.keepkey.com/" target="_blank" role="button">Check webiste</a>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+{% endblock main %}
+
+
+
+
+
+
+
+
+
+{% block modals %}
+    <!-- Processing Modal -->
+    <div class="modal fade" id="processing-modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true" data-backdrop='true'>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div id="cssload-pgloading">
+                <div class="cssload-loadingwrap">
+                    <ul class="cssload-bokeh">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block scripts %}
+    <!-- typeahead -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap3-typeahead.min.js') }}"></script>
+    <!-- Site styles -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- Tests -->
+    <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/tests.js') }}"></script> -->
+{% endblock %}

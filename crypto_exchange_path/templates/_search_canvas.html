@@ -1,0 +1,263 @@
+    <!--Section: Search Canvas-->
+    <section id="search-canvas">
+        <div class="mask rgba-black-strong">
+
+            <div class="container py-4 py-md-5">
+
+                <h2 class="mt-0 mb-2 font-weight-bold text-center">Cryptoasset exchange engine</h2>
+
+                <h5 class="text-center my-4">Find the cheapest way to buy or exchange cryptoassets</h5>
+
+                <div class="row no-gutters d-flex justify-content-center">
+                    <div class="col-12 col-md-10 col-lg-11 col-xl-12">
+
+                            <form id="search-form" method="POST" action="{{ url_for('exch_results', session_id=session_id) }}">
+                                {{ form.hidden_tag() }}
+                                <div class="row d-flex justify-content-between no-gutters">
+                                    <!-- <fieldset class="form-group"> -->
+                                        <div class="col-12 col-lg-6 mb-2">
+                                            <p class="font-weight-bold mb-0 mb-lg-1">From</p>
+                                            <div class="row d-flex justify-content-start no-gutters pr-lg-4">
+                                                <!-- Currency (HIDDEN TO USER) -->
+                                                <div class="col-12 d-none">
+                                                    <div class="form-group mb-0">
+                                                        {{ form.currency(class="form-control", type="text", placeholder="Location", autocomplete="off") }}
+                                                    </div>
+                                                </div>
+                                                <!-- Origin amount -->
+                                                <div class="col-4 pr-1 pr-sm-2">
+                                                    <div class="form-group mb-0">
+                                                        {% if form.orig_amt.errors %}
+                                                            {{ form.orig_amt(class="form-control is-invalid", autocomplete="off", spellcheck="false") }}
+                                                            <div class="invalid-feedback">
+                                                                {% for error in form.orig_amt.errors %}
+                                                                    <span>{{ error }}</span>
+                                                                {% endfor %}
+                                                            </div>
+                                                        {% else %}
+                                                            {{ form.orig_amt(class="form-control", placeholder="Amount", autocomplete="off", spellcheck="false") }}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <!-- Origin coin -->
+                                                <div class="col-4 pr-1 pr-sm-2">
+                                                    <div id="input-orig-coin" class="form-group mb-0">
+                                                        {% if form.orig_coin.errors %}
+                                                            {{ form.orig_coin(class="form-control typeahead is-invalid", type="text", autocomplete="off", spellcheck="false") }}
+                                                            <div class="invalid-feedback">
+                                                                {% for error in form.orig_coin.errors %}
+                                                                    <span>{{ error }}</span>
+                                                                {% endfor %}
+                                                            </div>
+                                                        {% else %}
+                                                            {{ form.orig_coin(class="form-control typeahead", type="text", placeholder="Coin", autocomplete="off", spellcheck="false") }}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <!-- Origin location -->
+                                                <div class="col-4 pr-1 pr-sm-2">
+                                                    <div class="form-group mb-0">
+                                                        {% if form.orig_loc.errors %}
+                                                            {{ form.orig_loc(class="form-control is-invalid", type="text", autocomplete="off", spellcheck="false") }}
+                                                            <div class="invalid-feedback">
+                                                                {% for error in form.orig_loc.errors %}
+                                                                    <span>{{ error }}</span>
+                                                                {% endfor %}
+                                                            </div>
+                                                        {% else %}
+                                                            {{ form.orig_loc(class="form-control", type="text", placeholder="Location", autocomplete="off", spellcheck="false") }}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-8 col-lg-4 mb-2">
+                                            <p class="font-weight-bold mb-0 mb-lg-1">To</p>
+                                            <div class="row d-flex justify-content-start no-gutters">
+                                                <!-- Destination coin -->
+                                                <div class="col-6 pr-1 pr-sm-2">
+                                                    <div id="input-dest-coin" class="form-group mb-0">
+                                                        {% if form.dest_coin.errors %}
+                                                            {{ form.dest_coin(class="form-control typeahead is-invalid", type="text", autocomplete="off", spellcheck="false") }}
+                                                            <div class="invalid-feedback">
+                                                                {% for error in form.dest_coin.errors %}
+                                                                    <span>{{ error }}</span>
+                                                                {% endfor %}
+                                                            </div>
+                                                        {% else %}
+                                                            {{ form.dest_coin(class="form-control typeahead", type="text", placeholder="Coin", autocomplete="off", spellcheck="false") }}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <!-- Destination location -->
+                                                <div class="col-6 pr-1 pr-sm-2">
+                                                    <div class="form-group mb-0">
+                                                        {% if form.dest_loc.errors %}
+                                                            {{ form.dest_loc(class="form-control is-invalid", type="text", autocomplete="off", spellcheck="false") }}
+                                                            <div class="invalid-feedback">
+                                                                {% for error in form.dest_loc.errors %}
+                                                                    <span>{{ error }}</span>
+                                                                {% endfor %}
+                                                            </div>
+                                                        {% else %}
+                                                            {{ form.dest_loc(class="form-control", type="text", placeholder="Destination", autocomplete="off", spellcheck="false") }}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!-- </fieldset> -->
+                                        <div class="col-4 col-lg-2 d-flex justify-content-center align-items-start" style="margin-top: 1.7rem">
+                                            <div class="form-group mb-0">
+                                                {{ form.search_submit(id="submit-btn", class="btn btn-deep-orange m-0") }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+                            <!-- Connecting Options -->
+                            <div class="row no-gutters mt-1 mt-lg-2">
+                                <div class="col d-flex justify-content-start">
+                                    <a class="text-white" data-toggle="collapse" href="#options-collapse" role="button" aria-expanded="false" aria-controls="options-collapse"><span>Search options<i class="fa fa-chevron-down px-2" aria-hidden="true"></i></span></a>
+                                </div>
+                            </div>
+                            <div id="options-collapse" class="collapse my-2">
+                                <div id="options" class="row pt-2">
+                                    <div class="col">
+                                        <!-- Connections radio button -->
+                                        <div class="row">
+                                            <div class="col-auto pr-0">
+                                                <p class="font-weight-bold fixed-min-width">Connections</p>
+                                            </div>
+                                            <div class="col pl-0 d-flex justify-content-start">
+                                                <div class="form-group">
+                                                    {% for subfield in form.connection_type %}
+                                                        <div class="custom-control custom-radio custom-control-inline">
+                                                            <td>{{ subfield(class="custom-control-input") }}</td>
+                                                            <td>{{ subfield.label(class="custom-control-label") }}</td>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Default fee option -->
+                                        <div class="row">
+                                            <div class="col-auto pr-0">
+                                                <p class="font-weight-bold fixed-min-width">Default fee</p>
+                                            </div>
+                                            <div class="col pl-0 d-flex justify-content-start">
+                                                <div class="form-group">
+                                                    <div class="row no-gutters">
+                                                        {% for subfield in form.default_fee %}
+                                                            <div class="col-12 col-sm-auto">
+                                                                <div class="custom-control custom-radio custom-control-inline">
+                                                                    <td>{{ subfield(class="custom-control-input") }}</td>
+                                                                    <td>{{ subfield.label(class="custom-control-label") }}</td>
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Exchanges checkboxes -->
+                                        <div id="exchange-options"class="row">
+                                            <div class="col-auto pt-1 pr-0">
+                                                <p class="font-weight-bold fixed-min-width">Exchanges</p>
+                                            </div>
+                                            <!-- Real form field. Not displayed, filled with JS -->
+                                            <div class="form-group d-none">
+                                                {{ form.exchanges(size=40) }}
+                                            </div>
+                                            <!-- Exchanges checkboxes. Used to populate form -->
+                                            <div class="col pl-0">
+                                                <div class="row no-gutters">
+                                                    <div class="col">
+                                                        <button id="select-all-btn" type="button" class="btn btn-dark-grey ml-0 px-2 py-1">Select All</button>
+                                                        <button id="deselect-all-btn" type="button" class="btn btn-dark-grey px-2 py-1">Clear All</button>
+                                                    </div>
+                                                </div>
+                                                <div class="row no-gutters">
+                                                    {% for exch in exchanges %}
+                                                        <div class="col-4 col-md-3 col-lg-2">
+                                                            <div class="custom-control custom-checkbox">
+                                                                {% if exch in user_exchanges %}
+                                                                    <input type="checkbox" class="custom-control-input" id="exch-{{ exch }}" checked>
+                                                                {% else %}
+                                                                    <input type="checkbox" class="custom-control-input" id="exch-{{ exch }}">
+                                                                {% endif %}
+                                                                <label class="custom-control-label" for="exch-{{ exch }}">{{ exch }}</label>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Fees options -->
+                                <div class="row no-gutters mt-2 mt-lg-3">
+                                    <div class="col d-flex justify-content-start">
+                                        <a class="text-white" data-toggle="collapse" href="#fee-options-collapse" role="button" aria-expanded="false" aria-controls="fee-options-collapse"><span>Fee settings<i class="fa fa-chevron-down px-2" aria-hidden="true"></i></span></a>
+                                    </div>
+                                </div>
+                                <div id="fee-options-collapse" class="collapse my-2">
+                                    <div id="fee-options" class="row pt-2">
+                                        <div class="col">
+                                            <!-- CEP promos -->
+                                            <div class="row">
+                                                <div class="col-auto pr-0">
+                                                    <p class="font-weight-bold fixed-min-width">CEP Promos</p>
+                                                </div>
+                                                <div class="col pl-0 d-flex justify-content-start">
+                                                    <div class="form-group">
+                                                        <div class="row no-gutters">
+                                                            {% for subfield in form.cep_promos %}
+                                                                <div class="col-12 col-sm-auto">
+                                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                                        <td>{{ subfield(class="custom-control-input") }}</td>
+                                                                        <td>{{ subfield.label(class="custom-control-label") }}</td>
+                                                                    </div>
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Binance fees option -->
+                                            <div class="row">
+                                                <div class="col-auto pr-0">
+                                                    <p class="font-weight-bold fixed-min-width">Binance fees</p>
+                                                </div>
+                                                <div class="col pl-0 d-flex justify-content-start">
+                                                    <div class="form-group">
+                                                        <div class="row no-gutters">
+                                                            {% for subfield in form.binance_fee %}
+                                                                <div class="col-12 col-sm-auto">
+                                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                                        <td>{{ subfield(class="custom-control-input") }}</td>
+                                                                        <td>{{ subfield.label(class="custom-control-label") }}</td>
+                                                                    </div>
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>

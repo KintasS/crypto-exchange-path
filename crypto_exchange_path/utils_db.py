@@ -43,43 +43,6 @@ def get_coin_by_price_id(price_id):
     return coin
 
 
-def round_amount(amount, coin):
-    """Returns a rounded amount depending on the valuation of the coin.
-    """
-    if amount is None:
-        return "-"
-    if coin in Params.FIAT_COINS:
-        try:
-            decs = Params.STEPS_DECIMAL_POS[coin]
-            return round(amount, decs)
-        except Exception as e:
-            return amount
-    else:
-        price = Price.query.filter_by(coin=coin, base_coin='EUR').first()
-        if price:
-            price = price.price
-            if price > 10000:
-                decs = 8
-            elif price > 1000:
-                decs = 7
-            elif price > 100:
-                decs = 6
-            elif price > 10:
-                decs = 5
-            elif price > 1:
-                decs = 4
-            elif price > 0.1:
-                decs = 3
-            elif price > 0.01:
-                decs = 2
-            elif price > 0.001:
-                decs = 1
-            else:
-                decs = 0
-            return "{:20,.{}f}".format(round(amount, decs), decs)
-        return amount
-
-
 def get_exchange(id):
     """Returns the exchange object with the given 'name'.
     """
@@ -161,6 +124,7 @@ def get_exch_by_pair(coin, base_coin, logger):
 
 def calc_withdraw_fee(exchange, coin, amt):
     """Gets the withdraw fee of 'exchange'/'coin'.
+    Returns: [<fee_amt>, <withdraw_details>]
     """
     withdraw_fee = Fee.query.filter_by(exchange=exchange,
                                        action="Withdrawal",
@@ -168,15 +132,22 @@ def calc_withdraw_fee(exchange, coin, amt):
     if withdraw_fee:
         # If Type == 'Absolute', just return value
         if withdraw_fee.type == 'Absolute':
-            return withdraw_fee.amount
+            lit = "{} {} (fixed amount)".format(withdraw_fee.amount,
+                                                coin)
+            return [withdraw_fee.amount, lit]
         # If Type == 'Percentage', calc fee and check minimum quantity
         elif withdraw_fee.type == 'Percentage':
             wd_fee = withdraw_fee.amount / 100 * amt
             if withdraw_fee.min_amount:
-                return max(wd_fee, withdraw_fee.min_amount)
+                lit = "{}% (minimum fee of {} {})"\
+                    .format(withdraw_fee.amount,
+                            withdraw_fee.min_amount,
+                            coin)
+                return [max(wd_fee, withdraw_fee.min_amount), lit]
             else:
-                return wd_fee
-    return None
+                lit = "{}%".format(withdraw_fee.amount)
+                return [wd_fee, lit]
+    return [None, None]
 
 
 def get_exch_by_coin(coin):
@@ -186,6 +157,18 @@ def get_exch_by_coin(coin):
                       .filter((TradePair.coin == coin) |
                               (TradePair.base_coin == coin))\
                       .distinct(TradePair.exchange).all()
+    if exchs:
+        return set([item[0] for item in exchs])
+    return set()
+
+
+def get_exch_by_withdrawal_coin(coin):
+    """Gets the exchanges that allows withdrawal of a given coin.
+    """
+    exchs = db.session.query(Fee.exchange)\
+                      .filter((Fee.action == 'Withdrawal') &
+                              (Fee.scope == coin))\
+                      .distinct(Fee.exchange).all()
     if exchs:
         return set([item[0] for item in exchs])
     return set()

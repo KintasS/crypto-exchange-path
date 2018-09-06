@@ -1,7 +1,7 @@
 from secrets import token_hex
-from crypto_exchange_path.utils_db import (calc_withdraw_fee, fx_exchange,
-                                           round_amount)
-from crypto_exchange_path.utils import num_2_str
+from crypto_exchange_path.utils_db import calc_withdraw_fee, fx_exchange
+from crypto_exchange_path.utils import (num_2_str, round_amount,
+                                        round_amount_by_price)
 
 
 class Path:
@@ -18,7 +18,6 @@ class Path:
         self.currency = currency
         self.logger = logger
         self.total_fees = self.calc_fees(currency, logger)
-        # self.steps = self.calc_steps(logger)
 
     def __repr__(self):
         return "Result(Type='{}', Origin='{}', Hop_1='{}', Hop_2='{}', "\
@@ -129,12 +128,29 @@ class Location:
         self.exchange = exchange
         self.amount = amount
         self.coin = coin
-        self.withdraw_fee = calc_withdraw_fee(exchange.id, coin.id, amount)
+        self.withdraw_fee = None
+        self.withdraw_details = None
         self.amount_str = self.calc_amt_str()
+        self.store_withdraw_fee(exchange.id, coin.id, amount)
 
     def calc_amt_str(self):
-        amount = round_amount(self.amount, self.coin.id)
+        amount = round_amount_by_price(self.amount, self.coin.id)
         return "{} {}".format(amount, self.coin.id)
+
+    def store_withdraw_fee(self, exchange, coin, amount):
+        withdraw_fee = calc_withdraw_fee(exchange, coin, amount)
+        self.withdraw_fee = withdraw_fee[0]
+        self.withdraw_details = self.calc_withdraw_details(withdraw_fee)
+
+    def calc_withdraw_details(self, withdraw_lit):
+        lit = None
+        if withdraw_lit:
+            lit = withdraw_lit[1]
+        literal = ("{} withdrawal fee for {}: {}")\
+            .format(self.exchange.name,
+                    self.coin.symbol,
+                    lit)
+        return literal
 
     def __repr__(self):
         return "Location({}: {} [{} {}]').".format(self.type,
@@ -145,17 +161,43 @@ class Location:
 
 class Hop:
 
-    def __init__(self, exchange, trade, volume, withdraw_fee):
+    def __init__(self, exchange, trade, withdraw_fee):
         self.exchange = exchange
         self.trade = trade
-        self.volume = volume
-        self.withdraw_fee = withdraw_fee
+        self.withdraw_fee = self.store_withdraw_fee(withdraw_fee)
+        self.trade_details = self.calc_trade_details()
+        self.withdraw_details = self.calc_withdraw_details(withdraw_fee)
+
+    def store_withdraw_fee(self, withdraw_fee):
+        if withdraw_fee and withdraw_fee[0] is not None:
+            return withdraw_fee[0]
+        else:
+            return None
+
+    def calc_trade_details(self):
+        rate = round_amount(self.trade.buy_amt / self.trade.sell_amt)
+        literal = ("{}/{} rate: {}. {} trading fee: {}")\
+            .format(self.trade.buy_coin.symbol,
+                    self.trade.sell_coin.symbol,
+                    rate,
+                    self.exchange.name,
+                    self.trade.fee_literal)
+        return literal
+
+    def calc_withdraw_details(self, withdraw_lit):
+        lit = None
+        if withdraw_lit:
+            lit = withdraw_lit[1]
+        literal = ("{} withdrawal fee for {}: {}")\
+            .format(self.exchange.name,
+                    self.trade.buy_coin.symbol,
+                    lit)
+        return literal
 
     def __repr__(self):
-        return "Hop([{}] {}. Vol={}. Withdraw fee='{}')."\
+        return "Hop([{}] {}. Withdraw fee='{}')."\
             .format(self.exchange.id,
                     self.trade,
-                    self.volume,
                     self.withdraw_fee)
 
 
@@ -163,13 +205,14 @@ class Trade:
 
     def __init__(self, sell_amt, sell_coin,
                  buy_amt, buy_coin,
-                 fee_amt, fee_coin):
+                 fee_amt, fee_coin, fee_literal):
         self.sell_amt = sell_amt
         self.sell_coin = sell_coin
         self.buy_amt = buy_amt
         self.buy_coin = buy_coin
         self.fee_amt = fee_amt
         self.fee_coin = fee_coin
+        self.fee_literal = fee_literal
         self.sell_amt_str = self.calc_amt_str(self.sell_amt,
                                               self.sell_coin.id)
         self.buy_amt_str = self.calc_amt_str(self.buy_amt,
@@ -178,7 +221,7 @@ class Trade:
                                              self.fee_coin.id)
 
     def calc_amt_str(self, amt, coin):
-        amount = round_amount(amt, coin)
+        amount = round_amount_by_price(amt, coin)
         return "{} {}".format(amount, coin)
 
     def __repr__(self):

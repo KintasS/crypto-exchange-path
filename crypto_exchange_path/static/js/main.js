@@ -137,8 +137,6 @@ $(document).ready(function() {
     ///////////////////////////////////////////////////////////////////////////
 
 
-    console.log("control 5")
-
     // Show URL on Mouse Hover
     // Open in new window
     $(".block-link").click(function() {
@@ -157,6 +155,19 @@ $(document).ready(function() {
         return false;
     });
 
+
+    ///////////////////////////////////////////////////////////////////////////
+    /////   AUTO-SEARCH
+    ///////////////////////////////////////////////////////////////////////////
+
+    // If auto_search='True', run search automatically
+    var cond = $('#results').attr('data-auto-search')
+    console.log("llego 3");
+    console.log(cond);
+    if (cond == "True") {
+        console.log("entro");
+        $('#submit-btn').trigger("click");
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     /////   OTHER ACTIONS

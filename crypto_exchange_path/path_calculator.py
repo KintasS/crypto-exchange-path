@@ -64,12 +64,12 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
         # Calc destination amount
         dest_amt = trade_1.buy_amt
         # Calc Withdraw fee and modify destination amount
-        withdraw_fee_1 = None
+        withdraw_fee_1 = []
         if exch != dest_loc.id:
             withdraw_fee_1 = calc_withdraw_fee(exch, trade_1.buy_coin.id,
                                                trade_1.buy_amt)
-            if withdraw_fee_1 is not None:
-                dest_amt -= withdraw_fee_1
+            if withdraw_fee_1 and withdraw_fee_1[0] is not None:
+                dest_amt -= withdraw_fee_1[0]
             else:
                 logger.warning("Main: Withdraw Fee not found for {} [{}]. "
                                "Path skipped.".format(exch,
@@ -78,7 +78,6 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
         # Generate Hop & destination location to finish 'Path'
         hop_1 = Hop(get_exchange(exch),
                     trade_1,
-                    -1,  # BORRAR VOLUMEN
                     withdraw_fee_1)
         destination = Location("Destination", dest_loc, dest_amt, dest_coin)
         # Generate 'Path' and add to 'path_list'
@@ -178,7 +177,6 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
         # Generate output object for 'Hop 1'
         hop_1 = Hop(exchange.exchange,
                     trade_1,
-                    coinZ.liq_vs_coin,
                     None)
         # CALCULATE OUTPUTS FOR 'Hop 2'
         trade_2 = exchange.perform_trade(trade_1.buy_amt,
@@ -194,12 +192,12 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
         # Calc destination amount
         dest_amt = trade_2.buy_amt
         # Calc Withdraw fee and modify destination amount
-        withdraw_fee_2 = None
+        withdraw_fee_2 = []
         if exch != dest_loc.id:
             withdraw_fee_2 = calc_withdraw_fee(exch, trade_2.buy_coin.id,
                                                trade_2.buy_amt)
-            if withdraw_fee_2 is not None:
-                dest_amt -= withdraw_fee_2
+            if withdraw_fee_2 and withdraw_fee_2[0] is not None:
+                dest_amt -= withdraw_fee_2[0]
             else:
                 logger.warning("Main: Withdraw Fee not found for {} [{}]. "
                                "Path skipped.".format(exch,
@@ -208,7 +206,6 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
         # Generate Hop & destination location to finish 'Path'
         hop_2 = Hop(exchange.exchange,
                     trade_2,
-                    coinZ.liq_vs_base_coin,
                     withdraw_fee_2)
         destination = Location("Destination", dest_loc, dest_amt, dest_coin)
         # Generate 'Path' and add to 'path_list'
@@ -290,8 +287,8 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                         withdraw_fee_1 = calc_withdraw_fee(exch_A.exchange.id,
                                                            trade_1.buy_coin.id,
                                                            trade_1.buy_amt)
-                        if withdraw_fee_1 is not None:
-                            in_amt_2 -= withdraw_fee_1
+                        if withdraw_fee_1 and withdraw_fee_1[0] is not None:
+                            in_amt_2 -= withdraw_fee_1[0]
                         else:
                             logger.warning("Main: Withdraw Fee not found for"
                                            " {} [{}]. Path skipped."
@@ -301,7 +298,6 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                         # Generate output object for 'Hop 1'
                         hop_1 = Hop(exch_A.exchange,
                                     trade_1,
-                                    coinZ_A[1],
                                     withdraw_fee_1)
                         # CALCULATE OUTPUTS FOR 'Hop 2'
                         trade_2 = exch_B.perform_trade(in_amt_2,
@@ -318,15 +314,16 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                         # Calc destination amount
                         dest_amt = trade_2.buy_amt
                         # Calc Withdraw fee and modify destination amount
-                        withdraw_fee_2 = None
+                        withdraw_fee_2 = []
                         if exch_B.exchange.id != dest_loc.id:
                             withdraw_fee_2 = calc_withdraw_fee(exch_B.exchange
                                                                .id,
                                                                trade_2
                                                                .buy_coin.id,
                                                                trade_2.buy_amt)
-                            if withdraw_fee_2 is not None:
-                                dest_amt -= withdraw_fee_2
+                            if (withdraw_fee_2 and
+                                    withdraw_fee_2[0] is not None):
+                                dest_amt -= withdraw_fee_2[0]
                             else:
                                 logger.warning("Main: Withdraw Fee not found "
                                                "for {} [{}]. Path skipped."
@@ -336,7 +333,6 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                         # Generate Hop & destination location to finish 'Path'
                         hop_2 = Hop(exch_B.exchange,
                                     trade_2,
-                                    coinZ_A[1],
                                     withdraw_fee_2)
                         destination = Location("Destination",
                                                dest_loc,
