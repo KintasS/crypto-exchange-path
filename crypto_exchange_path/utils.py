@@ -55,6 +55,25 @@ def error_notifier(error_type, error_traceback, mail, logger):
         logger.error("error_notifier: {}".format(traceback.format_exc()))
 
 
+def feedback_notifier(topic, subject, detail, mail, logger):
+    # Send email
+    try:
+        msg = Message('App FEEDBACK - {}'.format(topic),
+                      sender=Params.SENDER_EMAIL,
+                      recipients=[Params.ERROR_RECIPIENT_EMAIL])
+        msg.body = f'''Feedback recibido:
+
+        Topic: {topic}
+        Subject: {subject}
+
+        Detail: {detail}
+
+        '''
+        mail.send(msg)
+    except Exception as e:
+        logger.error("feedback_notifier: {}".format(traceback.format_exc()))
+
+
 def generate_file_path(relative_path, keyword):
     """Creates a filename that contains the provided 'keyword', plus the
     current time and some random characters.

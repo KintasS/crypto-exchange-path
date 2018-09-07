@@ -7,7 +7,8 @@ from crypto_exchange_path import app, db, mail
 from crypto_exchange_path.config import Params
 from crypto_exchange_path.forms import SearchForm, FeedbackForm
 from crypto_exchange_path.path_calculator import calc_paths
-from crypto_exchange_path.utils import set_logger, error_notifier
+from crypto_exchange_path.utils import (set_logger, error_notifier,
+                                        feedback_notifier)
 from crypto_exchange_path.utils_db import (get_exchange, get_exchanges,
                                            get_coin_by_longname, get_coin,
                                            fx_exchange)
@@ -27,6 +28,7 @@ def manage_feedback_form(feedback_form):
                         topic=topic,
                         subject=subject,
                         detail=detail)
+    feedback_notifier(topic, subject, detail, mail, logger)
     db.session.add(feedback)
     db.session.commit()
 
