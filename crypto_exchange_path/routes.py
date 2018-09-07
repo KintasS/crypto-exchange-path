@@ -63,7 +63,7 @@ def exchanges(session_id=None, currency=None):
             return redirect(url_for('exchanges'))
     return render_template('exchanges.html', form=input_form, curr=curr,
                            exchanges=exchanges, user_exchanges=user_exchanges,
-                           session_id=session_id,
+                           session_id=session_id, title='Exchanges',
                            feedback_form=feedback_form,
                            open_feedback_modal=open_feedback_modal)
 
@@ -185,7 +185,7 @@ def exch_results(session_id=None, currency=None,
                            exchanges=exchanges, user_exchanges=user_exchanges,
                            paths=sorted_paths, session_id=session_id,
                            path_results=path_results, auto_search=auto_search,
-                           feedback_form=feedback_form,
+                           feedback_form=feedback_form, title='Exchanges',
                            open_feedback_modal=open_feedback_modal)
 
 
