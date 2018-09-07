@@ -174,8 +174,11 @@ def exch_results(session_id=None, orig_coin=None, dest_coin=None):
 
 @app.route("/update/slfjh23hk353mh4567df")
 def update_prcs():
-    update_prices(logger)
-    return "ok"
+    try:
+        update_prices(logger)
+        return "ok"
+    except Exception as e:
+        return traceback.format_exc()
 
 
 @app.route("/landing")

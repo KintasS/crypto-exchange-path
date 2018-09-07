@@ -1,6 +1,7 @@
 import os
 import logging
 import datetime
+import traceback
 from secrets import token_hex
 from PIL import Image
 from crypto_exchange_path import app
@@ -40,15 +41,18 @@ def error_notifier(error_type, error_traceback, mail, logger):
     # Log error
     logger.error("Unexpected error: {}".format(error_traceback))
     # Send email
-    msg = Message('App ERROR - {}'.format(error_type),
-                  sender=Params.SENDER_EMAIL,
-                  recipients=[Params.ERROR_RECIPIENT_EMAIL])
-    msg.body = f'''Error en la aplicación. Traza:
+    try:
+        msg = Message('App ERROR - {}'.format(error_type),
+                      sender=Params.SENDER_EMAIL,
+                      recipients=[Params.ERROR_RECIPIENT_EMAIL])
+        msg.body = f'''Error en la aplicación. Traza:
 
-    {error_traceback}
+        {error_traceback}
 
-'''
-    mail.send(msg)
+        '''
+        mail.send(msg)
+    except Exception as e:
+        logger.error("error_notifier: {}".format(traceback.format_exc()))
 
 
 def generate_file_path(relative_path, keyword):
