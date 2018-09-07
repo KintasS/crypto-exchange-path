@@ -32,16 +32,23 @@ def manage_feedback_form(feedback_form):
 
 
 @app.route("/", methods=['GET', 'POST'])
-@app.route("/home", methods=['GET', 'POST'])
-@app.route("/home/<session_id>", methods=['GET', 'POST'])
-def home(session_id=None):
+@app.route("/exchanges/<session_id>&currency=<currency>",
+           methods=['GET', 'POST'])
+@app.route("/exchanges", methods=['GET', 'POST'])
+@app.route("/exchanges/<session_id>", methods=['GET', 'POST'])
+def exchanges(session_id=None, currency=None):
     if not session_id or len(session_id) != 32:
         session_id = token_hex(16)
     input_form = SearchForm()
+    # If 'currency' was provided, use it
+    if currency:
+        curr = currency
+        input_form.currency.data = currency
+    else:
+        curr = Params.DEFAULT_CURRENCY
     feedback_form = FeedbackForm()
     exchanges = get_exchanges('Exchange')
     user_exchanges = exchanges
-    curr = Params.DEFAULT_CURRENCY
     open_feedback_modal = False
     # Actions if Feedback Form was filled
     if feedback_form.feedback_submit.data:
@@ -51,22 +58,31 @@ def home(session_id=None):
             # If form was properly filled, close modal again
             open_feedback_modal = False
             manage_feedback_form(feedback_form)
-            return redirect(url_for('home'))
-    return render_template('home.html', form=input_form, curr=curr,
+            return redirect(url_for('exchanges'))
+    return render_template('exchanges.html', form=input_form, curr=curr,
                            exchanges=exchanges, user_exchanges=user_exchanges,
                            session_id=session_id,
                            feedback_form=feedback_form,
                            open_feedback_modal=open_feedback_modal)
 
 
-@app.route("/exchanges/results/<session_id>/<orig_coin>/<dest_coin>",
+@app.route("/exchanges/results/<session_id>&currency=<currency>/"
+           "<orig_coin>&<dest_coin>", methods=['GET', 'POST'])
+@app.route("/exchanges/results/<session_id>&currency=<currency>",
            methods=['GET', 'POST'])
 @app.route("/exchanges/results/<session_id>", methods=['GET', 'POST'])
-def exch_results(session_id=None, orig_coin=None, dest_coin=None):
+def exch_results(session_id=None, currency=None,
+                 orig_coin=None, dest_coin=None):
     if not session_id or len(session_id) != 32:
         session_id = token_hex(16)
     sorted_paths = []
     input_form = SearchForm()
+    # If 'currency' was provided, use it
+    if currency:
+        curr = currency
+        input_form.currency.data = currency
+    else:
+        curr = Params.DEFAULT_CURRENCY
     # If 'orig_coin' and 'dest_coin' where provided, fill form
     auto_search = False
     if orig_coin and dest_coin:
@@ -81,7 +97,6 @@ def exch_results(session_id=None, orig_coin=None, dest_coin=None):
     feedback_form = FeedbackForm()
     exchanges = get_exchanges('Exchange')
     user_exchanges = exchanges
-    curr = Params.DEFAULT_CURRENCY
     path_results = None
     open_feedback_modal = False
     # Actions if Search Form was filled

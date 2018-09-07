@@ -126,8 +126,13 @@ $(document).ready(function() {
             $('#results').fadeOut(200);
             // Change selected option in input form
             var $option = $('#currency option[value=' + selectedCurrency + ']');
-            console.log("llego111")
             $option.prop('selected', true);
+            // Change currency in navbar links & other site navigation links
+            $('.curr-change').each(function() {
+                oldLink = $(this).attr('href');
+                newLink = oldLink.replace('currency%3D' + currentCurrency, 'currency%3D' + selectedCurrency)
+                $(this).attr('href', newLink);
+            });
         }
     });
 
@@ -162,10 +167,7 @@ $(document).ready(function() {
 
     // If auto_search='True', run search automatically
     var cond = $('#results').attr('data-auto-search')
-    console.log("llego 3");
-    console.log(cond);
     if (cond == "True") {
-        console.log("entro");
         $('#submit-btn').trigger("click");
     }
 

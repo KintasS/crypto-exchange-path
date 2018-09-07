@@ -20,11 +20,13 @@ class SearchForm(FlaskForm):
                            validators=[DataRequired()],
                            default='USD')
     orig_loc = SelectField('Origin location',
-                           choices=get_exchange_choices(['Auxiliar', 'Exchange']))
+                           choices=get_exchange_choices(['Auxiliar',
+                                                         'Exchange']))
     orig_coin = StringField('Origin coin')
     orig_amt = StringField('Origin amount')
     dest_loc = SelectField('Destination location',
-                           choices=get_exchange_choices(['Auxiliar', 'Exchange']),
+                           choices=get_exchange_choices(['Auxiliar',
+                                                         'Exchange']),
                            validators=[DataRequired()])
     dest_coin = StringField('Destination coin')
     connection_type = RadioField('Connections',
@@ -33,7 +35,8 @@ class SearchForm(FlaskForm):
     exchanges = SelectMultipleField('Exchanges',
                                     choices=get_exchange_choices(['Exchange']),
                                     default=[exch[0] for exch in
-                                             get_exchange_choices(['Exchange'])])
+                                             get_exchange_choices([
+                                                 'Exchange'])])
     cep_promos = RadioField('CEP promos',
                             choices=Params.CEP_CHOICES,
                             default='(CEP)')

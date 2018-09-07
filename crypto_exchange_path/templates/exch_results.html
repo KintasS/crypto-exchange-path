@@ -200,11 +200,11 @@
                                                     <span>Transfer your <b>{{ path.origin.coin.symbol }}</b> from <b>{{ path.origin.exchange.name }}</b> to <b>{{ path.hop_1.exchange.name }}</b>.</span>
                                                 {% endif %}
                                                 {% if (path.origin.exchange.id == 'Wallet') or (path.origin.exchange.id == 'Bank') %}
-                                                    <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-placement="top" title="Specific withdrawal fees will apply depending on the wallet or bank you use. Please, consider those fees when planning the operation.">
+                                                    <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="Specific withdrawal fees will apply depending on the wallet or bank you use. Please, consider those fees when planning the operation.">
                                                         <i class="fa fa-info-circle" aria-hidden="true"></i>
                                                     </a>
                                                 {% else %}
-                                                    <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-placement="top" title="{{ path.origin.withdraw_details }}">
+                                                    <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.origin.withdraw_details }}">
                                                         <i class="fa fa-info-circle" aria-hidden="true"></i>
                                                     </a>
                                                 {% endif %}
@@ -263,7 +263,7 @@
                                         </div>
                                         <div class="col-3 pl-2">
                                             <span>In <b>{{ path.hop_1.exchange.name }}</b>, trade your <b>{{ path.hop_1.trade.sell_coin.symbol }}</b> for <b>{{ path.hop_1.trade.buy_coin.symbol }}</b>.</span>
-                                            <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-placement="top" title="{{ path.hop_1.trade_details }}">
+                                            <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_1.trade_details }}">
                                                 <i class="fa fa-info-circle" aria-hidden="true"></i>
                                             </a>
                                         </div>
@@ -332,7 +332,7 @@
                                             </div>
                                             <div class="col-3 pl-2">
                                                 <span>Transfer your <b>{{ path.hop_1.trade.buy_coin.symbol }}</b> from <b>{{ path.hop_1.exchange.name }}</b> to <b>{{ step2b_dest_name }}</b>.</span>
-                                                <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-placement="top" title="{{ path.hop_1.withdraw_details }}">
+                                                <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_1.withdraw_details }}">
                                                     <i class="fa fa-info-circle" aria-hidden="true"></i>
                                                 </a>
                                             </div>
@@ -389,7 +389,7 @@
                                             </div>
                                             <div class="col-3 pl-2">
                                                 <span>In <b>{{ path.hop_2.exchange.name }}</b>, trade your <b>{{ path.hop_2.trade.sell_coin.symbol }}</b> for <b>{{ path.hop_2.trade.buy_coin.symbol }}</b>.</span>
-                                                <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-placement="top" title="{{ path.hop_2.trade_details }}">
+                                                <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_2.trade_details }}">
                                                     <i class="fa fa-info-circle" aria-hidden="true"></i>
                                                 </a>
                                             </div>
@@ -451,7 +451,7 @@
                                                 {% else %}
                                                     <span>Transfer your <b>{{ path.hop_2.trade.buy_coin.symbol }}</b> from <b>{{ path.hop_2.exchange.name }}</b> to <b>{{ path.destination.exchange.name }}</b>.</span>
                                                 {% endif %}
-                                                <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-placement="top" title="{{ path.hop_2.withdraw_details }}">
+                                                <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_2.withdraw_details }}">
                                                     <i class="fa fa-info-circle" aria-hidden="true"></i>
                                                 </a>
                                             </div>

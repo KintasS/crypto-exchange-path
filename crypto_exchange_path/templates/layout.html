@@ -39,16 +39,16 @@
                                 <span class="navbar-toggler-icon"></span>
                               </button>
                     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                        <a class="navbar-brand font-weight-bold" href="{{ url_for('home', session_id=session_id) }}">Crypto Exchange Path<span class="badge badge-light ml-2">Beta</span></a>
+                        <a class="navbar-brand font-weight-bold curr-change" href="{{ url_for('exchanges', session_id=session_id, currency=curr) }}">Crypto Exchange Path<span class="badge badge-light ml-2">Beta</span></a>
                         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link active" href="{{ url_for('home', session_id=session_id) }}">Home</a>
+                                <a class="nav-link active curr-change" href="{{ url_for('exchanges', session_id=session_id, currency=curr) }}">Exchanges</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link no-link-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Comming soon">Exchanges</a>
+                                <a class="nav-link no-link-tooltip" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="<em>Comming soon</em>">Wallets</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link no-link-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Comming soon">Wallets</a>
+                                <a class="nav-link no-link-tooltip" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="<em>Comming soon</em>">Cloud mining</a>
                             </li>
                         </ul>
                         <!-- Navbar Right Side -->
