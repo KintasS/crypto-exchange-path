@@ -140,7 +140,7 @@
                             <span aria-hidden="true" class="white-text">&times;</span>
                         </button>
                     </div>
-                    <form id="feedback-form" method="POST" action="">
+                    <form id="feedback-form" method="POST" action="{{ url_for('exchanges', session_id=session_id, currency=curr) }}">
                         {{ feedback_form.hidden_tag() }}
                         <div class="modal-body mx-0 mx-sm-3">
                             <h2 class="font-weight-bold text-center mt-2 mb-4" style="color: #212529;">We are listening</h2>
