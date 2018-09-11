@@ -123,7 +123,7 @@ class TradePair(db.Model):
 
 class QueryRegister(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    session_id = db.Column(db.String(50), nullable=False)
+    session_id = db.Column(db.String(100), nullable=False)
     orig_amt = db.Column(db.Float)
     orig_coin = db.Column(db.String(10))
     orig_loc = db.Column(db.String(30))

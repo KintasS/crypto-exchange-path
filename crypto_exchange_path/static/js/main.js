@@ -128,13 +128,14 @@ $(document).ready(function() {
             var $option = $('#currency option[value=' + selectedCurrency + ']');
             $option.prop('selected', true);
             // Change currency in navbar links & other site navigation links
-            $('.curr-change').each(function() {
-                oldLink = $(this).attr('href');
-                newLink = oldLink.replace('currency%3D' + currentCurrency, 'currency%3D' + selectedCurrency)
-                $(this).attr('href', newLink);
-            });
+            // $('.curr-change').each(function() {
+            //     oldLink = $(this).attr('href');
+            //     newLink = oldLink.replace('currency%3D' + currentCurrency, 'currency%3D' + selectedCurrency)
+            //     $(this).attr('href', newLink);
+            // });
         }
     });
+    console.log(1)
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -170,6 +171,20 @@ $(document).ready(function() {
     if (cond == "True") {
         $('#submit-btn').trigger("click");
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    /////   COLLAPSE-ANIMATIONS (CHEVRON ROTATION)
+    ///////////////////////////////////////////////////////////////////////////
+
+    // Rotate chevron image when collapse button is clicked
+    // Avoid rotation when content is collpsing!
+    $(".collapse-animation").click(function() {
+        var $collpaseElement = $($(this).attr("href"));
+        if (!$collpaseElement.hasClass("collapsing")) {
+            $(this).find("i:first").toggleClass("rotateimg180");
+        }
+    });
+
 
     ///////////////////////////////////////////////////////////////////////////
     /////   OTHER ACTIONS

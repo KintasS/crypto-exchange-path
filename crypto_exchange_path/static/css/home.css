@@ -186,18 +186,9 @@
     }
 }
 
-body {
-    /* background: #ffffff !important; */
-    /* background: url("/static/img/background/coins_1920_1280.jpg")no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover; */
-}
-
-a, a.disabled:hover, a:disabled:hover {
+/* a, a.disabled:hover, a:disabled:hover {
     color: #5c5c5c;
-}
+} */
 
 .light-grey-color {
     color: #DCDCDC;
@@ -209,6 +200,14 @@ a, a.disabled:hover, a:disabled:hover {
 
 .btn-dark-grey {
     background-color: #525050;
+}
+
+.rotateimg180 {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
 }
 
 /* /////////////////////////////////////////////////////////
@@ -224,30 +223,17 @@ a, a.disabled:hover, a:disabled:hover {
     color: white;
 }
 
-/* #search-canvas {
-    background-color: #212121;
-    color: white;
-} */
-
 #search-form .form-control {
     border-radius: .1rem;
     /* border-color: #212121; */
     /* padding: .5rem 1rem; */
 }
 
-/* #search-form option {
-    padding: .5rem 1rem;
-} */
-
 #submit-btn {
     font-size: 0.8rem;
     font-weight: bold;
     padding: .7rem 1.3rem;
 }
-
-/* #search-canvas select.form-control:not([size]):not([multiple]) {
-    height: calc(2.25rem + 1.5px);
-} */
 
 /* Typeahead results */
 
@@ -349,6 +335,11 @@ a, a.disabled:hover, a:disabled:hover {
     color: #404040;
     text-decoration: underline;
     text-decoration-color: #c1c1c1;
+}
+
+#results a, a.disabled:hover, a:disabled:hover {
+    color: #3f51b5;
+    font-weight: 500;
 }
 
 /* Collapse font */

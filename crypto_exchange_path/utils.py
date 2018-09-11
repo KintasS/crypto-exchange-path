@@ -160,28 +160,73 @@ def generate_paths_file(paths, currency, logger):
             paths_file.write(line)
 
 
-def num_2_str(number, currency, decs=None):
-    """Formats 'number' so that it has 'decs' number of decimal places,
-    and the symbol corresponding to 'currency'
+def num_2_str(number, currency):
+    """Formats 'number' so that it has the appropriate number of decs
+    depending on the amount of 'number'
     """
     try:
         symbol = Params.CURRENCY_SYMBOLS[currency]
     except Exception as e:
         symbol = '?'
-    if decs is None:
-        try:
-            decs = Params.TOTAL_DECIMAL_POS[currency]
-        except Exception as e:
-            decs = 2
+    decs = 0
+    format = "in_units"
     try:
-        if currency == 'USD':
-            return "{}{:20,.{}f}".format(symbol, number, decs)
+        if number < 100:
+            decs = 2
+        elif number < 1000:
+            decs = 1
+        elif number < 10000:
+            decs = 0
+        elif number < 100000:
+            number = number / 1000
+            decs = 2
+            format = "in_thousands"
+        elif number < 1000000:
+            number = number / 1000
+            decs = 1
+            format = "in_thousands"
         else:
-            return "{:20,.{}f} {}".format(number, decs, symbol)
+            number = number / 1000
+            decs = 0
+            format = "in_thousands"
+        if currency == 'USD':
+            if format == "in_units":
+                return "{}{:20,.{}f}".format(symbol, number, decs)
+            else:
+                return "{}{:20,.{}f}k".format(symbol, number, decs)
+        else:
+            if format == "in_units":
+                return "{:20,.{}f} {}".format(number, decs, symbol)
+            else:
+                return "{:20,.{}f} k{}".format(number, decs, symbol)
     except ValueError as e:
         return number
     except TypeError as e:
         return number
+
+
+# def num_2_str(number, currency, decs=None):
+#     """Formats 'number' so that it has 'decs' number of decimal places,
+#     and the symbol corresponding to 'currency'
+#     """
+#     try:
+#         symbol = Params.CURRENCY_SYMBOLS[currency]
+#     except Exception as e:
+#         symbol = '?'
+#     if decs is None:
+#         try:
+#             decs = Params.TOTAL_DECIMAL_POS[currency]
+#         except Exception as e:
+#             decs = 2
+#     try:
+#         if currency == 'USD':
+#             return "{}{:20,.{}f}".format(symbol, number, decs)
+#         else:
+#             return "{:20,.{}f} {}".format(number, decs, symbol)
+#     except ValueError as e:
+#         return number
+#     except TypeError as e:
+#         return number
 
 
 def resize_image(input_image_path, output_image_path, size):

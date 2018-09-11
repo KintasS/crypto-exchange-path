@@ -39,10 +39,10 @@
                                 <span class="navbar-toggler-icon"></span>
                               </button>
                     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                        <a class="navbar-brand curr-change" href="{{ url_for('exchanges', session_id=session_id, currency=curr) }}"><em>Top<b>Crypto</b>Services</em><span class="grey-text">.com</span><span class="badge badge-light ml-3">Beta</span></a>
+                        <a class="navbar-brand" href="{{ url_for('exchanges') }}"><em>Top<b>Crypto</b>Services</em><span class="grey-text">.com</span><span class="badge badge-light ml-3">Beta</span></a>
                         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link active curr-change" href="{{ url_for('exchanges', session_id=session_id, currency=curr) }}">Exchanges</a>
+                                <a class="nav-link active" href="{{ url_for('exchanges') }}">Exchanges</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link no-link-tooltip" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="<em>Comming soon</em>">Wallets</a>
@@ -140,7 +140,7 @@
                             <span aria-hidden="true" class="white-text">&times;</span>
                         </button>
                     </div>
-                    <form id="feedback-form" method="POST" action="{{ url_for('exchanges', session_id=session_id, currency=curr) }}">
+                    <form id="feedback-form" method="POST" action="{{ url_for('exchanges') }}">
                         {{ feedback_form.hidden_tag() }}
                         <div class="modal-body mx-0 mx-sm-3">
                             <h2 class="font-weight-bold text-center mt-2 mb-4" style="color: #212529;">We are listening</h2>

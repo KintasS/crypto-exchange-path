@@ -2,7 +2,7 @@ import datetime
 import math
 import traceback
 from secrets import token_hex
-from flask import render_template, url_for, redirect
+from flask import render_template, url_for, redirect, request, make_response
 from crypto_exchange_path import app, db, mail
 from crypto_exchange_path.config import Params
 from crypto_exchange_path.forms import SearchForm, FeedbackForm
@@ -33,16 +33,17 @@ def manage_feedback_form(feedback_form):
     db.session.commit()
 
 
-@app.route("/", methods=['GET', 'POST'])
-@app.route("/exchanges/<session_id>&currency=<currency>",
-           methods=['GET', 'POST'])
 @app.route("/exchanges", methods=['GET', 'POST'])
-@app.route("/exchanges/<session_id>", methods=['GET', 'POST'])
-def exchanges(session_id=None, currency=None):
-    if not session_id or len(session_id) != 32:
-        session_id = token_hex(16)
+def exchanges():
+    return redirect(url_for('home'))
+
+
+@app.route("/home", methods=['GET', 'POST'])
+@app.route("/", methods=['GET', 'POST'])
+def home():
     input_form = SearchForm()
-    # If 'currency' was provided, use it
+    # If 'calc_currency' exists in cockie, use it
+    currency = request.cookies.get('calc_currency')
     if currency:
         curr = currency
         input_form.currency.data = currency
@@ -51,40 +52,49 @@ def exchanges(session_id=None, currency=None):
     feedback_form = FeedbackForm()
     exchanges = get_exchanges('Exchange')
     user_exchanges = exchanges
-    open_feedback_modal = False
+    open_fbck_modal = False
     # Actions if Feedback Form was filled
     if feedback_form.feedback_submit.data:
         # If form was filled, but with errors, open modal again
-        open_feedback_modal = True
+        open_fbck_modal = True
         if feedback_form.validate():
             # If form was properly filled, close modal again
-            open_feedback_modal = False
+            open_fbck_modal = False
             manage_feedback_form(feedback_form)
-            return redirect(url_for('exchanges'))
-    return render_template('exchanges.html', form=input_form, curr=curr,
-                           exchanges=exchanges, user_exchanges=user_exchanges,
-                           session_id=session_id, title='Exchanges',
-                           feedback_form=feedback_form,
-                           open_feedback_modal=open_feedback_modal)
+            return redirect(url_for('home'))
+    resp = make_response(render_template('home.html', form=input_form,
+                                         curr=curr, exchanges=exchanges,
+                                         user_exchanges=user_exchanges,
+                                         title='Exchanges',
+                                         feedback_form=feedback_form,
+                                         open_feedback_modal=open_fbck_modal))
+    # Store session ID in cookie if it is not already stored
+    session_id = request.cookies.get('session')
+    if not session_id:
+        resp.set_cookie('session', token_hex(8))
+        session_id = request.cookies.get('session')
+    return resp
 
 
-@app.route("/exchanges/results/<session_id>&currency=<currency>/"
-           "<orig_coin>&<dest_coin>", methods=['GET', 'POST'])
-@app.route("/exchanges/results/<session_id>&currency=<currency>",
+@app.route("/exchanges/results/", methods=['GET', 'POST'])
+@app.route("/exchanges/results/<orig_coin>/<dest_coin>",
            methods=['GET', 'POST'])
-@app.route("/exchanges/results/<session_id>", methods=['GET', 'POST'])
-def exch_results(session_id=None, currency=None,
-                 orig_coin=None, dest_coin=None):
-    if not session_id or len(session_id) != 32:
-        session_id = token_hex(16)
+def exch_results(orig_coin=None, dest_coin=None):
+    session_id = request.cookies.get('session')
+    if not session_id:
+        new_session_id = token_hex(8)
     sorted_paths = []
     input_form = SearchForm()
-    # If 'currency' was provided, use it
-    if currency:
+    # Choose currency: 1) Form 2) Cookie 3) Default
+    currency = request.cookies.get('calc_currency')
+    if input_form.currency.data != 'Empty':
+        curr = input_form.currency.data
+    elif currency:
         curr = currency
-        input_form.currency.data = currency
+        input_form.currency.data = curr
     else:
         curr = Params.DEFAULT_CURRENCY
+        input_form.currency.data = curr
     # If 'orig_coin' and 'dest_coin' where provided, fill form
     auto_search = False
     if orig_coin and dest_coin:
@@ -100,7 +110,7 @@ def exch_results(session_id=None, currency=None,
     exchanges = get_exchanges('Exchange')
     user_exchanges = exchanges
     path_results = None
-    open_feedback_modal = False
+    open_fbck_modal = False
     # Actions if Search Form was filled
     if input_form.search_submit.data and input_form.validate():
         curr = input_form.currency.data
@@ -138,19 +148,19 @@ def exch_results(session_id=None, currency=None,
         for exch in user_exchanges:
             exchs += exch + '|'
         exchs = exchs[:-1]
-        query = QueryRegister(session_id=session_id,
-                              orig_amt=orig_amt,
-                              orig_coin=orig_coin.id,
-                              orig_loc=orig_loc.id,
-                              dest_coin=dest_coin.id,
-                              dest_loc=dest_loc.id,
-                              currency=curr,
-                              connection_type=connection_type,
-                              exchanges=exchs,
-                              results=results,
-                              start_time=start_time,
-                              finish_time=finish_time)
         try:
+            query = QueryRegister(session_id=session_id,
+                                  orig_amt=orig_amt,
+                                  orig_coin=orig_coin.id,
+                                  orig_loc=orig_loc.id,
+                                  dest_coin=dest_coin.id,
+                                  dest_loc=dest_loc.id,
+                                  currency=curr,
+                                  connection_type=connection_type,
+                                  exchanges=exchs,
+                                  results=results,
+                                  start_time=start_time,
+                                  finish_time=finish_time)
             db.session.add(query)
             db.session.commit()
         except Exception as e:
@@ -167,9 +177,9 @@ def exch_results(session_id=None, currency=None,
     # Actions if Feedback Form was filled
     elif feedback_form.feedback_submit.data:
         # If form was filled, but with errors, open modal again
-        open_feedback_modal = True
+        open_fbck_modal = True
         if feedback_form.validate():
-            open_feedback_modal = False
+            open_fbck_modal = False
             date = datetime.datetime.now()
             topic = feedback_form.topic.data
             subject = feedback_form.subject.data
@@ -181,12 +191,21 @@ def exch_results(session_id=None, currency=None,
             db.session.add(feedback)
             db.session.commit()
             return redirect(url_for('exch_results'))
-    return render_template('exch_results.html', form=input_form, curr=curr,
-                           exchanges=exchanges, user_exchanges=user_exchanges,
-                           paths=sorted_paths, session_id=session_id,
-                           path_results=path_results, auto_search=auto_search,
-                           feedback_form=feedback_form, title='Exchanges',
-                           open_feedback_modal=open_feedback_modal)
+    resp = make_response(render_template('exch_results.html', form=input_form,
+                                         curr=curr, exchanges=exchanges,
+                                         user_exchanges=user_exchanges,
+                                         paths=sorted_paths,
+                                         path_results=path_results,
+                                         auto_search=auto_search,
+                                         feedback_form=feedback_form,
+                                         title='Exchanges',
+                                         open_feedback_modal=open_fbck_modal))
+    # Store session ID & Currency in cookie if there are not already stored
+    if not session_id:
+        resp.set_cookie('session', new_session_id)
+    if currency != curr:
+        resp.set_cookie('calc_currency', curr)
+    return resp
 
 
 @app.route("/update/slfjh23hk353mh4567df")

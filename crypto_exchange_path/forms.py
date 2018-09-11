@@ -18,7 +18,7 @@ class SearchForm(FlaskForm):
     currency = SelectField('Currency',
                            choices=get_currency_choices(),
                            validators=[DataRequired()],
-                           default='USD')
+                           default='Empty')
     orig_loc = SelectField('Origin location',
                            choices=get_exchange_choices(['Auxiliar',
                                                          'Exchange']))

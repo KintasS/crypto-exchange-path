@@ -29,12 +29,12 @@ class Path:
                                           self.hop_2,
                                           self.destination)
 
-    def get_total_fees(self, currency, decs=None):
-        return num_2_str(self.total_fees, currency, decs)
+    def get_total_fees(self, currency):
+        return num_2_str(self.total_fees, currency)
 
     def fee_to_currency(self, amount, orig_coin):
         fee_curr = fx_exchange(orig_coin, self.currency, amount, self.logger)
-        return num_2_str(fee_curr, self.currency, None)
+        return num_2_str(fee_curr, self.currency)
 
     def calc_fees(self, currency, logger):
         """Calculates the overall path fees in the given 'currency'. Adds up:
