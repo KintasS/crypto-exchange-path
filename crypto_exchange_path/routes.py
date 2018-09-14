@@ -13,7 +13,9 @@ from crypto_exchange_path.utils_db import (get_exchange, get_exchanges,
                                            get_coin_by_longname, get_coin,
                                            fx_exchange)
 from crypto_exchange_path.models import Feedback, QueryRegister
-from crypto_exchange_path.info_fetcher import update_prices
+from crypto_exchange_path.info_fetcher import (update_prices, import_exchanges,
+                                               import_fees, import_coins,
+                                               import_pairs)
 
 # Start logging
 logger = set_logger('Main', 'INFO')
@@ -208,7 +210,7 @@ def exch_results(orig_coin=None, dest_coin=None):
     return resp
 
 
-@app.route("/update/slfjh23hk353mh4567df")
+@app.route("/update/prices_slfjh23hk353mh4567df")
 def update_prcs():
     try:
         update_prices(logger)
@@ -217,11 +219,37 @@ def update_prcs():
         return traceback.format_exc()
 
 
-@app.route("/landing")
-def landing():
-    return render_template('landing_page.html', title='Test')
+@app.route("/update/exchanges_amnsdfno8234q8rfafonfd")
+def update_exchanges():
+    try:
+        import_exchanges(logger, Params.EXCHANGES_PATH)
+        return "ok"
+    except Exception as e:
+        return traceback.format_exc()
 
 
-@app.route("/start")
-def start():
-    return render_template('start.html', title='Test')
+@app.route("/update/fees_amnsdfno8234q8rfafonfd")
+def update_fees():
+    try:
+        import_fees(logger, Params.FEES_PATH)
+        return "ok"
+    except Exception as e:
+        return traceback.format_exc()
+
+
+@app.route("/update/coins_amnsdfno8234q8rfafonfd")
+def update_coins():
+    try:
+        import_coins(logger, Params.COINS_PATH)
+        return "ok"
+    except Exception as e:
+        return traceback.format_exc()
+
+
+@app.route("/update/pairs_amnsdfno8234q8rfafonfd")
+def update_pairs():
+    try:
+        import_pairs(logger, Params.PAIRS_PATH)
+        return "ok"
+    except Exception as e:
+        return traceback.format_exc()
