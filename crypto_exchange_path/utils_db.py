@@ -166,7 +166,7 @@ def calc_fee(action, exchange, coin, amt, logger):
                 return [fee_query.amount, lit]
         # If Type == '1%+20', calc 1% and then add 20 units
         elif fee_query.type == '1%+20':
-            wd_fee = 0.01 * amt + 20
+            wd_fee = round(0.01 * amt + 20, 2)
             lit = "1% + 20 {}".format(coin)
             return [wd_fee, lit]
     return [None, None]
