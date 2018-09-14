@@ -8,8 +8,7 @@ from crypto_exchange_path.utils_db import (get_active_coins,
                                            get_exchange_choices,
                                            get_currency_choices,
                                            get_feedback_topics,
-                                           get_coin_by_longname,
-                                           get_exch_by_withdrawal_coin)
+                                           get_coin_by_longname)
 from crypto_exchange_path.utils import is_number
 
 
@@ -35,14 +34,14 @@ class SearchForm(FlaskForm):
     exchanges = SelectMultipleField('Exchanges',
                                     choices=get_exchange_choices(['Exchange']),
                                     default=[exch[0] for exch in
-                                             get_exchange_choices([
-                                                 'Exchange'])])
+                                             get_exchange_choices(
+                                             ['Exchange'])])
     cep_promos = RadioField('CEP promos',
                             choices=Params.CEP_CHOICES,
                             default='(CEP)')
     default_fee = RadioField('Default fee',
                              choices=Params.TRADE_FEE_CHOICES,
-                             default='(Taker)')
+                             default='(Avg)')
     binance_fee = RadioField('Binance fees',
                              choices=[('(BNB)', 'Pay fees in BNB (0.075%)'),
                                       ('(No-BNB)', 'Regular fees (0.1%)')],
@@ -78,7 +77,7 @@ class SearchForm(FlaskForm):
                 valid_coins = get_active_coins()
                 # Only raise error is 'orig_coin' exist
                 if coin.id in valid_coins:
-                    valid_exchs = get_exch_by_withdrawal_coin(coin.id)
+                    valid_exchs = get_exch_by_coin(coin.id)
                     if valid_exchs:
                         valid_exchs.add(Params.AUX_EXCHANGE)
                     else:

@@ -57,11 +57,21 @@ class ExchangeManager(object):
         trade_pair = "{}/{}".format(sell_coin.id,
                                     buy_coin.id)
         # Find the trading fee for the given pair
-        return_fee = [None, None]
+        return_fee = [None, None, None]
         cep_promo_found = False
         special_fee_found = False
         pair_fee_found = False
+        maker_fee = None
+        taker_fee = None
+        fee_coin_avg = None
         for fee in exch_trade_fees:
+            # Save 'Maker'/Taker fees in case they are needed latter
+            if fee.scope == '(Maker)':
+                maker_fee = fee.amount
+                fee_coin_avg = fee.fee_coin
+            elif fee.scope == '(Taker)':
+                taker_fee = fee.amount
+                fee_coin_avg = fee.fee_coin
             # First look for our promos
             if fee.scope == self.cep_promo:
                 cep_promo_found = True
@@ -85,13 +95,29 @@ class ExchangeManager(object):
                         and not pair_fee_found):
                     fee_literal = self.calc_fee_literal(fee.amount, fee.scope)
                     return_fee = [fee.amount, fee.fee_coin, fee_literal]
-        return return_fee
+        # If fee was found, return it
+        if return_fee[0] is not None:
+            return return_fee
+        # If fee was not found already, then it must be set as '(Avg)'
+        elif self.default_fee == '(Avg)':
+            avg_fee = (maker_fee + taker_fee) / 2
+            if maker_fee == taker_fee:
+                fee_literal = "{}% (for both Market Makers & Market Takers)"\
+                    .format(avg_fee)
+            else:
+                fee_literal = "{}% (average of Market Makers fee - {}% -"\
+                    " and Market Takers fee - {}% -)"\
+                    .format(avg_fee, maker_fee, taker_fee)
+            return [avg_fee, fee_coin_avg, fee_literal]
+        # This else should work just if there are configuration errors
+        else:
+            return_fee
 
     def perform_trade(self, sell_amt, sell_coin, buy_coin):
         """Performs the trade from 'sell_coin' to 'buy_coin'.
         Returns a 'Trade' object
         """
-        # Find the trading fee for the given pair
+        # Find the trading fee for the given pairget_trade_fee(
         fee_amt_perc, fee_coin, fee_literal = self.get_trade_fee(sell_amt,
                                                                  sell_coin,
                                                                  buy_coin)

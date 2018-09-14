@@ -35,12 +35,17 @@
 
             <nav class="navbar navbar-expand-md navbar-light fixed-top">
                 <div class="container">
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                              </button>
-                    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                        <a class="navbar-brand" href="{{ url_for('exchanges') }}"><em>Top<b>Crypto</b>Services</em><span class="grey-text">.com</span><span class="badge badge-light ml-3">Beta</span></a>
-                        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ url_for('exchanges') }}">
+                        <div class="d-block d-flex align-items-center">
+                            <div><em>Top<b>Crypto</b>Services</em><span class="grey-text">.com</span></div>
+                            <span class="badge badge-light ml-2">Beta</span>
+                        </div>
+                    </a>
+                    <div class="collapse navbar-collapse" id="navbarToggler">
+                        <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
                                 <a class="nav-link active" href="{{ url_for('exchanges') }}">Exchanges</a>
                             </li>
@@ -52,9 +57,11 @@
                             </li>
                         </ul>
                         <!-- Navbar Right Side -->
-                        <div class="navbar-nav ml-auto mr-3">
-                            <a class="nav-item nav-link" href="#" data-toggle="modal" data-target="#modalFeedbackForm">Feedback</a>
-                        </div>
+                        <ul class="navbar-nav ml-md-auto mr-md-3">
+                            <li class="nav-item">
+                                <a class="nav-item nav-link" href="#" data-toggle="modal" data-target="#modalFeedbackForm">Feedback</a>
+                            </li>
+                        </ul>
                         <div id="currency-btn" class="btn-group">
                             {% if curr == 'USD' %}
                                 <button class="btn btn-dark-grey dropdown-toggle" data-currency="USD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-dollar mx-2" aria-hidden="true"></i>USD</b></button>

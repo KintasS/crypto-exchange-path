@@ -44,7 +44,7 @@ def get_coin_by_price_id(price_id):
 
 
 def get_exchange(id):
-    """Returns the exchange object with the given 'name'.
+    """Returns the exchange object with the given 'id'.
     """
     exchange = Exchange.query.filter_by(id=id).first()
     if exchange:
@@ -118,48 +118,10 @@ def get_exch_by_pair(coin, base_coin, logger):
     return set()
 
 
-def calc_withdraw_fee(exchange, coin, amt):
-    """Gets the withdraw fee of 'exchange'/'coin'.
-    Returns: [<fee_amt>, <withdraw_details>]
-    """
-    withdraw_fee = Fee.query.filter_by(exchange=exchange,
-                                       action="Withdrawal",
-                                       scope=coin).first()
-    if withdraw_fee:
-        # If Type == 'Absolute', just return value
-        if withdraw_fee.type == 'Absolute':
-            lit = "{} {} (fixed amount)".format(withdraw_fee.amount,
-                                                coin)
-            return [withdraw_fee.amount, lit]
-        # If Type == 'Percentage', calc fee and check minimum quantity
-        elif withdraw_fee.type == 'Percentage':
-            wd_fee = withdraw_fee.amount / 100 * amt
-            if withdraw_fee.min_amount:
-                lit = "{}% (minimum fee of {} {})"\
-                    .format(withdraw_fee.amount,
-                            withdraw_fee.min_amount,
-                            coin)
-                return [max(wd_fee, withdraw_fee.min_amount), lit]
-            else:
-                lit = "{}%".format(withdraw_fee.amount)
-                return [wd_fee, lit]
-    return [None, None]
-
-
 def get_exch_by_coin(coin):
-    """Gets the exchanges that trade a given coin.
-    """
-    exchs = db.session.query(TradePair.exchange)\
-                      .filter((TradePair.coin == coin) |
-                              (TradePair.base_coin == coin))\
-                      .distinct(TradePair.exchange).all()
-    if exchs:
-        return set([item[0] for item in exchs])
-    return set()
-
-
-def get_exch_by_withdrawal_coin(coin):
-    """Gets the exchanges that allows withdrawal of a given coin.
+    """Gets the exchanges that allows deposit or withdrawal of 'coin'.
+    It is assumed that, in order for an exchange to allow the deposit of a
+    coin, it must allow the withdrawal of that coin (which should be the case).
     """
     exchs = db.session.query(Fee.exchange)\
                       .filter((Fee.action == 'Withdrawal') &
@@ -168,6 +130,46 @@ def get_exch_by_withdrawal_coin(coin):
     if exchs:
         return set([item[0] for item in exchs])
     return set()
+
+
+def calc_fee(action, exchange, coin, amt, logger):
+    """Gets the deposit or withdrawal fee of 'exchange'/'coin'.
+    Returns: [<fee_amt>, <fee_details>]
+    """
+    fee_query = Fee.query.filter_by(exchange=exchange,
+                                    action=action,
+                                    scope=coin).first()
+    if fee_query:
+        # If Type == 'Absolute', just return value
+        if fee_query.type == 'Absolute':
+            lit = "{} {} (fixed amount)".format(fee_query.amount,
+                                                coin)
+            return [fee_query.amount, lit]
+        # If Type == 'Percentage', calc fee and check minimum quantity
+        elif fee_query.type == 'Percentage':
+            wd_fee = fee_query.amount / 100 * amt
+            if fee_query.min_amount:
+                lit = "{}% (minimum fee of {} {})"\
+                    .format(fee_query.amount,
+                            fee_query.min_amount,
+                            coin)
+                return [max(wd_fee, fee_query.min_amount), lit]
+            else:
+                lit = "{}%".format(fee_query.amount)
+                return [wd_fee, lit]
+        # If Type == 'IfLess1kUSD', get amount in USD and check if less than 1k
+        elif fee_query.type == 'IfLess1kUSD':
+            amount_usd = fx_exchange(coin, 'USD', amt, logger)
+            if amount_usd < 1000:
+                lit = "{} {} (fixed amount for deposits of less than $1000)"\
+                    .format(fee_query.amount, coin)
+                return [fee_query.amount, lit]
+        # If Type == '1%+20', calc 1% and then add 20 units
+        elif fee_query.type == '1%+20':
+            wd_fee = 0.01 * amt + 20
+            lit = "1% + 20 {}".format(coin)
+            return [wd_fee, lit]
+    return [None, None]
 
 
 def is_crypto(crypto):

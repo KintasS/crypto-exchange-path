@@ -1,6 +1,6 @@
 from secrets import token_hex
 from crypto_exchange_path.config import Params
-from crypto_exchange_path.utils_db import (calc_withdraw_fee, fx_exchange,
+from crypto_exchange_path.utils_db import (calc_fee, fx_exchange,
                                            is_crypto, get_exchange)
 from crypto_exchange_path.utils import (num_2_str, round_amount,
                                         round_amount_by_price)
@@ -36,13 +36,35 @@ class Path:
         fee_curr = fx_exchange(orig_coin, self.currency, amount, self.logger)
         return num_2_str(fee_curr, self.currency)
 
+    def calc_transfer_fees(self, fee_lst, coin, to_curr=False):
+        """ Returns a string that contains the sum of the fees provided in
+        'fee_lst' (withdrawal & deposit fees).
+        If 'to_curr' is equeal to 'True', the function converts the sum
+        to the calculation currency.
+        """
+        fee_sum = sum(filter(None, fee_lst))
+        if fee_sum is not None:
+            if to_curr:
+                fee_sum = fx_exchange(coin,
+                                      self.currency,
+                                      fee_sum,
+                                      self.logger)
+                return num_2_str(fee_sum, self.currency)
+            else:
+                return "{} {}".format(fee_sum, coin)
+        else:
+            return ""
+
     def calc_fees(self, currency, logger):
         """Calculates the overall path fees in the given 'currency'. Adds up:
         - Origin Withdraw fees (origin.withdraw_fee)
+        - Hop 1 Deposit fees (hop_1.deposit_fee)
         - Hop 1 Trade fees (hop_1.trade.fee_amt)
         - Hop 1 Withdraw fees (hop_1.withdraw_fee)
+        - Hop 2 Deposit fees (hop_2.deposit_fee)
         - Hop 2 Trade fees (hop_2.trade.fee_amt)
         - Hop 2 Withdraw fees (hop_2.withdraw_fee)
+        - Destination Deposit fees (destination.deposit_fee)
         """
         total_fees = 0
         # Add Origin Withdraw fees (origin.withdraw_fee)
@@ -57,6 +79,21 @@ class Path:
                     .format("origin.withdraw_fee",
                             self.origin.withdraw_fee,
                             self.origin.coin.id,
+                            fee,
+                            currency)
+                logger.debug(msg)
+        # Hop 1 Deposit fees (hop_1.deposit_fee)
+        if self.hop_1.deposit_fee:
+            fee = fx_exchange(self.hop_1.trade.sell_coin.id,
+                              currency,
+                              self.hop_1.deposit_fee,
+                              logger)
+            if fee:
+                total_fees += fee
+                msg = "calc_fees: {} = {} {} ({} {})"\
+                    .format("hop_1.deposit_fee",
+                            self.hop_1.deposit_fee,
+                            self.hop_1.trade.sell_coin.id,
                             fee,
                             currency)
                 logger.debug(msg)
@@ -90,6 +127,21 @@ class Path:
                             fee,
                             currency)
                 logger.debug(msg)
+        # Add Hop 2 Deposit fees (hop_2.deposit_fee)
+        if self.hop_2 and self.hop_2.deposit_fee:
+            fee = fx_exchange(self.hop_2.trade.sell_coin.id,
+                              currency,
+                              self.hop_2.deposit_fee,
+                              logger)
+            if fee:
+                total_fees += fee
+                msg = "calc_fees: {} = {} {} ({} {})"\
+                    .format("hop_2.deposit_fee",
+                            self.hop_2.deposit_fee,
+                            self.hop_2.trade.sell_coin.id,
+                            fee,
+                            currency)
+                logger.debug(msg)
         # Add Hop 2 Trade fees (hop_2.trade.fee_amt)
         if self.hop_2 and self.hop_2.trade.fee_amt:
             fee = fx_exchange(self.hop_2.trade.fee_coin.id,
@@ -120,36 +172,73 @@ class Path:
                             fee,
                             currency)
                 logger.debug(msg)
+        # Add Destination Deposit fees (destination.deposit_fee)
+        if self.destination.deposit_fee:
+            fee = fx_exchange(self.destination.coin.id,
+                              currency,
+                              self.destination.deposit_fee,
+                              logger)
+            if fee:
+                total_fees += fee
+                msg = "calc_fees: {} = {} {} ({} {})"\
+                    .format("destination.deposit_fee",
+                            self.destination.deposit_fee,
+                            self.destination.coin.id,
+                            fee,
+                            currency)
+                logger.debug(msg)
         return total_fees
 
 
 class Location:
 
-    def __init__(self, type, exchange, amount, coin):
+    def __init__(self, type, exchange, amount, coin, logger):
         self.type = type
         self.exchange = self.set_exchange(exchange, coin)
         self.amount = amount
         self.coin = coin
+        self.deposit_fee = None
+        self.deposit_details = None
         self.withdraw_fee = None
         self.withdraw_details = None
         self.amount_str = self.calc_amt_str()
-        self.store_withdraw_fee(exchange.id, coin.id, amount)
+        self.logger = logger
+        self.store_fee('Deposit', exchange.id, coin.id, amount)
+        self.store_fee('Withdrawal', exchange.id, coin.id, amount)
 
     def calc_amt_str(self):
         amount = round_amount_by_price(self.amount, self.coin.id)
         return "{} {}".format(amount, self.coin.id)
 
-    def store_withdraw_fee(self, exchange, coin, amount):
-        withdraw_fee = calc_withdraw_fee(exchange, coin, amount)
-        self.withdraw_fee = withdraw_fee[0]
-        self.withdraw_details = self.calc_withdraw_details(withdraw_fee)
+    def store_fee(self, action, exchange, coin, amount):
+        """ Stores the deposit or withdrawal fee.
+        """
+        fee_array = calc_fee(action, exchange, coin, amount, self.logger)
+        if action == 'Deposit':
+            self.deposit_fee = fee_array[0]
+            self.deposit_details = self.calc_fee_details(action, fee_array)
+            # If there are deposit fees for 'Destination', substract from amt
+            if self.type == 'Destination' and self.deposit_fee:
+                self.amount -= self.deposit_fee
+                self.amount_str = self.calc_amt_str()
+        if action == 'Withdrawal':
+            self.withdraw_fee = fee_array[0]
+            self.withdraw_details = self.calc_fee_details(action, fee_array)
 
-    def calc_withdraw_details(self, withdraw_lit):
+    def remove_deposit_fees(self):
+        self.deposit_fee = None
+        self.deposit_details = None
+
+    def calc_fee_details(self, action, fee_lit):
+        fee_type = 'withdrawal'
+        if action == 'Deposit':
+            fee_type = 'deposit'
         lit = None
-        if withdraw_lit:
-            lit = withdraw_lit[1]
-        literal = ("{} withdrawal fee for {}: {}")\
+        if fee_lit:
+            lit = fee_lit[1]
+        literal = ("{} {} fee for {}: {}.")\
             .format(self.exchange.name,
+                    fee_type,
                     self.coin.symbol,
                     lit)
         return literal
@@ -175,22 +264,26 @@ class Location:
 
 class Hop:
 
-    def __init__(self, exchange, trade, withdraw_fee):
+    def __init__(self, exchange, trade, deposit_fee, withdraw_fee):
         self.exchange = exchange
         self.trade = trade
-        self.withdraw_fee = self.store_withdraw_fee(withdraw_fee)
+        self.deposit_fee = None
+        self.withdraw_fee = None
         self.trade_details = self.calc_trade_details()
-        self.withdraw_details = self.calc_withdraw_details(withdraw_fee)
+        self.deposit_details = self.calc_fee_details('Deposit', deposit_fee)
+        self.withdraw_details = self.calc_fee_details('Withdrawal',
+                                                      withdraw_fee)
+        self.store_fees(deposit_fee, withdraw_fee)
 
-    def store_withdraw_fee(self, withdraw_fee):
+    def store_fees(self, deposit_fee, withdraw_fee):
+        if deposit_fee and deposit_fee[0] is not None:
+            self.deposit_fee = deposit_fee[0]
         if withdraw_fee and withdraw_fee[0] is not None:
-            return withdraw_fee[0]
-        else:
-            return None
+            self.withdraw_fee = withdraw_fee[0]
 
     def calc_trade_details(self):
         rate = round_amount(self.trade.buy_amt / self.trade.sell_amt)
-        literal = ("{}/{} rate: {}. {} trading fee: {}")\
+        literal = ("{}/{} rate: {}.<br>- - -</br> {} trading fee: {}")\
             .format(self.trade.buy_coin.symbol,
                     self.trade.sell_coin.symbol,
                     rate,
@@ -198,15 +291,20 @@ class Hop:
                     self.trade.fee_literal)
         return literal
 
-    def calc_withdraw_details(self, withdraw_lit):
-        lit = None
-        if withdraw_lit:
-            lit = withdraw_lit[1]
-        literal = ("{} withdrawal fee for {}: {}")\
-            .format(self.exchange.name,
-                    self.trade.buy_coin.symbol,
-                    lit)
-        return literal
+    def calc_fee_details(self, action, fee_array):
+        if fee_array and fee_array[1] is not None:
+            fee_type = 'withdrawal'
+            coin = self.trade.buy_coin.symbol
+            if action == 'Deposit':
+                fee_type = 'deposit'
+                coin = self.trade.sell_coin.symbol
+            literal = ("{} {} fee for {}: {}.")\
+                .format(self.exchange.name,
+                        fee_type,
+                        coin,
+                        fee_array[1])
+            return literal
+        return ""
 
     def __repr__(self):
         return "Hop([{}] {}. Withdraw fee='{}')."\

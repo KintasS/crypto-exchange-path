@@ -157,7 +157,7 @@
                                             {% elif path.hop_2 and path.hop_2.exchange.affiliate == 'Yes' %}
                                                 <a class="select-btn btn btn-indigo m-0" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">Select</a>
                                             {% else %}
-                                                <a class="select-btn btn btn-indigo disabled m-0" href="#" role="button">Select</a>
+                                                <a class="select-btn btn btn-indigo m-0" href="#" role="button">Select</a>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -202,11 +202,17 @@
                                                     <span>Transfer your <b>{{ path.origin.coin.symbol }}</b> from <b>{{ path.origin.exchange.name }}</b> to <b>{{ path.hop_1.exchange.name }}</b>.</span>
                                                 {% endif %}
                                                 {% if (path.origin.exchange.id == 'Wallet') or (path.origin.exchange.id == 'Bank') %}
-                                                    <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="Specific withdrawal fees will apply depending on the wallet or bank you use. Please, consider those fees when planning the operation.">
-                                                        <i class="fa fa-info-circle" aria-hidden="true"></i>
-                                                    </a>
+                                                    {% if path.hop_1.deposit_details == '' %}
+                                                        <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="Withdrawal fees may apply depending on the wallet or bank you use. Please, take them into account as well.</em>">
+                                                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                        </a>
+                                                    {% else %}
+                                                        <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_1.deposit_details }}<br>- - -</br><em>Withdrawal fees may apply depending on the wallet or bank you use. Please, take them into account as well.</em>">
+                                                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                        </a>
+                                                    {% endif %}
                                                 {% else %}
-                                                    <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.origin.withdraw_details }}">
+                                                    <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.origin.withdraw_details }}<br>{{ path.hop_1.deposit_details }}">
                                                         <i class="fa fa-info-circle" aria-hidden="true"></i>
                                                     </a>
                                                 {% endif %}
@@ -241,18 +247,16 @@
                                                 </div>
                                             </div>
                                             <div class="col-2 border-left">
-                                                {% if (path.origin.exchange.id != 'Wallet') and (path.origin.exchange.id != 'Bank') %}
                                                 <div class="row no-gutters pr-2">
                                                     <div class="col d-flex justify-content-end">
-                                                        <span class="mb-0 font-weight-bold text-right">{{ path.origin.withdraw_fee }} {{ path.origin.coin.symbol }}</span>
+                                                        <span class="mb-0 font-weight-bold text-right">{{ path.calc_transfer_fees([path.origin.withdraw_fee, path.hop_1.deposit_fee], path.origin.coin.id) }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="row no-gutters pr-2">
                                                     <div class="col d-flex justify-content-end">
-                                                        <span class="mb-0 text-right">{{ path.fee_to_currency(path.origin.withdraw_fee, path.origin.coin.id) }}</span>
+                                                        <span class="mb-0 text-right">{{ path.calc_transfer_fees([path.origin.withdraw_fee, path.hop_1.deposit_fee], path.origin.coin.id, True) }}</span>
                                                     </div>
                                                 </div>
-                                                {% endif %}
                                             </div>
                                         </div>
                                     {% endif %}
@@ -334,7 +338,7 @@
                                             </div>
                                             <div class="col-3 pl-2">
                                                 <span>Transfer your <b>{{ path.hop_1.trade.buy_coin.symbol }}</b> from <b>{{ path.hop_1.exchange.name }}</b> to <b>{{ step2b_dest_name }}</b>.</span>
-                                                <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_1.withdraw_details }}">
+                                                <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="<p class='mb-1'>{{ path.hop_1.withdraw_details }}</p><p class='mb-1'>{{ path.hop_2.deposit_details }}</p>">
                                                     <i class="fa fa-info-circle" aria-hidden="true"></i>
                                                 </a>
                                             </div>
@@ -370,12 +374,12 @@
                                             <div class="col-2 border-left">
                                                 <div class="row no-gutters pr-2">
                                                     <div class="col d-flex justify-content-end">
-                                                        <span class="mb-0 font-weight-bold text-right">{{ path.hop_1.withdraw_fee }} {{ path.hop_1.trade.buy_coin.symbol }}</span>
+                                                        <span class="mb-0 font-weight-bold text-right">{{ path.calc_transfer_fees([path.hop_1.withdraw_fee, path.hop_2.deposit_fee], path.hop_1.trade.buy_coin.symbol) }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="row no-gutters pr-2">
                                                     <div class="col d-flex justify-content-end">
-                                                        <span class="mb-0 text-right">{{ path.fee_to_currency(path.hop_1.withdraw_fee, path.hop_1.trade.buy_coin.id) }}</span>
+                                                        <span class="mb-0 text-right">{{ path.calc_transfer_fees([path.hop_1.withdraw_fee, path.hop_2.deposit_fee], path.hop_1.trade.buy_coin.symbol, True) }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -453,7 +457,7 @@
                                                 {% else %}
                                                     <span>Transfer your <b>{{ path.hop_2.trade.buy_coin.symbol }}</b> from <b>{{ path.hop_2.exchange.name }}</b> to <b>{{ path.destination.exchange.name }}</b>.</span>
                                                 {% endif %}
-                                                <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_2.withdraw_details }}">
+                                                <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_2.withdraw_details }}<br>{{ path.destination.deposit_details }}">
                                                     <i class="fa fa-info-circle" aria-hidden="true"></i>
                                                 </a>
                                             </div>
@@ -489,12 +493,12 @@
                                             <div class="col-2 border-left">
                                                 <div class="row no-gutters pr-2">
                                                     <div class="col d-flex justify-content-end">
-                                                        <span class="mb-0 font-weight-bold text-right">{{ path.hop_2.withdraw_fee }} {{ path.hop_2.trade.buy_coin.symbol }}</span>
+                                                        <span class="mb-0 font-weight-bold text-right">{{ path.calc_transfer_fees([path.hop_2.withdraw_fee, path.destination.deposit_fee], path.hop_2.trade.buy_coin.symbol) }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="row no-gutters pr-2">
                                                     <div class="col d-flex justify-content-end">
-                                                        <span class="mb-0 text-right">{{ path.fee_to_currency(path.hop_2.withdraw_fee, path.hop_2.trade.buy_coin.id) }}</span>
+                                                        <span class="mb-0 text-right">{{ path.calc_transfer_fees([path.hop_2.withdraw_fee, path.destination.deposit_fee], path.hop_2.trade.buy_coin.symbol, True) }}</span>
                                                     </div>
                                                 </div>
                                             </div>

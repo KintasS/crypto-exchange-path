@@ -1,7 +1,6 @@
 from crypto_exchange_path.utils_db import (get_exch_by_pair, get_exch_by_coin,
                                            get_coin, get_exchange,
-                                           calc_withdraw_fee)
-from crypto_exchange_path.utils import generate_paths_file
+                                           calc_fee)
 from crypto_exchange_path.exchange_manager import ExchangeManager
 from crypto_exchange_path.objects import Location, Hop, Path
 
@@ -32,6 +31,8 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
     direct_pair_exch = get_exch_by_pair(orig_coin.id,
                                         dest_coin.id,
                                         logger)
+    # Get exchanges that allow deposits of 'orig_coin'
+    exchs_allow_deposits = get_exch_by_coin(orig_coin.id)
     # Filter exchanges with user preferences
     if user_exchanges:
         filtered_exch = set()
@@ -43,13 +44,24 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                      .format(direct_pair_exch))
     # Common parts of 'Path'
     path_type = '[1] Direct (1 Exch)'
-    origin = Location("Origin", orig_loc, orig_amt, orig_coin)
-
+    origin = Location("Origin", orig_loc, orig_amt, orig_coin, logger)
     # Loop for each exchange to calculate Path fees
     for exch in direct_pair_exch:
+        # First, check if the exchange allows deposits
+        if exch not in exchs_allow_deposits:
+            continue
+        # If allows deposits, perform trade
         trade_1_sell_amt = orig_amt
         if origin.withdraw_fee:
             trade_1_sell_amt -= origin.withdraw_fee
+        # Calc deposit fee 1 and substract it from sell amount
+        deposit_fee_1 = [None, None]
+        if exch != origin.exchange.id:
+            deposit_fee_1 = calc_fee('Deposit', exch, orig_coin.id,
+                                     trade_1_sell_amt, logger)
+            if deposit_fee_1 and deposit_fee_1[0] is not None:
+                trade_1_sell_amt -= deposit_fee_1[0]
+        # Perform Trade 1
         exchange_1 = ExchangeManager(get_exchange(exch), fee_settings, logger)
         trade_1 = exchange_1.perform_trade(trade_1_sell_amt,
                                            orig_coin,
@@ -66,8 +78,8 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
         # Calc Withdraw fee and modify destination amount
         withdraw_fee_1 = []
         if exch != dest_loc.id:
-            withdraw_fee_1 = calc_withdraw_fee(exch, trade_1.buy_coin.id,
-                                               trade_1.buy_amt)
+            withdraw_fee_1 = calc_fee('Withdrawal', exch, trade_1.buy_coin.id,
+                                      trade_1.buy_amt, logger)
             if withdraw_fee_1 and withdraw_fee_1[0] is not None:
                 dest_amt -= withdraw_fee_1[0]
             else:
@@ -78,8 +90,12 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
         # Generate Hop & destination location to finish 'Path'
         hop_1 = Hop(get_exchange(exch),
                     trade_1,
+                    deposit_fee_1,
                     withdraw_fee_1)
-        destination = Location("Destination", dest_loc, dest_amt, dest_coin)
+        destination = Location("Destination", dest_loc, dest_amt,
+                               dest_coin, logger)
+        if destination.exchange.id == exch:
+            destination.remove_deposit_fees()
         # Generate 'Path' and add to 'path_list'
         path = Path(path_type, origin, hop_1, None,
                     destination, currency, logger)
@@ -147,7 +163,7 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                  "".format(len(indirect_pair_exch), indirect_pair_exch))
     # Common parts of 'Path'
     path_type = '[2] Indirect (1 Exch)'
-    origin = Location("Origin", orig_loc, orig_amt, orig_coin)
+    origin = Location("Origin", orig_loc, orig_amt, orig_coin, logger)
     # Loop for each exchange with both pairs
     for exch in indirect_pair_exch:
         # Get CoinZ that trades against both pairs
@@ -164,6 +180,14 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
         trade_1_sell_amt = orig_amt
         if origin.withdraw_fee:
             trade_1_sell_amt -= origin.withdraw_fee
+        # Calc deposit fee 1 and substract it from sell amount
+        deposit_fee_1 = [None, None]
+        if exch != origin.exchange.id:
+            deposit_fee_1 = calc_fee('Deposit', exch, orig_coin.id,
+                                     trade_1_sell_amt, logger)
+            if deposit_fee_1 and deposit_fee_1[0] is not None:
+                trade_1_sell_amt -= deposit_fee_1[0]
+        # Perform Trade 1
         trade_1 = exchange.perform_trade(trade_1_sell_amt,
                                          orig_coin,
                                          coinZ.coin)
@@ -177,6 +201,7 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
         # Generate output object for 'Hop 1'
         hop_1 = Hop(exchange.exchange,
                     trade_1,
+                    deposit_fee_1,
                     None)
         # CALCULATE OUTPUTS FOR 'Hop 2'
         trade_2 = exchange.perform_trade(trade_1.buy_amt,
@@ -194,8 +219,8 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
         # Calc Withdraw fee and modify destination amount
         withdraw_fee_2 = []
         if exch != dest_loc.id:
-            withdraw_fee_2 = calc_withdraw_fee(exch, trade_2.buy_coin.id,
-                                               trade_2.buy_amt)
+            withdraw_fee_2 = calc_fee('Withdrawal', exch, trade_2.buy_coin.id,
+                                      trade_2.buy_amt, logger)
             if withdraw_fee_2 and withdraw_fee_2[0] is not None:
                 dest_amt -= withdraw_fee_2[0]
             else:
@@ -204,10 +229,15 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                                                       trade_2.buy_coin.id))
                 continue
         # Generate Hop & destination location to finish 'Path'
+        deposit_fee_2 = [None, None]
         hop_2 = Hop(exchange.exchange,
                     trade_2,
+                    deposit_fee_2,
                     withdraw_fee_2)
-        destination = Location("Destination", dest_loc, dest_amt, dest_coin)
+        destination = Location("Destination", dest_loc, dest_amt,
+                               dest_coin, logger)
+        if destination.exchange.id == exch:
+            destination.remove_deposit_fees()
         # Generate 'Path' and add to 'path_list'
         path = Path(path_type, origin,
                     hop_1, hop_2,
@@ -256,7 +286,7 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                                                       exchange.coinZs))
     # Common parts of 'Path'
     path_type = '[3] Indirect (2 Exchanges)'
-    origin = Location("Origin", orig_loc, orig_amt, orig_coin)
+    origin = Location("Origin", orig_loc, orig_amt, orig_coin, logger)
     # Loop through all the exchanges and coins
     for exch_A in orig_coin_exchanges_coinZs:
         for coinZ_A in exch_A.coinZs:
@@ -270,6 +300,17 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                         trade_1_sell_amt = orig_amt
                         if origin.withdraw_fee:
                             trade_1_sell_amt -= origin.withdraw_fee
+                        # Calc deposit fee 1 and substract it from sell amount
+                        deposit_fee_1 = [None, None]
+                        if exch_A.exchange.id != origin.exchange.id:
+                            deposit_fee_1 = calc_fee('Deposit',
+                                                     exch_A.exchange.id,
+                                                     orig_coin.id,
+                                                     trade_1_sell_amt,
+                                                     logger)
+                            if deposit_fee_1 and deposit_fee_1[0] is not None:
+                                trade_1_sell_amt -= deposit_fee_1[0]
+                        # Perform Trade 1
                         trade_1 = exch_A.perform_trade(trade_1_sell_amt,
                                                        orig_coin,
                                                        get_coin(coinZ_A[0]))
@@ -284,9 +325,11 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                         # Calc destination amount
                         in_amt_2 = trade_1.buy_amt
                         # Calc Withdraw fee and modify destination amount
-                        withdraw_fee_1 = calc_withdraw_fee(exch_A.exchange.id,
-                                                           trade_1.buy_coin.id,
-                                                           trade_1.buy_amt)
+                        withdraw_fee_1 = calc_fee('Withdrawal',
+                                                  exch_A.exchange.id,
+                                                  trade_1.buy_coin.id,
+                                                  trade_1.buy_amt,
+                                                  logger)
                         if withdraw_fee_1 and withdraw_fee_1[0] is not None:
                             in_amt_2 -= withdraw_fee_1[0]
                         else:
@@ -298,8 +341,18 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                         # Generate output object for 'Hop 1'
                         hop_1 = Hop(exch_A.exchange,
                                     trade_1,
+                                    deposit_fee_1,
                                     withdraw_fee_1)
                         # CALCULATE OUTPUTS FOR 'Hop 2'
+                        # Calc deposit fee 2 and substract it from sell amount
+                        deposit_fee_2 = calc_fee('Deposit',
+                                                 exch_B.exchange.id,
+                                                 trade_1.buy_coin.id,
+                                                 in_amt_2,
+                                                 logger)
+                        if deposit_fee_2 and deposit_fee_2[0] is not None:
+                            in_amt_2 -= deposit_fee_2[0]
+                        # Perform Trade 2
                         trade_2 = exch_B.perform_trade(in_amt_2,
                                                        trade_1.buy_coin,
                                                        dest_coin)
@@ -316,11 +369,11 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                         # Calc Withdraw fee and modify destination amount
                         withdraw_fee_2 = []
                         if exch_B.exchange.id != dest_loc.id:
-                            withdraw_fee_2 = calc_withdraw_fee(exch_B.exchange
-                                                               .id,
-                                                               trade_2
-                                                               .buy_coin.id,
-                                                               trade_2.buy_amt)
+                            withdraw_fee_2 = calc_fee('Withdrawal',
+                                                      exch_B.exchange.id,
+                                                      trade_2.buy_coin.id,
+                                                      trade_2.buy_amt,
+                                                      logger)
                             if (withdraw_fee_2 and
                                     withdraw_fee_2[0] is not None):
                                 dest_amt -= withdraw_fee_2[0]
@@ -333,11 +386,15 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                         # Generate Hop & destination location to finish 'Path'
                         hop_2 = Hop(exch_B.exchange,
                                     trade_2,
+                                    deposit_fee_2,
                                     withdraw_fee_2)
                         destination = Location("Destination",
                                                dest_loc,
                                                dest_amt,
-                                               dest_coin)
+                                               dest_coin,
+                                               logger)
+                        if destination.exchange.id == exch_B.exchange.id:
+                            destination.remove_deposit_fees()
                         # Generate 'Path' and add to 'path_list'
                         path = Path(path_type, origin,
                                     hop_1, hop_2,
