@@ -19,7 +19,7 @@
     {% endblock %}
 
     {% if title %}
-        <title>CryptoFeeSaver | The Crypto Search Engine that helps you save money | {{ title }}</title>
+        <title>CryptoFeeSaver | The Crypto Search Engine that helps you save money</title>
     {% else %}
         <title>CryptoFeeSaver | The Crypto Search Engine that helps you save money</title>
     {% endif %}
@@ -41,8 +41,9 @@
                     </button>
                     <a class="navbar-brand" href="{{ url_for('exchanges') }}">
                         <div class="d-block d-flex align-items-center">
-                            <span style="font-size: 1.5rem"><em>Crypto<b>FeeSaver</b></em><span class="grey-text">.com</span></span>
-                            <span class="badge badge-light ml-3 mr-4">Beta</span>
+                            <!-- <span style="font-size: 1.5rem"><em>Crypto<b>FeeSaver</b></em><span class="grey-text">.com</span></span> -->
+                            <img class="img-logo" src="/static/img/logo/CFS_Logo_Left2_206x28.png" alt="CryptoFeeSaver">
+                            <span class="badge badge-warning ml-2 mr-0 mr-md-4">Beta</span>
                         </div>
                     </a>
                     <div class="collapse navbar-collapse" id="navbarToggler">

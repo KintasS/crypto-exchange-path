@@ -34,6 +34,9 @@
         width: 35px;
         height: 35px;
     }
+    img.img-logo {
+        height: 22px;
+    }
 }
 
 @media (min-width: 411px) and (max-width: 480px) {
@@ -63,6 +66,9 @@
     img.img-popular-services {
         width: 35px;
         height: 35px;
+    }
+    img.img-logo {
+        height: 24px;
     }
 }
 
@@ -94,6 +100,9 @@
         width: 45px;
         height: 45px;
     }
+    img.img-logo {
+        height: 24px;
+    }
 }
 
 @media (min-width: 576px) and (max-width: 767px) {
@@ -123,6 +132,9 @@
     img.img-popular-services {
         width: 60px;
         height: 60px;
+    }
+    img.img-logo {
+        height: 24px;
     }
 }
 
@@ -154,6 +166,9 @@
         width: 60px;
         height: 60px;
     }
+    img.img-logo {
+        height: 22px;
+    }
 }
 
 @media (min-width: 992px) {
@@ -183,6 +198,9 @@
     img.img-popular-services {
         width: 60px;
         height: 60px;
+    }
+    img.img-logo {
+        height: 28px;
     }
 }
 
