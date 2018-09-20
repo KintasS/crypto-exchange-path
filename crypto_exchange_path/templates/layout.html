@@ -5,6 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Looking for the cheapest exchange to buy or exchange cryptocurrencies? Our Crypto Exchange Engine compares all of them for you. Try it now!"/>
     <link rel="icon" href="{{ url_for('static', filename='img/Bitcoin_logo.png') }}">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -18,9 +19,9 @@
     {% endblock %}
 
     {% if title %}
-        <title>TopCryptoServices - {{ title }}</title>
+        <title>CryptoFeeSaver | The Crypto Search Engine that helps you save money | {{ title }}</title>
     {% else %}
-        <title>TopCryptoServices</title>
+        <title>CryptoFeeSaver | The Crypto Search Engine that helps you save money</title>
     {% endif %}
 </head>
 
@@ -40,14 +41,17 @@
                     </button>
                     <a class="navbar-brand" href="{{ url_for('exchanges') }}">
                         <div class="d-block d-flex align-items-center">
-                            <div><em>Top<b>Crypto</b>Services</em><span class="grey-text">.com</span></div>
-                            <span class="badge badge-light ml-2">Beta</span>
+                            <span style="font-size: 1.5rem"><em>Crypto<b>FeeSaver</b></em><span class="grey-text">.com</span></span>
+                            <span class="badge badge-light ml-3 mr-4">Beta</span>
                         </div>
                     </a>
                     <div class="collapse navbar-collapse" id="navbarToggler">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
                                 <a class="nav-link active" href="{{ url_for('exchanges') }}">Exchanges</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link no-link-tooltip" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="<em>Comming soon</em>">DEXs</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link no-link-tooltip" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="<em>Comming soon</em>">Wallets</a>
@@ -123,7 +127,7 @@
             </div>
             <!-- Copyright -->
             <div class="footer-copyright text-center py-3">© 2018 Copyright:
-              <a href="#"> TopCryptoServices.com</a>
+              <a href="#"> CryptoFeeSaver.com</a>
             </div>
             <!-- Copyright -->
 

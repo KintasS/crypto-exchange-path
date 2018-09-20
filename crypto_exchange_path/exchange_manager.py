@@ -100,7 +100,7 @@ class ExchangeManager(object):
             return return_fee
         # If fee was not found already, then it must be set as '(Avg)'
         elif self.default_fee == '(Avg)':
-            avg_fee = (maker_fee + taker_fee) / 2
+            avg_fee = round((maker_fee + taker_fee) / 2, 4)
             if maker_fee == taker_fee:
                 fee_literal = "{}% (for both Market Makers & Market Takers)"\
                     .format(avg_fee)

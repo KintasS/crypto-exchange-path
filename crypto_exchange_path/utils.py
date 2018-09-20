@@ -205,30 +205,6 @@ def num_2_str(number, currency):
         return number
 
 
-# def num_2_str(number, currency, decs=None):
-#     """Formats 'number' so that it has 'decs' number of decimal places,
-#     and the symbol corresponding to 'currency'
-#     """
-#     try:
-#         symbol = Params.CURRENCY_SYMBOLS[currency]
-#     except Exception as e:
-#         symbol = '?'
-#     if decs is None:
-#         try:
-#             decs = Params.TOTAL_DECIMAL_POS[currency]
-#         except Exception as e:
-#             decs = 2
-#     try:
-#         if currency == 'USD':
-#             return "{}{:20,.{}f}".format(symbol, number, decs)
-#         else:
-#             return "{:20,.{}f} {}".format(number, decs, symbol)
-#     except ValueError as e:
-#         return number
-#     except TypeError as e:
-#         return number
-
-
 def resize_image(input_image_path, output_image_path, size):
     original_image = Image.open(input_image_path)
     img_size = (size, size)
