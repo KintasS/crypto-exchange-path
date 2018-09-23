@@ -178,10 +178,24 @@ $(document).ready(function() {
     // Rotate chevron image when collapse button is clicked
     // Avoid rotation when content is collpsing!
     $(".collapse-animation").click(function() {
-        var $collpaseElement = $($(this).attr("href"));
-        if (!$collpaseElement.hasClass("collapsing")) {
+        var $collapseElement = $($(this).attr("href"));
+        if (!$collapseElement.hasClass("collapsing")) {
             $(this).find("i:first").toggleClass("rotateimg180");
         }
+    });
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    /////   GOOGLE ANALYTICS EVENTS
+    ///////////////////////////////////////////////////////////////////////////
+
+    // 'Referral Result Button' Event
+    $(".referral-result-btn").click(function() {
+        var exchangeName = $(this).attr("data-exch");
+        gtag('event', 'Redirect', {
+            'event_category': exchangeName,
+            'event_label': 'Result button'
+        });
     });
 
 

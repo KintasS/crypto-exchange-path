@@ -153,11 +153,11 @@
                                         </div>
                                         <div class="d-block d-flex justify-content-center pl-md-2 mt-2">
                                             {% if path.hop_1.exchange.affiliate == 'Yes' %}
-                                                <a class="select-btn btn btn-indigo m-0" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">Select</a>
+                                                <a class="referral-result-btn select-btn btn btn-indigo m-0" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}">Select</a>
                                             {% elif path.hop_2 and path.hop_2.exchange.affiliate == 'Yes' %}
-                                                <a class="select-btn btn btn-indigo m-0" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">Select</a>
+                                                <a class="referral-result-btn select-btn btn btn-indigo m-0" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button" data-exch="{{ path.hop_2.exchange.name }}">Select</a>
                                             {% else %}
-                                                <a class="select-btn btn btn-indigo m-0" href="#" role="button">Select</a>
+                                                <a class="referral-result-btn select-btn btn btn-indigo m-0" href="#" role="button">Select</a>
                                             {% endif %}
                                         </div>
                                     </div>
