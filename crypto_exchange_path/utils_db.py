@@ -25,7 +25,7 @@ def get_active_coins(type=None, price_id=False):
 def get_coin(id):
     """Returns a Coin object given its symbol.
     """
-    coin = Coin.query.filter_by(id=id).first()
+    coin = Coin.query.filter_by(id=id.upper()).first()
     return coin
 
 

@@ -11,7 +11,7 @@
                 <div class="row no-gutters d-flex justify-content-center">
                     <div class="col-12 col-md-10 col-lg-11 col-xl-12">
 
-                            <form id="search-form" method="POST" action="{{ url_for('exch_results') }}">
+                            <form id="search-form" method="POST" action="{{ url_for('exch_results', url_orig_coin=url_orig_coin, url_dest_coin=url_dest_coin) }}">
                                 {{ form.hidden_tag() }}
                                 <div class="row d-flex justify-content-between no-gutters">
                                     <!-- <fieldset class="form-group"> -->

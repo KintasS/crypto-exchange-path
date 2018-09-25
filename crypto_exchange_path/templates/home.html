@@ -58,16 +58,16 @@
             <!-- Links -->
             <div class="row no-gutters pb-0 pb-md-5">
                 <div class="col-3 px-2 px-lg-3">
-                    <a class="select-btn btn btn-indigo mt-3" href="{{ url_for('exch_results', orig_coin='BTC', dest_coin='XMR') }}" role="button">Search</a>
+                    <a class="trending-searches-btn select-btn btn btn-indigo mt-3" href="{{ url_for('exch_results', url_orig_coin='BTC', url_dest_coin='XMR') }}" role="button" data-click="BTC+XMR">Search</a>
                 </div>
                 <div class="col-3 px-2 px-lg-3">
-                    <a class="select-btn btn btn-indigo mt-3" href="{{ url_for('exch_results', orig_coin='USD', dest_coin='ADA') }}" role="button">Search</a>
+                    <a class="trending-searches-btn select-btn btn btn-indigo mt-3" href="{{ url_for('exch_results', url_orig_coin='USD', url_dest_coin='ADA') }}" role="button" data-click="USD+ADA">Search</a>
                 </div>
                 <div class="col-3 px-2 px-lg-3">
-                    <a class="select-btn btn btn-indigo mt-3" href="{{ url_for('exch_results', orig_coin='ETH', dest_coin='NEO') }}" role="button">Search</a>
+                    <a class="trending-searches-btn select-btn btn btn-indigo mt-3" href="{{ url_for('exch_results', url_orig_coin='ETH', url_dest_coin='NEO') }}" role="button" data-click="ETH+NEO">Search</a>
                 </div>
                 <div class="col-3 px-2 px-lg-3">
-                    <a class="select-btn btn btn-indigo mt-3" href="{{ url_for('exch_results', orig_coin='BTC', dest_coin='BNB') }}" role="button">Search</a>
+                    <a class="trending-searches-btn select-btn btn btn-indigo mt-3" href="{{ url_for('exch_results', url_orig_coin='BTC', url_dest_coin='BNB') }}" role="button" data-click="BTC+BNB">Search</a>
                 </div>
             </div>
 
@@ -117,15 +117,15 @@
             <!-- Links -->
             <div class="row">
                 <div class="col-4 px-2 px-md-3 mb-0 mb-md-5">
-                    <a class="btn btn-indigo select-btn" href="https://www.coinbase.com/join/5b850192be8c8506e5572fb0" target="_blank" role="button">Sign up</a>
+                    <a class="referral-popular-exch btn btn-indigo select-btn" href="https://www.coinbase.com/join/5b850192be8c8506e5572fb0" target="_blank" role="button" data-exch="Coinbase PRO">Sign up</a>
                 </div>
 
                 <div class="col-4 px-2 px-md-3 mb-0 mb-md-5">
-                    <a class="btn btn-indigo select-btn" href="https://www.binance.com/?ref=11020500" target="_blank" role="button">Sign up</a>
+                    <a class="referral-popular-exch btn btn-indigo select-btn" href="https://www.binance.com/?ref=11020500" target="_blank" role="button" data-exch="Binance">Sign up</a>
                 </div>
 
                 <div class="col-4 px-2 px-md-3 mb-0 mb-md-5">
-                    <a class="btn btn-indigo select-btn" href="https://www.hbg.com/en-us/topic/invited/?invite_code=6gtv3" target="_blank" role="button">Sign up</a>
+                    <a class="referral-popular-exch btn btn-indigo select-btn" href="https://www.hbg.com/en-us/topic/invited/?invite_code=6gtv3" target="_blank" role="button" data-exch="Huobi">Sign up</a>
                 </div>
             </div>
         </div>
@@ -157,29 +157,27 @@
                     <h4 class="my-3 font-weight-bold">Ledger</h4>
                     <p class="grey-text">The most popular and trusted hardware manufacture of wallets to store cryptocurrency on.</p>
                 </div>
-
+                <div class="col-4 px-2 px-md-3">
+                    <img class="img-popular-services" src="/static/img/wallets/Keepkey.jpg" alt="KeepKeey-logo" height="60" width="60">
+                    <h4 class="my-3 font-weight-bold">KeepKey</h4>
+                    <p class="grey-text">KeepKey is a new kid on the block when it comes to crypto hardware wallets.</p>
+                </div>
                 <div class="col-4 px-2 px-md-3">
                     <img class="img-popular-services" src="/static/img/wallets/Trezor.png" alt="Trezor-logo" height="60" width="60">
                     <h4 class="my-3 font-weight-bold">Trezor</h4>
                     <p class="grey-text">The original Bitcoin (BTC) and ERC-20 token wallet. hardware wallet on the market.</p>
                 </div>
-
-                <div class="col-4 px-2 px-md-3">
-                    <img class="img-popular-services" src="/static/img/wallets/Keepkey.jpg" alt="KeepKeey-logo" height="60" width="60">
-                    <h4 class="my-3 font-weight-bold">KeepKeey</h4>
-                    <p class="grey-text">KeepKey is a new kid on the block when it comes to crypto hardware wallets.</p>
-                </div>
             </div>
             <!-- Links -->
             <div class="row">
                 <div class="col-4 mb-3 mb-sm-5">
-                    <a class="btn btn-indigo select-btn" href="https://www.ledger.com/products/ledger-nano-s?r=e9435a2e294a&tracker=MY_TRACKER" target="_blank" role="button">Check webiste</a>
+                    <a class="referral-popular-wallet btn btn-indigo select-btn" href="https://www.ledger.com/products/ledger-nano-s?r=e9435a2e294a&tracker=MY_TRACKER" target="_blank" role="button" data-wallet="Ledger">Check webiste</a>
                 </div>
                 <div class="col-4 mb-3 mb-sm-5">
-                    <a class="btn btn-indigo select-btn" href="https://shop.trezor.io?a=cbxmujtk" target="_blank" role="button">Check webiste</a>
+                    <a class="referral-popular-wallet btn btn-indigo select-btn" href="http://keepkey.go2cloud.org/SHEt" target="_blank" role="button" data-wallet="KeepKey">Check webiste</a>
                 </div>
                 <div class="col-4 mb-3 mb-sm-5">
-                    <a class="btn btn-indigo select-btn" href="http://keepkey.go2cloud.org/SHEt" target="_blank" role="button">Check webiste</a>
+                    <a class="referral-popular-wallet btn btn-indigo select-btn" href="https://shop.trezor.io?a=cbxmujtk" target="_blank" role="button" data-wallet="Trezor">Check webiste</a>
                 </div>
             </div>
         </div>

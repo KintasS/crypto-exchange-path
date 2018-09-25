@@ -161,7 +161,7 @@
                             <span aria-hidden="true" class="white-text">&times;</span>
                         </button>
                     </div>
-                    <form id="feedback-form" method="POST" action="{{ url_for('exchanges') }}">
+                    <form id="feedback-form" method="POST" action="">
                         {{ feedback_form.hidden_tag() }}
                         <div class="modal-body mx-0 mx-sm-3">
                             <h2 class="font-weight-bold text-center mt-2 mb-4" style="color: #212529;">We are listening</h2>
@@ -173,29 +173,29 @@
                                 <!-- <i class="fa fa-user fa-lg prefix grey-text d-inline"></i> -->
                                 <!-- {{ feedback_form.topic.label(class="form-control-label text-bigger") }} -->
                                 {% if feedback_form.topic.errors %}
-                                    {{ feedback_form.topic(class="form-control d-inline is-invalid", type="text", autocomplete="off") }}
+                                    {{ feedback_form.topic(id="feedback-topic", class="form-control d-inline is-invalid", type="text", autocomplete="off") }}
                                     <div class="invalid-feedback">
                                         {% for error in feedback_form.topic.errors %}
                                             <span>{{ error }}</span>
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ feedback_form.topic(class="form-control d-inline", type="text", placeholder="Location", autocomplete="off") }}
+                                    {{ feedback_form.topic(id="feedback-topic", class="form-control d-inline", type="text", placeholder="Location", autocomplete="off") }}
                                 {% endif %}
                             </div>
                             <div class="md-form mb-5">
                                 <i class="fa fa-tag prefix grey-text"></i>
                                 {% if feedback_form.subject.errors %}
-                                    {{ feedback_form.subject(id="form32", class="form-control is-invalid", type="text", autocomplete="off") }}
+                                    {{ feedback_form.subject(id="feedback-subject", class="form-control is-invalid", type="text", autocomplete="off") }}
                                     <div class="invalid-feedback">
                                         {% for error in feedback_form.subject.errors %}
                                             <span>{{ error }}</span>
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ feedback_form.subject(id="form32", class="form-control", type="text", autocomplete="off") }}
+                                    {{ feedback_form.subject(id="feedback-subject", class="form-control", type="text", autocomplete="off") }}
                                 {% endif %}
-                                <label data-error="wrong" data-success="right" for="form32">Subject</label>
+                                <label data-error="wrong" data-success="right" for="feedback-subject">Subject</label>
                             </div>
                             <div class="md-form">
                                 <i class="fa fa-pencil prefix grey-text"></i>
@@ -207,14 +207,14 @@
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ feedback_form.detail(id="form8", class="md-textarea form-control", rows="4", type="text") }}
+                                    {{ feedback_form.detail(id="feedback-text", class="md-textarea form-control", rows="4", type="text") }}
                                 {% endif %}
-                                <label data-error="wrong" data-success="right" for="form8">Your feedback</label>
+                                <label data-error="wrong" data-success="right" for="feedback-text">Your feedback</label>
                             </div>
                         </div>
                         <div class="modal-footer d-flex justify-content-center">
                             <div class="form-group">
-                                {{ feedback_form.feedback_submit(class="btn btn-dark-grey") }}
+                                {{ feedback_form.feedback_submit(class="send-feedback-btn btn btn-dark-grey") }}
                             </div>
                         </div>
                     </form>

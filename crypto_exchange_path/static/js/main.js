@@ -25,7 +25,12 @@ $(document).ready(function() {
             },
             highlighter: Object,
             afterSelect: function(item) {
+                // Change input to the selected coin's longname
                 $input_orig_coin.val(item.long_name).change();
+                // Change Search Form action (i.e. it's URL)
+                var formAction = $("#search-form").attr('action');
+                var newAction = formAction.replace(/result\/.*\+/, 'result/' + item.id + '+');
+                $("#search-form").attr('action', newAction);
             },
             sorter: function(items) {
                 return items.sort(Comparator);
@@ -45,7 +50,13 @@ $(document).ready(function() {
             },
             highlighter: Object,
             afterSelect: function(item) {
+                // Change input to the selected coin's longname
                 $input_dest_coin.val(item.long_name).change();
+                // Change Search Form action (i.e. it's URL)
+                var formAction = $("#search-form").attr('action');
+                var newAction = formAction.replace(/\+.*/, '+' + item.id);
+                $("#search-form").attr('action', newAction);
+
             },
             sorter: function(items) {
                 return items.sort(Comparator);
@@ -100,6 +111,7 @@ $(document).ready(function() {
     // Actions when submit button is clicked:
     //   - Hide current results being displayed
     //   - Hide 'Connecting options'
+    //   - Show processing modal
     $('#submit-btn').on('click', function() {
         $('#results').fadeOut(200);
         $('#intro').fadeOut(200);
@@ -138,17 +150,17 @@ $(document).ready(function() {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    /////   BLOCK LINKS
+    /////   BLOCK LINKS (IN RESULTS)
     ///////////////////////////////////////////////////////////////////////////
 
 
     // Show URL on Mouse Hover
     // Open in new window
-    $(".block-link").click(function() {
+    $(".referral-summary-link").click(function() {
         window.open($(this).find("a:first").attr("href"));
         return false;
     });
-    $(".block-link").hover(function() {
+    $(".referral-summary-link").hover(function() {
         $(this).find("a:first").css({
             color: '#4285F4'
         });
@@ -189,12 +201,89 @@ $(document).ready(function() {
     /////   GOOGLE ANALYTICS EVENTS
     ///////////////////////////////////////////////////////////////////////////
 
+    // WEB ACTIONS //
+
+    // 'Trending Searches Click' Event
+    $(".trending-searches-btn").click(function() {
+        var dataClick = $(this).attr("data-click");
+        gtag('event', 'Trending searches', {
+            'event_category': 'Click',
+            'event_label': dataClick
+        });
+    });
+
+    // 'Send Feedback' Event
+    $(".send-feedback-btn").click(function() {
+        var feedbackTopic = $("#feedback-topic").val();
+        var feedbackSuject = $("#feedback-subject").val();
+        var feedbackText = $("#feedback-text").val();
+        if ((feedbackTopic != '(Select a topic)') && (feedbackSuject != '') && (feedbackText != '')) {
+            gtag('event', 'Send feedback', {
+                'event_category': 'Click'
+            });
+        }
+    });
+
+    // REDIRECT EVENTS //
+
+    // 'Referral Popular Exchanges Button' Event
+    $(".referral-popular-exch").click(function() {
+        var exchangeName = $(this).attr("data-exch");
+        gtag('event', exchangeName, {
+            'event_category': 'Redirect - Exchange',
+            'event_label': 'Home - Popular exchanges'
+        });
+    });
+
+    // 'Referral Popular Wallet Button' Event
+    $(".referral-popular-wallet").click(function() {
+        var walletName = $(this).attr("data-wallet");
+        gtag('event', walletName, {
+            'event_category': 'Redirect - Wallet',
+            'event_label': 'Home - Popular wallets'
+        });
+    });
+
     // 'Referral Result Button' Event
     $(".referral-result-btn").click(function() {
         var exchangeName = $(this).attr("data-exch");
-        gtag('event', 'Redirect', {
-            'event_category': exchangeName,
+        gtag('event', exchangeName, {
+            'event_category': 'Redirect - Exchange',
             'event_label': 'Result button'
+        });
+    });
+
+    // 'Referral Result summary link' Event
+    $(".referral-summary-link").click(function() {
+        var exchangeName = $(this).attr("data-exch");
+        gtag('event', exchangeName, {
+            'event_category': 'Redirect - Exchange',
+            'event_label': 'Result Summary link'
+        });
+    });
+
+    // 'Referral Result detail link 1' Event (1 = first detail column)
+    $(".referral-detail-link-1").click(function() {
+        var exchangeName = $(this).html();
+        gtag('event', exchangeName, {
+            'event_category': 'Redirect - Exchange',
+            'event_label': 'Result Detail link (Column 1)'
+        });
+    });
+    // 'Referral Result detail link 2' Event (2 = first detail column)
+    $(".referral-detail-link-2").click(function() {
+        var exchangeName = $(this).html();
+        gtag('event', exchangeName, {
+            'event_category': 'Redirect - Exchange',
+            'event_label': 'Result Detail link (Column 2)'
+        });
+    });
+    // 'Referral Result detail link 3' Event (3 = first detail column)
+    $(".referral-detail-link-3").click(function() {
+        var exchangeName = $(this).html();
+        gtag('event', exchangeName, {
+            'event_category': 'Redirect - Exchange',
+            'event_label': 'Result Detail link (Column 3)'
         });
     });
 

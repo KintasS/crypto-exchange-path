@@ -43,6 +43,8 @@ def exchanges():
 @app.route("/home", methods=['GET', 'POST'])
 @app.route("/", methods=['GET', 'POST'])
 def home():
+    url_orig_coin = 'empty'
+    url_dest_coin = 'empty'
     input_form = SearchForm()
     # If 'calc_currency' exists in cockie, use it
     currency = request.cookies.get('calc_currency')
@@ -69,7 +71,9 @@ def home():
                                          user_exchanges=user_exchanges,
                                          title='Exchanges',
                                          feedback_form=feedback_form,
-                                         open_feedback_modal=open_fbck_modal))
+                                         open_feedback_modal=open_fbck_modal,
+                                         url_orig_coin=url_orig_coin,
+                                         url_dest_coin=url_dest_coin))
     # Store session ID in cookie if it is not already stored
     session_id = request.cookies.get('session')
     if not session_id:
@@ -78,10 +82,16 @@ def home():
     return resp
 
 
-@app.route("/exchanges/results/", methods=['GET', 'POST'])
-@app.route("/exchanges/results/<orig_coin>/<dest_coin>",
+@app.route("/exchanges/result/<url_orig_coin>+<url_dest_coin>",
            methods=['GET', 'POST'])
-def exch_results(orig_coin=None, dest_coin=None):
+def exch_results(url_orig_coin=None, url_dest_coin=None):
+    """There are three ways of landing in this page:
+         - Search form was filled: performs search and returns results
+         - Feedback form was filled: handles form and returns here
+         - Direct external link (no form was filled!): in this case,
+         the user is redirected to a temporal website where the search form
+         is filled and automatically executed.
+    """
     session_id = request.cookies.get('session')
     if not session_id:
         new_session_id = token_hex(8)
@@ -97,102 +107,89 @@ def exch_results(orig_coin=None, dest_coin=None):
     else:
         curr = Params.DEFAULT_CURRENCY
         input_form.currency.data = curr
-    # If 'orig_coin' and 'dest_coin' where provided, fill form
     auto_search = False
-    if orig_coin and dest_coin:
-        orig_coin = get_coin(orig_coin)
-        dest_coin = get_coin(dest_coin)
-        if orig_coin and dest_coin:
-            input_form.orig_coin.data = orig_coin.long_name
-            input_form.dest_coin.data = dest_coin.long_name
-            amt = fx_exchange("USD", orig_coin.id, 3000, logger)
-            input_form.orig_amt.data = str(math.ceil(amt))
-            auto_search = True
     feedback_form = FeedbackForm()
     exchanges = get_exchanges('Exchange')
     user_exchanges = exchanges
     path_results = None
     open_fbck_modal = False
-    # Actions if Search Form was filled
-    if input_form.search_submit.data and input_form.validate():
-        curr = input_form.currency.data
-        orig_loc = get_exchange(input_form.orig_loc.data)
-        orig_coin = get_coin_by_longname(input_form.orig_coin.data)
-        orig_amt = float(input_form.orig_amt.data)
-        dest_loc = get_exchange(input_form.dest_loc.data)
-        dest_coin = get_coin_by_longname(input_form.dest_coin.data)
-        connection_type = input_form.connection_type.data
-        user_exchanges = input_form.exchanges.data
-        # If user selected all Exchanges or none of them, don't filter
-        if len(user_exchanges) == len(exchanges):
-            user_exchanges = []
-        fee_settings = {"CEP": input_form.cep_promos.data,
-                        "Default": input_form.default_fee.data,
-                        "Binance": input_form.binance_fee.data}
-        start_time = datetime.datetime.now()
-        try:
-            paths = calc_paths(orig_loc, orig_coin, orig_amt,
-                               dest_loc, dest_coin, connection_type,
-                               user_exchanges, curr, fee_settings, logger)
-            path_results = len(paths)
-        # Catch generic exception just in case anything went wront in logic
-        except Exception as e:
-            error_notifier(type(e).__name__,
-                           traceback.format_exc(),
-                           mail,
-                           logger)
-            paths = []
-            path_results = -1
-        # Register query
-        finish_time = datetime.datetime.now()
-        results = len(paths)
-        exchs = ""
-        for exch in user_exchanges:
-            exchs += exch + '|'
-        exchs = exchs[:-1]
-        try:
-            query = QueryRegister(session_id=session_id,
-                                  orig_amt=orig_amt,
-                                  orig_coin=orig_coin.id,
-                                  orig_loc=orig_loc.id,
-                                  dest_coin=dest_coin.id,
-                                  dest_loc=dest_loc.id,
-                                  currency=curr,
-                                  connection_type=connection_type,
-                                  exchanges=exchs,
-                                  results=results,
-                                  start_time=start_time,
-                                  finish_time=finish_time)
-            db.session.add(query)
-            db.session.commit()
-        except Exception as e:
-            error_notifier(type(e).__name__,
-                           traceback.format_exc(),
-                           mail,
-                           logger)
-        # Select all Exchanges if no partial selection was made
-        if not user_exchanges:
-            user_exchanges = exchanges
-        # Return capped list of results
-        sorted_paths = sorted(paths, key=lambda x: x.total_fees)
-        sorted_paths = sorted_paths[0:Params.MAX_PATHS]
-    # Actions if Feedback Form was filled
+    # 1) ACTIONS IF *SEARCH* FORM WAS FILLED
+    if input_form.search_submit.data:
+        if input_form.validate():
+            curr = input_form.currency.data
+            orig_loc = get_exchange(input_form.orig_loc.data)
+            orig_coin = get_coin_by_longname(input_form.orig_coin.data)
+            orig_amt = float(input_form.orig_amt.data)
+            dest_loc = get_exchange(input_form.dest_loc.data)
+            dest_coin = get_coin_by_longname(input_form.dest_coin.data)
+            connection_type = input_form.connection_type.data
+            user_exchanges = input_form.exchanges.data
+            # If user selected all Exchanges or none of them, don't filter
+            if len(user_exchanges) == len(exchanges):
+                user_exchanges = []
+            fee_settings = {"CEP": input_form.cep_promos.data,
+                            "Default": input_form.default_fee.data,
+                            "Binance": input_form.binance_fee.data}
+            start_time = datetime.datetime.now()
+            try:
+                paths = calc_paths(orig_loc, orig_coin, orig_amt,
+                                   dest_loc, dest_coin, connection_type,
+                                   user_exchanges, curr, fee_settings, logger)
+                path_results = len(paths)
+            # Catch generic exception just in case anything went wront in logic
+            except Exception as e:
+                error_notifier(type(e).__name__,
+                               traceback.format_exc(),
+                               mail,
+                               logger)
+                paths = []
+                path_results = -1
+            # Register query
+            finish_time = datetime.datetime.now()
+            results = len(paths)
+            exchs = ""
+            for exch in user_exchanges:
+                exchs += exch + '|'
+            exchs = exchs[:-1]
+            try:
+                query = QueryRegister(session_id=session_id,
+                                      orig_amt=orig_amt,
+                                      orig_coin=orig_coin.id,
+                                      orig_loc=orig_loc.id,
+                                      dest_coin=dest_coin.id,
+                                      dest_loc=dest_loc.id,
+                                      currency=curr,
+                                      connection_type=connection_type,
+                                      exchanges=exchs,
+                                      results=results,
+                                      start_time=start_time,
+                                      finish_time=finish_time)
+                db.session.add(query)
+                db.session.commit()
+            except Exception as e:
+                error_notifier(type(e).__name__,
+                               traceback.format_exc(),
+                               mail,
+                               logger)
+            # Select all Exchanges if no partial selection was made
+            if not user_exchanges:
+                user_exchanges = exchanges
+            # Return capped list of results
+            sorted_paths = sorted(paths, key=lambda x: x.total_fees)
+            sorted_paths = sorted_paths[0:Params.MAX_PATHS]
+    # 2) ACTIONS IF *FEEDBACK* FORM WAS FILLED
     elif feedback_form.feedback_submit.data:
         # If form was filled, but with errors, open modal again
         open_fbck_modal = True
         if feedback_form.validate():
             open_fbck_modal = False
-            date = datetime.datetime.now()
-            topic = feedback_form.topic.data
-            subject = feedback_form.subject.data
-            detail = feedback_form.detail.data
-            feedback = Feedback(datetime=date,
-                                topic=topic,
-                                subject=subject,
-                                detail=detail)
-            db.session.add(feedback)
-            db.session.commit()
-            return redirect(url_for('exch_results'))
+            manage_feedback_form(feedback_form)
+            return redirect(url_for('home'))
+    # 3) ACTIONS IF *NO* FORM WAS FILLED (DIRECT LINK!)
+    else:
+        return redirect(url_for('auto_search',
+                                url_orig_coin=url_orig_coin,
+                                url_dest_coin=url_dest_coin))
     resp = make_response(render_template('exch_results.html', form=input_form,
                                          curr=curr, exchanges=exchanges,
                                          user_exchanges=user_exchanges,
@@ -201,7 +198,82 @@ def exch_results(orig_coin=None, dest_coin=None):
                                          auto_search=auto_search,
                                          feedback_form=feedback_form,
                                          title='Exchanges',
-                                         open_feedback_modal=open_fbck_modal))
+                                         open_feedback_modal=open_fbck_modal,
+                                         url_orig_coin=url_orig_coin,
+                                         url_dest_coin=url_dest_coin))
+    # Store session ID & Currency in cookie if there are not already stored
+    if not session_id:
+        resp.set_cookie('session', new_session_id)
+    if currency != curr:
+        resp.set_cookie('calc_currency', curr)
+    return resp
+
+
+@app.route("/exchanges/search/", methods=['GET', 'POST'])
+@app.route("/exchanges/search/<url_orig_coin>+<url_dest_coin>",
+           methods=['GET', 'POST'])
+def auto_search(url_orig_coin=None, url_dest_coin=None):
+    """Page that automatically performs a search based on the
+    arguments provided.
+    The feedback for may also get here as well.
+    """
+    session_id = request.cookies.get('session')
+    if not session_id:
+        new_session_id = token_hex(8)
+    sorted_paths = []
+    input_form = SearchForm()
+    # Choose currency: 1) Form 2) Cookie 3) Default
+    currency = request.cookies.get('calc_currency')
+    if input_form.currency.data != 'Empty':
+        curr = input_form.currency.data
+    elif currency:
+        curr = currency
+        input_form.currency.data = curr
+    else:
+        curr = Params.DEFAULT_CURRENCY
+        input_form.currency.data = curr
+    auto_search = False
+    feedback_form = FeedbackForm()
+    exchanges = get_exchanges('Exchange')
+    user_exchanges = exchanges
+    path_results = None
+    open_fbck_modal = False
+    # 1) ACTIONS IF *FEEDBACK* FORM WAS FILLED
+    if feedback_form.feedback_submit.data:
+        # If form was filled, but with errors, open modal again
+        open_fbck_modal = True
+        if feedback_form.validate():
+            open_fbck_modal = False
+            manage_feedback_form(feedback_form)
+            return redirect(url_for('auto_search'))
+    # 2) ACTIONS IF *NO* FORM WAS FILLED (DIRECT LINK!)
+    else:
+        if url_orig_coin and url_dest_coin:
+            url_orig_coin = url_orig_coin.upper()
+            url_dest_coin = url_dest_coin.upper()
+            orig_coin = get_coin(url_orig_coin)
+            dest_coin = get_coin(url_dest_coin)
+            if orig_coin:
+                input_form.orig_coin.data = orig_coin.long_name
+                amt = fx_exchange("USD", orig_coin.id, 3000, logger)
+                input_form.orig_amt.data = str(math.ceil(amt))
+            if dest_coin:
+                input_form.dest_coin.data = dest_coin.long_name
+            auto_search = True
+        else:
+            url_orig_coin = 'empty'
+            url_dest_coin = 'empty'
+    resp = make_response(render_template('exch_results.html', form=input_form,
+                                         curr=curr, exchanges=exchanges,
+                                         user_exchanges=user_exchanges,
+                                         paths=sorted_paths,
+                                         path_results=path_results,
+                                         auto_search=auto_search,
+                                         feedback_form=feedback_form,
+                                         title='Exchanges',
+                                         open_feedback_modal=open_fbck_modal,
+                                         url_orig_coin=url_orig_coin,
+                                         url_dest_coin=url_dest_coin))
     # Store session ID & Currency in cookie if there are not already stored
     if not session_id:
         resp.set_cookie('session', new_session_id)
