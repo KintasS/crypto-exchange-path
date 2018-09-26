@@ -275,6 +275,15 @@ $(document).ready(function() {
         });
     });
 
+    // 'Referral Result promo link' Event
+    $("#results .promo-link").click(function() {
+        var exchangeName = $(this).attr("data-exch");
+        gtag('event', exchangeName, {
+            'event_category': 'Redirect - Exchange',
+            'event_label': 'Result Promo link'
+        });
+    });
+
     // 'Referral Result detail link 1' Event (1 = first detail column)
     $(".referral-detail-link-1").click(function() {
         var exchangeName = $(this).html();
