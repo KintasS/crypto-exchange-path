@@ -9,6 +9,8 @@
 
     {% include '_search_canvas.html' %}
 
+    <!-- Variable to store promotions that have been displayed and must not to be displayed again. -->
+    {% set promotions_displayed = [] %}
 
     <!--Section: Results-->
     <section id="results" data-auto-search={{auto_search}}>
@@ -41,7 +43,7 @@
                     {% endif %}
 
                     {% for path in paths %}
-                        <div class="card mb-2 mb-sm-3">
+                        <div class="card mb-3">
                             <div class="card-header px-0 pt-3 pb-0" id="headingOne">
                                 <div class="d-block">
                                     <!-- Origin -->
@@ -149,6 +151,25 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Promotions section: Show promo if there is promo for Exchange 1 or 2. Display only once per exchange! -->
+                                <!-- Look for promotions in Exchange 1 -->
+                                {% if path.hop_1.exch_promo %}
+                                    {% if path.hop_1.exchange.id not in promotions_displayed %}
+                                        {% set promotions_displayed = promotions_displayed.append( path.hop_1.exchange.id ) %}
+                                        <div class="px-2 px-sm-3 px-lg-4 pt-3 pb-2 text-center">
+                                            <span class="text-danger font-italic"><b>Promo!</b> Use <a class="promo-link" href="{{ path.hop_1.exchange.site_url }}" target="_blank">this link</a> {{ path.hop_1.exch_promo }}</span>
+                                        </div>
+                                    {% endif %}
+                                <!-- Look for promotions in Exchange 2 -->
+                                {% elif path.hop_2 and path.hop_1.exchange.id != path.hop_2.exchange.id and path.hop_2.exch_promo %}
+                                    {% if path.hop_2.exchange.id not in promotions_displayed %}
+                                        {% set promotions_displayed = promotions_displayed.append( path.hop_2.exchange.id ) %}
+                                        <div class="px-2 px-sm-3 px-lg-4 pt-3 pb-2 text-center">
+                                            <span class="text-danger font-italic"><b>Promo!</b> Use <a class="promo-link" href="{{ path.hop_2.exchange.site_url }}" target="_blank">this link</a> {{ path.hop_2.exch_promo }}</span>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                                <!-- Collapse animation section -->
                                 <div class="d-block d-flex align-items-center justify-content-between">
                                     <div class="pl-2 pl-sm-3 pl-lg-4 smaller-font pt-1 pb-2">
                                         <a id="path-fee-details-collapse" class="collapse-animation" data-toggle="collapse" href="#{{ path.id }}" role="button" aria-expanded="false" aria-controls="{{ path.id }}">
@@ -158,7 +179,6 @@
                                             </div>
                                         </a>
                                     </div>
-
                                 </div>
 
                             </div>

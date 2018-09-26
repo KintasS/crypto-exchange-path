@@ -358,6 +358,11 @@
     font-weight: 500;
 }
 
+#results .promo-link {
+    color: #ff3547;
+    text-decoration: underline;
+}
+
 .referral-detail-link-1, .referral-detail-link-2, .referral-detail-link-3 {
     color: #212529;
 }

@@ -1,4 +1,5 @@
 from secrets import token_hex
+from flask import Markup
 from crypto_exchange_path.config import Params
 from crypto_exchange_path.utils_db import (calc_fee, fx_exchange,
                                            is_crypto, get_exchange)
@@ -266,6 +267,7 @@ class Hop:
 
     def __init__(self, exchange, trade, deposit_fee, withdraw_fee):
         self.exchange = exchange
+        self.exch_promo = self.get_exch_promo(exchange)
         self.trade = trade
         self.deposit_fee = None
         self.withdraw_fee = None
@@ -274,6 +276,15 @@ class Hop:
         self.withdraw_details = self.calc_fee_details('Withdrawal',
                                                       withdraw_fee)
         self.store_fees(deposit_fee, withdraw_fee)
+
+    def get_exch_promo(self, exchange):
+        """Checks whether the exchange has a user promo, in which case adds
+        the promo text. Otherwise it returns None.
+        """
+        if exchange.id in Params.USER_PROMOS:
+            return Markup(Params.USER_PROMOS[exchange.id])
+        else:
+            return None
 
     def store_fees(self, deposit_fee, withdraw_fee):
         if deposit_fee and deposit_fee[0] is not None:

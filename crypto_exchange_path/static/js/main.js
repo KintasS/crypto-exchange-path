@@ -201,14 +201,26 @@ $(document).ready(function() {
     /////   GOOGLE ANALYTICS EVENTS
     ///////////////////////////////////////////////////////////////////////////
 
+
+    // EXCHANGE SEARCHES //
+
+    $('#submit-btn').on('click', function() {
+        var formAction = $("#search-form").attr('action');
+        var searchCoins = formAction.replace('/exchanges/result/', '');
+        gtag('event', 'Exchange Engine Search', {
+            'event_category': 'Click',
+            'event_label': 'Exchange Engine Search: ' + String(searchCoins)
+        });
+    });
+
     // WEB ACTIONS //
 
     // 'Trending Searches Click' Event
     $(".trending-searches-btn").click(function() {
         var dataClick = $(this).attr("data-click");
-        gtag('event', 'Trending searches', {
+        gtag('event', 'Trending search', {
             'event_category': 'Click',
-            'event_label': dataClick
+            'event_label': 'Trending search: ' + String(dataClick)
         });
     });
 
@@ -219,7 +231,8 @@ $(document).ready(function() {
         var feedbackText = $("#feedback-text").val();
         if ((feedbackTopic != '(Select a topic)') && (feedbackSuject != '') && (feedbackText != '')) {
             gtag('event', 'Send feedback', {
-                'event_category': 'Click'
+                'event_category': 'Click',
+                'event_label': 'Send feedback: ' + String(feedbackTopic)
             });
         }
     });
