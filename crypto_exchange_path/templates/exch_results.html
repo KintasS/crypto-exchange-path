@@ -157,7 +157,7 @@
                                     {% if path.hop_1.exchange.id not in promotions_displayed %}
                                         {% set promotions_displayed = promotions_displayed.append( path.hop_1.exchange.id ) %}
                                         <div class="px-2 px-sm-3 px-lg-4 pt-3 pb-2 text-center">
-                                            <span class="text-danger font-italic"><b>Promo!</b> Use <a class="promo-link" href="{{ path.hop_1.exchange.site_url }}" target="_blank" data-exch="{{ path.hop_1.exchange.name }}">this link</a> {{ path.hop_1.exch_promo }}</span>
+                                            <span class="badge badge-danger">Promo!</span><span class="text-danger font-italic"> Use <a class="promo-link" href="{{ path.hop_1.exchange.site_url }}" target="_blank" data-exch="{{ path.hop_1.exchange.name }}">this link</a> {{ path.hop_1.exch_promo }}</span>
                                         </div>
                                     {% endif %}
                                 <!-- Look for promotions in Exchange 2 -->
@@ -165,7 +165,7 @@
                                     {% if path.hop_2.exchange.id not in promotions_displayed %}
                                         {% set promotions_displayed = promotions_displayed.append( path.hop_2.exchange.id ) %}
                                         <div class="px-2 px-sm-3 px-lg-4 pt-3 pb-2 text-center">
-                                            <span class="text-danger font-italic"><b>Promo!</b> Use <a class="promo-link" href="{{ path.hop_2.exchange.site_url }}" target="_blank" data-exch="{{ path.hop_2.exchange.name }}>this link</a> {{ path.hop_2.exch_promo }}</span>
+                                            <span class="badge badge-danger">Promo!</span><span class="text-danger font-italic"> Use <a class="promo-link" href="{{ path.hop_2.exchange.site_url }}" target="_blank" data-exch="{{ path.hop_2.exchange.name }}">this link</a> {{ path.hop_2.exch_promo }}</span>
                                         </div>
                                     {% endif %}
                                 {% endif %}
