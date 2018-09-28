@@ -237,7 +237,7 @@ body, h1, h2, h3, h4, h5, h6 {
 ///////////////////////////////////////////////////////// */
 
 #search-canvas {
-    background: url("/static/img/background/coins_1920_1280.jpg")no-repeat center center;
+    background: url("/static/img/background/coins_fs_low.jpg")no-repeat center center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
