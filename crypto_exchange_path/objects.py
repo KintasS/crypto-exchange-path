@@ -231,18 +231,18 @@ class Location:
         self.deposit_details = None
 
     def calc_fee_details(self, action, fee_lit):
-        fee_type = 'withdrawal'
-        if action == 'Deposit':
-            fee_type = 'deposit'
-        lit = None
-        if fee_lit:
+        if fee_lit and fee_lit[1] is not None:
+            fee_type = 'withdrawal'
+            if action == 'Deposit':
+                fee_type = 'deposit'
             lit = fee_lit[1]
-        literal = ("{} {} fee for {}: {}.")\
-            .format(self.exchange.name,
-                    fee_type,
-                    self.coin.symbol,
-                    lit)
-        return literal
+            literal = ("{} {} fee for {}: {}.")\
+                .format(self.exchange.name,
+                        fee_type,
+                        self.coin.symbol,
+                        lit)
+            return literal
+        return ""
 
     def set_exchange(self, exchange, coin):
         """If the auxiliar exchange 'Wallet / Bank' was provided,

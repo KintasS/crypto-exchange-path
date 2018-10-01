@@ -55,7 +55,7 @@ def home():
         curr = Params.DEFAULT_CURRENCY
     feedback_form = FeedbackForm()
     exchanges = get_exchanges('Exchange')
-    user_exchanges = exchanges
+    user_exchanges = [exch.id for exch in exchanges]
     open_fbck_modal = False
     # Actions if Feedback Form was filled
     if feedback_form.feedback_submit.data:
@@ -110,7 +110,7 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
     auto_search = False
     feedback_form = FeedbackForm()
     exchanges = get_exchanges('Exchange')
-    user_exchanges = exchanges
+    user_exchanges = [exch.id for exch in exchanges]
     path_results = None
     open_fbck_modal = False
     # 1) ACTIONS IF *SEARCH* FORM WAS FILLED
@@ -173,7 +173,7 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                                logger)
             # Select all Exchanges if no partial selection was made
             if not user_exchanges:
-                user_exchanges = exchanges
+                user_exchanges = [exch.id for exch in exchanges]
             # Return capped list of results
             sorted_paths = sorted(paths, key=lambda x: x.total_fees)
             sorted_paths = sorted_paths[0:Params.MAX_PATHS]
@@ -235,7 +235,7 @@ def auto_search(url_orig_coin=None, url_dest_coin=None):
     auto_search = False
     feedback_form = FeedbackForm()
     exchanges = get_exchanges('Exchange')
-    user_exchanges = exchanges
+    user_exchanges = [exch.id for exch in exchanges]
     path_results = None
     open_fbck_modal = False
     # 1) ACTIONS IF *FEEDBACK* FORM WAS FILLED

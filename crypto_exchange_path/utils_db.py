@@ -60,9 +60,7 @@ def get_exchanges(type=None):
         exchanges = Exchange.query.filter_by(type=type).all()
     else:
         exchanges = Exchange.query.all()
-    if exchanges:
-        exchanges = [exch.id for exch in exchanges]
-        return sorted(exchanges)
+    return exchanges
 
 
 def get_exchange_choices(types=[]):

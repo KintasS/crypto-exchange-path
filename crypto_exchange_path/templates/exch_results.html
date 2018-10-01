@@ -50,11 +50,11 @@
                                     <div class="d-inline-block pl-2 pl-sm-3 pl-lg-4" style="width: 17%">
                                         {% if path.origin.exchange.id != path.hop_1.exchange.id %}
                                             <div class="d-block d-flex align-items-center">
-                                                <img class="mr-1 mr-sm-2 img-exchange-lg" src="/static/img/exchanges/20/{{ path.origin.exchange.img_fn }}" alt="{{ path.origin.exchange.name }}-logo">
+                                                <img class="mr-1 mr-sm-2 img-exchange-lg" src="/static/img/exchanges/20/{{ path.origin.exchange.img_fn }}" alt="{{ path.origin.exchange.name }} logo">
                                                 <span class="orig-dest-format">{{ path.origin.exchange.name }}</span>
                                             </div>
                                             <div class="d-block d-flex align-items-center path-format mt-3">
-                                                <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.origin.coin.local_fn }}" alt="{{ path.origin.coin.long_name }}-logo">
+                                                <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.origin.coin.local_fn }}" alt="{{ path.origin.coin.long_name }} logo">
                                                 <small>{{ path.origin.coin.symbol }}<i class="fa fa-long-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i></small>
                                             </div>
                                         {% endif %}
@@ -62,20 +62,20 @@
                                     <!-- Hop 1 -->
                                     <div class="referral-summary-link d-inline-block" data-exch="{{ path.hop_1.exchange.name }}" style="width: 25%; cursor:pointer">
                                         <div class="d-block d-flex align-items-center">
-                                            <img class="mr-1 mr-sm-2 img-exchange-lg" src="/static/img/exchanges/20/{{ path.hop_1.exchange.img_fn }}" alt="{{ path.hop_1.exchange.name }}-logo">
+                                            <img class="mr-1 mr-sm-2 img-exchange-lg" src="/static/img/exchanges/20/{{ path.hop_1.exchange.img_fn }}" alt="{{ path.hop_1.exchange.name }} logo">
                                             <a class="exchange-format" href="{{ path.hop_1.exchange.site_url }}" target="_blank" style="color: #212529">{{ path.hop_1.exchange.name }}</a>
                                         </div>
                                         <div class="d-block d-flex align-items-center mt-3">
                                             <small class="d-flex align-items-center path-format">
-                                                <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_1.trade.sell_coin.local_fn }}" alt="{{ path.hop_1.trade.sell_coin.long_name }}-logo">
+                                                <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_1.trade.sell_coin.local_fn }}" alt="{{ path.hop_1.trade.sell_coin.long_name }} logo">
                                                 <span>{{ path.hop_1.trade.sell_coin.symbol }}</span>
                                                 <i class="fa fa-exchange mx-1 mx-sm-2" aria-hidden="true"></i>
-                                                <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_1.trade.buy_coin.local_fn }}" alt="{{ path.hop_1.trade.buy_coin.long_name }}-logo">
+                                                <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_1.trade.buy_coin.local_fn }}" alt="{{ path.hop_1.trade.buy_coin.long_name }} logo">
                                                 <span>{{ path.hop_1.trade.buy_coin.symbol }}</span>
                                                 {% if path.hop_2 %}
                                                     {% if path.hop_1.exchange.id == path.hop_2.exchange.id %}
                                                         <i class="fa fa-exchange mx-1 mx-sm-2" aria-hidden="true"></i>
-                                                        <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_2.trade.buy_coin.local_fn }}" alt="{{ path.hop_2.trade.buy_coin.long_name }}-logo">
+                                                        <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_2.trade.buy_coin.local_fn }}" alt="{{ path.hop_2.trade.buy_coin.long_name }} logo">
                                                         <span>{{ path.hop_2.trade.buy_coin.symbol }}</span>
                                                         {% if path.hop_1.exchange.id != path.destination.exchange.id %}
                                                             <i class="fa fa-long-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i>
@@ -95,15 +95,15 @@
                                     {% if path.hop_2 and path.hop_1.exchange.id != path.hop_2.exchange.id %}
                                         <div class="referral-summary-link d-inline-block" data-exch="{{ path.hop_2.exchange.name }}" style="width: 25%; cursor:pointer">
                                             <div class="d-block d-flex align-items-center">
-                                                <img class="mr-1 mr-sm-2 img-exchange-lg" src="/static/img/exchanges/20/{{ path.hop_2.exchange.img_fn }}" alt="{{ path.hop_2.exchange.name }}-logo">
+                                                <img class="mr-1 mr-sm-2 img-exchange-lg" src="/static/img/exchanges/20/{{ path.hop_2.exchange.img_fn }}" alt="{{ path.hop_2.exchange.name }} logo">
                                                 <a class="exchange-format" href="{{ path.hop_2.exchange.site_url }}" target="_blank" style="color: #212529">{{ path.hop_2.exchange.name }}</a>
                                             </div>
                                             <div class="d-block d-flex align-items-center mt-3">
                                                 <small class="d-flex align-items-center path-format">
-                                                    <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_2.trade.sell_coin.local_fn }}" alt="{{ path.hop_2.trade.sell_coin.long_name }}-logo">
+                                                    <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_2.trade.sell_coin.local_fn }}" alt="{{ path.hop_2.trade.sell_coin.long_name }} logo">
                                                     <span>{{ path.hop_2.trade.sell_coin.symbol }}</span>
                                                     <i class="fa fa-exchange mx-1 mx-sm-2" aria-hidden="true"></i>
-                                                    <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_2.trade.buy_coin.local_fn }}" alt="{{ path.hop_2.trade.buy_coin.long_name }}-logo">
+                                                    <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_2.trade.buy_coin.local_fn }}" alt="{{ path.hop_2.trade.buy_coin.long_name }} logo">
                                                     <span>{{ path.hop_2.trade.buy_coin.symbol }}</span>
                                                     {% if path.hop_2.exchange.id != path.destination.exchange.id %}
                                                         <i class="fa fa-long-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i>
@@ -119,11 +119,11 @@
                                     <div class="d-inline-block" style="width: 17%">
                                         {% if (not path.hop_2 and path.hop_1.exchange.id != path.destination.exchange.id) or (path.hop_2 and path.hop_2.exchange.id != path.destination.exchange.id) %}
                                             <div class="d-block d-flex align-items-center">
-                                                <img class="mr-1 mr-sm-2 img-exchange-lg" src="/static/img/exchanges/20/{{ path.destination.exchange.img_fn }}" alt="{{ path.destination.exchange.name }}-logo">
+                                                <img class="mr-1 mr-sm-2 img-exchange-lg" src="/static/img/exchanges/20/{{ path.destination.exchange.img_fn }}" alt="{{ path.destination.exchange.name }} logo">
                                                 <span class="orig-dest-format">{{ path.destination.exchange.name }}</span>
                                             </div>
                                             <div class="d-block d-flex align-items-center path-format mt-3">
-                                                <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.destination.coin.local_fn }}" alt="{{ path.destination.coin.long_name }}-logo">
+                                                <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.destination.coin.local_fn }}" alt="{{ path.destination.coin.long_name }} logo">
                                                 <small>{{ path.destination.coin.symbol }}</small>
                                             </div>
                                         {% else %}
@@ -231,7 +231,7 @@
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column">
                                                                     <div class="d-flex align-items-center justify-content-end">
-                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.origin.exchange.img_fn }}" alt="{{ path.origin.exchange.name }}-logo">
+                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.origin.exchange.img_fn }}" alt="{{ path.origin.exchange.name }} logo">
                                                                         {% if path.origin.exchange.site_url != '' %}
                                                                             <a class="referral-detail-link-2 font-weight-bold" href="{{ path.origin.exchange.site_url }}" target="_blank" role="button">{{ path.origin.exchange.name }}</a>
                                                                         {% else %}
@@ -247,7 +247,7 @@
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column justify-content-end">
                                                                     <div class="d-flex align-items-center justify-content-end">
-                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.hop_1.exchange.img_fn }}" alt="{{ path.hop_1.exchange.name }}-logo">
+                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.hop_1.exchange.img_fn }}" alt="{{ path.hop_1.exchange.name }} logo">
                                                                         <a class="referral-detail-link-3 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a>
                                                                     </div>
                                                                     <span class="text-right">{{ path.hop_1.trade.sell_amt_str }}</span>
@@ -291,7 +291,7 @@
                                                         <div class="col-5">
                                                             <div class="d-flex flex-column justify-content-end">
                                                                 <div class="d-flex align-items-center justify-content-end">
-                                                                    <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.hop_1.exchange.img_fn }}" alt="{{ path.hop_1.exchange.name }}-logo">
+                                                                    <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.hop_1.exchange.img_fn }}" alt="{{ path.hop_1.exchange.name }} logo">
                                                                     <a class="referral-detail-link-2 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a>
                                                                 </div>
                                                                 <span class="text-right">{{ path.hop_1.trade.sell_amt_str }}</span>
@@ -303,7 +303,7 @@
                                                         <div class="col-5">
                                                             <div class="d-flex flex-column justify-content-end">
                                                                 <div class="d-flex align-items-center justify-content-end">
-                                                                    <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.hop_1.exchange.img_fn }}" alt="{{ path.hop_1.exchange.name }}-logo">
+                                                                    <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.hop_1.exchange.img_fn }}" alt="{{ path.hop_1.exchange.name }} logo">
                                                                     <a class="referral-detail-link-3 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a>
                                                                 </div>
                                                                 <span class="text-right">{{ path.hop_1.trade.buy_amt_str }}</span>
@@ -360,7 +360,7 @@
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column justify-content-end">
                                                                     <div class="d-flex align-items-center justify-content-end">
-                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.hop_1.exchange.img_fn }}" alt="{{ path.hop_1.exchange.name }}-logo">
+                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.hop_1.exchange.img_fn }}" alt="{{ path.hop_1.exchange.name }} logo">
                                                                         <a class="referral-detail-link-2 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a>
                                                                     </div>
                                                                     <span class="text-right">{{ path.hop_1.trade.buy_amt_str }}</span>
@@ -372,7 +372,7 @@
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column justify-content-end">
                                                                     <div class="d-flex align-items-center justify-content-end">
-                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ step2b_dest.img_fn }}" alt="{{ step2b_dest.name }}-logo">
+                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ step2b_dest.img_fn }}" alt="{{ step2b_dest.name }} logo">
                                                                         {% if step2b_dest.site_url != '' %}
                                                                             <a class="referral-detail-link-3 font-weight-bold" href="{{ step2b_dest.site_url }}" target="_blank" role="button">{{ step2b_dest.name }}</a>
                                                                         {% else %}
@@ -421,7 +421,7 @@
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column justify-content-end">
                                                                     <div class="d-flex align-items-center justify-content-end">
-                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.hop_2.exchange.img_fn }}" alt="{{ path.hop_2.exchange.name }}-logo">
+                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.hop_2.exchange.img_fn }}" alt="{{ path.hop_2.exchange.name }} logo">
                                                                         <a class="referral-detail-link-2 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a>
                                                                     </div>
                                                                     <span class="text-right">{{ path.hop_2.trade.sell_amt_str }}</span>
@@ -433,7 +433,7 @@
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column justify-content-end">
                                                                     <div class="d-flex align-items-center justify-content-end">
-                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.hop_2.exchange.img_fn }}" alt="{{ path.hop_2.exchange.name }}-logo">
+                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.hop_2.exchange.img_fn }}" alt="{{ path.hop_2.exchange.name }} logo">
                                                                         <a class="referral-detail-link-3 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a>
                                                                     </div>
                                                                     <span class="text-right">{{ path.hop_2.trade.buy_amt_str }}</span>
@@ -483,7 +483,7 @@
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column justify-content-end">
                                                                     <div class="d-flex align-items-center justify-content-end">
-                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.hop_2.exchange.img_fn }}" alt="{{ path.hop_2.exchange.name }}-logo">
+                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.hop_2.exchange.img_fn }}" alt="{{ path.hop_2.exchange.name }} logo">
                                                                         <a class="referral-detail-link-2 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a>
                                                                     </div>
                                                                     <span class="text-right">{{ path.hop_2.trade.buy_amt_str }}</span>
@@ -495,7 +495,7 @@
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column justify-content-end">
                                                                     <div class="d-flex align-items-center justify-content-end">
-                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.destination.exchange.img_fn }}" alt="{{ path.destination.exchange.name }}-logo">
+                                                                        <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/16/{{ path.destination.exchange.img_fn }}" alt="{{ path.destination.exchange.name }} logo">
                                                                         {% if path.destination.exchange.site_url != '' %}
                                                                             <a class="referral-detail-link-3 font-weight-bold" href="{{ path.destination.exchange.site_url }}" target="_blank" role="button">{{ path.destination.exchange.name }}</a>
                                                                         {% else %}
