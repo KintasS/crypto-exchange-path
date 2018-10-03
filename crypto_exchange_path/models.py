@@ -1,4 +1,35 @@
+from flask_security import UserMixin, RoleMixin
 from crypto_exchange_path import db
+
+
+# Define models
+roles_users = db.Table(
+    'roles_users',
+    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+    db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
+)
+
+
+class Role(db.Model, RoleMixin):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+    def __str__(self):
+        return self.name
+
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True)
+    password = db.Column(db.String(255))
+    active = db.Column(db.Boolean())
+    confirmed_at = db.Column(db.DateTime())
+    roles = db.relationship('Role', secondary=roles_users,
+                            backref=db.backref('users', lazy='dynamic'))
+
+    def __str__(self):
+        return self.email
 
 
 class Feedback(db.Model):
@@ -14,35 +45,6 @@ class Feedback(db.Model):
                 .format(date, self.topic, self.subject))
 
 
-class Task(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    request_time = db.Column(db.DateTime, nullable=False)
-    name = db.Column(db.String(30), nullable=False)
-    status = db.Column(db.String(10), nullable=False)
-    not_before_time = db.Column(db.DateTime)
-    start_time = db.Column(db.DateTime)
-    finish_time = db.Column(db.DateTime)
-    user_id = db.Column(db.Integer)
-    return_info = db.Column(db.String(100))
-
-    def __repr__(self):
-        start_time = None
-        if self.not_before_time:
-            start_time = self.not_before_time.strftime("%Y%m%d")
-        if self.user_id and start_time:
-            return ("Task({}[user:{}]: Status:{}, Start Time:{})"
-                    .format(self.name, self.user_id, self.status, start_time))
-        elif (self.user_id is None) and (start_time is None):
-            return ("Task({}: Status:{})"
-                    .format(self.name, self.status))
-        elif self.user_id is None:
-            return ("Task({}: Status:{}, Start Time:{})"
-                    .format(self.name, self.status, start_time))
-        elif start_time is None:
-            return ("Task({}[user:{}]: Status:{})"
-                    .format(self.name, self.user_id, self.status))
-
-
 class Price(db.Model):
     coin = db.Column(db.String(10), primary_key=True, nullable=False)
     base_coin = db.Column(db.String(10), primary_key=True, nullable=False)
@@ -55,9 +57,9 @@ class Price(db.Model):
 
 class Coin(db.Model):
     id = db.Column(db.String(10), primary_key=True, nullable=False)
-    symbol = db.Column(db.String(10), nullable=False)
-    long_name = db.Column(db.String(50), nullable=False)
-    price_id = db.Column(db.String(10), nullable=False)
+    symbol = db.Column(db.String(10), unique=True, nullable=False)
+    long_name = db.Column(db.String(50), unique=True, nullable=False)
+    price_id = db.Column(db.String(10), unique=True, nullable=False)
     ranking = db.Column(db.Float)
     image_url = db.Column(db.String(100))
     local_fn = db.Column(db.String(100))
@@ -76,7 +78,7 @@ class Coin(db.Model):
 
 class Exchange(db.Model):
     id = db.Column(db.String(30), primary_key=True, nullable=False)
-    name = db.Column(db.String(30), nullable=False)
+    name = db.Column(db.String(30), unique=True, nullable=False)
     type = db.Column(db.String(30), nullable=False)
     img_fn = db.Column(db.String(50))
     site_url = db.Column(db.String(100))
