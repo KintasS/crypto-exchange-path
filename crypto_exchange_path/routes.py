@@ -21,6 +21,11 @@ from crypto_exchange_path.info_fetcher import (update_prices, import_exchanges,
 logger = set_logger('Main', 'INFO')
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
 def manage_feedback_form(feedback_form):
     date = datetime.datetime.now()
     topic = feedback_form.topic.data
