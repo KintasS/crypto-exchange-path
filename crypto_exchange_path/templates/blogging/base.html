@@ -1,0 +1,205 @@
+{% extends "layout.html" %}
+
+{% block meta %}
+{% endblock meta %}
+
+{% block style %}
+    <!-- Google fonts - Open Sans-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+    <!-- Your custom styles (optional) -->
+    <link href="{{ url_for('static', filename='css/blog.css') }}" rel="stylesheet">
+{% endblock style %}
+
+{% block extrastyle %}
+{% endblock extrastyle %}
+
+
+{% block title %}
+{% endblock title %}
+
+{% block navbar %}
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="{{ url_for('exchanges') }}">
+                <div class="d-block d-flex align-items-center">
+                    <!-- <span style="font-size: 1.5rem"><em>Crypto<b>FeeSaver</b></em><span class="grey-text">.com</span></span> -->
+                    <img class="img-logo" src="/static/img/logo/CFS_Logo_Left2_206x28.png" alt="CryptoFeeSaver">
+                    <span class="badge badge-warning ml-2 mr-0 mr-md-4">Beta</span>
+                </div>
+            </a>
+            <div id="navbarToggler" class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('exchanges') }}">Exchanges</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link under-construction" href="#">DEXs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link under-construction" href="#">Wallets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('blogging.index') }}">Blog</a>
+                    </li>
+                </ul>
+                <!-- Navbar Right Side -->
+                <ul class="navbar-nav ml-md-auto mr-md-3">
+                    <li class="nav-item">
+                        <a class="nav-item nav-link" href="#" data-toggle="modal" data-target="#modalFeedbackForm">Feedback</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock navbar %}
+
+
+
+{% block main %}
+    <!-- main content -->
+     <div class="container">
+         {% block message %}
+             {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-3">
+                        <div id="alert_div" class="alert alert-{{category}} alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            {{ message }}
+                        </div>
+                        </div>
+                     </div>
+                    {% endfor %}
+                {% endif %}
+             {% endwith %}
+         {% endblock %}
+     </div>
+
+     {% block blog_main %}
+     {% endblock blog_main %}
+
+     {% block extramain %}
+     {% endblock extramain %}
+
+{% endblock main %}
+
+
+{% block modals %}
+
+    <!-- Processing Modal -->
+    <div class="modal fade" id="processing-modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true" data-backdrop='true'>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div id="cssload-pgloading">
+                <div class="cssload-loadingwrap">
+                    <ul class="cssload-bokeh">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div class="modal fade" id="modalFeedbackForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-modal-open={{open_feedback_modal}}>
+        <div class="modal-dialog modal-lg modal-notify modal-info" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center" style="background-color: #212121;">
+                    <p class="heading lead font-weight-bold">Feedback</p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="white-text">&times;</span>
+                    </button>
+                </div>
+                <form id="feedback-form" method="POST" action="{{ url_for('home') }}">
+                    {{ meta.feedback_form.hidden_tag() }}
+                    <div class="modal-body mx-0 mx-sm-3">
+                        <h2 class="font-weight-bold text-center mt-2 mb-4" style="color: #212529;">We are listening</h2>
+                        <p class="grey-text text-center mx-0 mx-md-5">Let us know what you think about our platform. We are working hard to improve it every day,
+                            and your feedback is priceless to us... We are listening to you and will do our best to add the functionality you miss or to
+                            fix the bugs you might encounter.</p>
+                        <p class="grey-text text-center mx-5">Keep in touch!</p>
+                        <div class="form-group mb-3">
+                            <!-- <i class="fa fa-user fa-lg prefix grey-text d-inline"></i> -->
+                            <!-- {{ meta.feedback_form.topic.label(class="form-control-label text-bigger") }} -->
+                            {% if meta.feedback_form.topic.errors %}
+                                {{ meta.feedback_form.topic(id="feedback-topic", class="form-control d-inline is-invalid", type="text", autocomplete="off") }}
+                                <div class="invalid-feedback">
+                                    {% for error in meta.feedback_form.topic.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ meta.feedback_form.topic(id="feedback-topic", class="form-control d-inline", type="text", placeholder="Location", autocomplete="off") }}
+                            {% endif %}
+                        </div>
+                        <div class="md-form mb-5">
+                            <i class="fa fa-tag prefix grey-text"></i>
+                            {% if meta.feedback_form.subject.errors %}
+                                {{ meta.feedback_form.subject(id="feedback-subject", class="form-control is-invalid", type="text", autocomplete="off") }}
+                                <div class="invalid-feedback">
+                                    {% for error in meta.feedback_form.subject.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ meta.feedback_form.subject(id="feedback-subject", class="form-control", type="text", autocomplete="off") }}
+                            {% endif %}
+                            <label data-error="wrong" data-success="right" for="feedback-subject">Subject</label>
+                        </div>
+                        <div class="md-form">
+                            <i class="fa fa-pencil prefix grey-text"></i>
+                            {% if meta.feedback_form.detail.errors %}
+                                {{ meta.feedback_form.detail(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in meta.feedback_form.detail.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ meta.feedback_form.detail(id="feedback-text", class="md-textarea form-control", rows="4", type="text") }}
+                            {% endif %}
+                            <label data-error="wrong" data-success="right" for="feedback-text">Your feedback</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-center">
+                        <div class="form-group">
+                            {{ meta.feedback_form.feedback_submit(class="send-feedback-btn btn btn-dark-grey") }}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock modals %}
+
+
+{% block js %}
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({
+          "HTML-CSS": {
+          styles: {
+          ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+          },
+          tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']],processEscapes: true}
+          });
+    </script>
+    <script>
+        $(document).ready(function(){
+            $("#alert_div").fadeTo(3000, 500).slideUp(500, function(){
+               $("#alert_div").slideUp(500);
+                });
+        })
+    </script>
+{% endblock js %}
+
+{% block extrajs %}
+{% endblock extrajs %}

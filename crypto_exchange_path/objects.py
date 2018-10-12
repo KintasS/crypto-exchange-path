@@ -195,7 +195,7 @@ class Location:
 
     def __init__(self, type, exchange, amount, coin, logger):
         self.type = type
-        self.exchange = self.set_exchange(exchange, coin)
+        self.exchange = exchange
         self.amount = amount
         self.coin = coin
         self.deposit_fee = None
@@ -243,18 +243,6 @@ class Location:
                         lit)
             return literal
         return ""
-
-    def set_exchange(self, exchange, coin):
-        """If the auxiliar exchange 'Wallet / Bank' was provided,
-        it transforms it to the appropriate one.
-        """
-        if exchange.id != Params.AUX_EXCHANGE:
-            return exchange
-        else:
-            if is_crypto(coin.id):
-                return get_exchange('Wallet')
-            else:
-                return get_exchange('Bank')
 
     def __repr__(self):
         return "Location({}: {} [{} {}]').".format(self.type,

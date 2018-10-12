@@ -21,6 +21,7 @@ class Role(db.Model, RoleMixin):
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True)
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean())
@@ -30,6 +31,9 @@ class User(db.Model, UserMixin):
 
     def __str__(self):
         return self.email
+
+    def get_name(self):
+        return self.username
 
 
 class Feedback(db.Model):
@@ -142,3 +146,16 @@ class QueryRegister(db.Model):
         return ("QueryRegister([{}] id={}, results={})".format(self.session_id,
                                                                self.id,
                                                                self.results))
+
+# class Post(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     title = db.Column(db.String(256))
+#     text = db.Column(db.Text)
+#     img_fn = db.Column(db.String(100))
+#     post_date = db.Column(db.DateTime)
+#     last_modified_date = db.Column(db.DateTime)
+#     draft = db.Column(db.SmallInteger)
+#
+#     def __repr__(self):
+#         return ("Post(id={}, title={})".format(self.id,
+#                                                self.title))

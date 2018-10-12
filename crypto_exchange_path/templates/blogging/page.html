@@ -1,0 +1,124 @@
+{% extends "blogging/base.html" %}
+
+{% block meta %}
+    {% include 'blogging/metatags.html' %}
+{% endblock meta %}
+
+{% block title %}
+    <title>{{post.title}}</title>
+{% endblock title %}
+
+{% block blog_main %}
+
+    {% if meta.is_user_blogger %}
+        <div class="modal fade" id="confirmModal" >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Are you sure you want to delete this post?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ url_for('blogging.delete', post_id=post.post_id) }}" method="POST">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <input type="submit" value="Yes" class="btn btn-primary" id="confirmedDelete"/>
+                        </form>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <div class="row d-flex justify-content-center">
+        {% if post.editable %}
+            <a href="#confirmModal" data-toggle="modal" id="delete">
+                <span class="glyphicon glyphicon-trash"></span>&nbsp;Delete
+            </a>&nbsp&nbsp&nbsp&nbsp
+
+            <a href="{{ url_for('blogging.editor', post_id=post.post_id) }}" id="edit">
+                <span class="glyphicon glyphicon-edit"></span>&nbsp;Edit
+            </a>&nbsp&nbsp&nbsp&nbsp
+        {% endif %}
+        </div>
+    {% endif %}
+
+
+    <div class="container">
+
+            <!-- Latest Post -->
+            <section class="post-content">
+                <div class="row d-flex justify-content-center">
+                    <div class="post blog-post col-lg-10 col-xl-9">
+                        <!-- <div class="container"> -->
+                            <div class="post-single">
+                                <div class="post-details">
+                                    <div class="post-meta d-flex justify-content-between">
+                                        <div class="category">
+                                            <!-- article tags-->
+                                            {% if post.tags %}
+                                                {% for tag in post.tags %}
+                                                    <a href="{{ url_for('blogging.posts_by_tag', tag=tag.lower(), count=10, offset=0) }}">{{ tag }}</a>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <h1>{{ post.title }}</h1>
+                                    <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
+                                        <a href="{{ url_for('blogging.posts_by_author', user_id=post.user_id)}}" class="author d-flex align-items-center flex-wrap">
+                                            <div class="title"><span>{{post.user_name}}</span></div>
+                                        </a>
+                                        <div class="d-flex align-items-center flex-wrap">
+                                            <div class="date">{{post.post_date.strftime('%d %b, %Y')}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="post-body">
+                                        {{post.rendered_text | safe}}
+                                    </div>
+
+                                    <!-- Social media links -->
+                                    {% include "blogging/social_links.html" %}
+
+                                    <!-- Post Tags -->
+                                    <div class="d-flex justify-content-center post-tags">
+                                        <!-- article tags-->
+                                        {% if post.tags %}
+                                            {% for tag in post.tags %}
+                                                <a href="{{ url_for('blogging.posts_by_tag', tag=tag.lower(), count=10, offset=0) }}" class="tag">#{{ tag }}</a>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Previous and Next post -->
+                                    <div class="posts-nav d-flex justify-content-between align-items-stretch flex-column flex-md-row">
+                                        {% if meta.prev_post %}
+                                        <a href="{{ url_for('blogging.page_by_id', post_id=meta.prev_post['post_id']|int, slug=meta.prev_post['Slug']|string) }}" class="prev-post text-left d-flex align-items-center">
+                                            <div class="icon prev"><i class="fa fa-angle-left"></i></div>
+                                            <div class="text"><strong class="text-primary">Previous Post </strong>
+                                                <h6>{{ meta.prev_post['title']|string }}</h6>
+                                            </div>
+                                        </a>
+                                        {% endif %}
+                                        {% if meta.next_post %}
+                                        <a href="{{ url_for('blogging.page_by_id', post_id=meta.next_post['post_id']|int, slug=meta.next_post['Slug']|string) }}" class="next-post text-right d-flex align-items-center justify-content-end">
+                                            <div class="text"><strong class="text-primary">Next Post </strong>
+                                                <h6>{{ meta.next_post['title']|string }}</h6>
+                                            </div>
+                                            <div class="icon next"><i class="fa fa-angle-right">   </i></div>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </section>
+
+    </div>
+
+{% endblock blog_main %}
+
+{% block extrajs %}
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/blog_index.js') }}"></script>
+{% endblock extrajs %}

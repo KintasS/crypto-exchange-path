@@ -1,0 +1,26 @@
+<p class="text-center" id="post-share-links">
+    <a href="http://twitter.com/home?status={{ post.title | urlencode }}%20{{ request.url | urlencode }}%3Futm_source=twitter
+{% if config.BLOGGING_SITENAME %}%20%23{{ config.BLOGGING_SITENAME | replace(' ', '') | urlencode }}{% endif %}
+{% if config.BLOGGING_TWITTER_USERNAME %}%20{{ config.BLOGGING_TWITTER_USERNAME | urlencode }}{% endif %}" target="_blank" title="Share on Twitter">
+        <i class="fa fa-twitter fa-2x mr-4" aria-hidden="true" style="color: #1DA1F2;"></i>
+    </a>
+
+    <a href="http://www.facebook.com/sharer/sharer.php?u={{ request.url | urlencode }}%3Futm_source=facebook" target="_blank" title="Share on Facebook">
+        <i class="fa fa-facebook fa-2x mr-4" aria-hidden="true" style="color: #4867AA;"></i>
+    </a>
+
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.url | urlencode }}&title={{ post.title | urlencode }}" target="_blank" title="Share on LinkedIn">
+        <i class="fa fa-linkedin fa-2x mr-4" aria-hidden="true" style="color: #0077B5;"></i>
+    </a>
+
+    <a href="mailto:?subject={{ post.title }}&amp;body=I thought you might like this:
+  {{ post.title }}
+  {{ request.url }}?utm_source=email-share" target="_blank" title="Share via Email">
+        <i class="fa fa-envelope fa-2x mr-4" aria-hidden="true" style="color: #ec5b00;"></i>
+    </a>
+
+    <a class="copy-link-tooltip" data-clipboard-text="{{ request.url }}" data-toggle="tooltip" data-trigger="manual" data-placement="top" title="Copy link">
+        <i class="fa fa-link fa-2x" aria-hidden="true" style="color: #525252;"></i>
+    </a>
+
+</p>

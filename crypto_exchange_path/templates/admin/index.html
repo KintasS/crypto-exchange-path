@@ -13,6 +13,7 @@
                 </p>
             {% else %}
                 <p class="lead">Signed in as "{{ current_user.email }}"</p>
+                <a class="btn btn-primary" href="{{ url_for('blogging.editor') }}">Create post</a>
             {% endif %}
             <p>
 

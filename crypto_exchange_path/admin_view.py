@@ -134,3 +134,19 @@ class RoleView(MyModelView):
     can_edit = False
     page_size = 10
     column_display_pk = True
+
+
+class PostView(MyModelView):
+    can_create = True
+    can_delete = True
+    can_edit = True
+    page_size = 20
+    column_display_pk = True
+
+
+class TagView(MyModelView):
+    can_create = True
+    can_delete = True
+    can_edit = True
+    page_size = 20
+    column_display_pk = True

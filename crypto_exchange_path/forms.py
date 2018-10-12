@@ -8,7 +8,8 @@ from crypto_exchange_path.utils_db import (get_active_coins,
                                            get_exchange_choices,
                                            get_currency_choices,
                                            get_feedback_topics,
-                                           get_coin_by_longname)
+                                           get_coin_by_longname,
+                                           set_default_exch)
 from crypto_exchange_path.utils import is_number
 
 
@@ -18,16 +19,11 @@ class SearchForm(FlaskForm):
                            choices=get_currency_choices(),
                            validators=[DataRequired()],
                            default='Empty')
-    orig_loc = SelectField('Origin location',
-                           choices=get_exchange_choices(['Auxiliar',
-                                                         'Exchange']))
-    orig_coin = StringField('Origin coin')
     orig_amt = StringField('Origin amount')
-    dest_loc = SelectField('Destination location',
-                           choices=get_exchange_choices(['Auxiliar',
-                                                         'Exchange']),
-                           validators=[DataRequired()])
+    orig_coin = StringField('Origin coin')
+    orig_loc = StringField('Origin location')
     dest_coin = StringField('Destination coin')
+    dest_loc = StringField('Destination location')
     connection_type = RadioField('Connections',
                                  choices=Params.CONNECTIONS_CHOICES,
                                  default='2')
@@ -68,23 +64,19 @@ class SearchForm(FlaskForm):
                 raise ValidationError("Unknown coin")
 
     def validate_orig_loc(self, orig_loc):
-        # If 'orig_loc' is 'Wallet', then any coin will be available
-        if orig_loc.data == Params.AUX_EXCHANGE:
-            return
-        else:
-            coin = get_coin_by_longname(self.orig_coin.data)
-            if coin:
-                valid_coins = get_active_coins()
-                # Only raise error is 'orig_coin' exist
-                if coin.id in valid_coins:
-                    valid_exchs = get_exch_by_coin(coin.id)
-                    if valid_exchs:
-                        valid_exchs.add(Params.AUX_EXCHANGE)
-                    else:
-                        valid_exchs = (Params.AUX_EXCHANGE)
-                    if orig_loc.data not in valid_exchs:
-                        raise ValidationError("'{}' not available in '{}'"
-                                              .format(coin.id, orig_loc.data))
+        coin = get_coin_by_longname(self.orig_coin.data)
+        if coin:
+            valid_coins = get_active_coins()
+            # Only raise error is 'orig_coin' exist
+            if coin.id in valid_coins:
+                # If valid coin but no exchange, set default exchange
+                if not orig_loc.data or orig_loc.data in ['Wallet', 'Bank']:
+                    orig_loc.data = set_default_exch(coin.id)
+                    return
+                valid_exchs = get_exch_by_coin(coin.id)
+                if orig_loc.data not in valid_exchs:
+                    raise ValidationError("'{}' not available in '{}'"
+                                          .format(coin.id, orig_loc.data))
 
     def validate_dest_coin(self, dest_coin):
         if not dest_coin.data:
@@ -100,23 +92,19 @@ class SearchForm(FlaskForm):
                 raise ValidationError("Same origin and destination coin")
 
     def validate_dest_loc(self, dest_loc):
-        # If 'dest_loc' is 'Wallet', then any coin will be available
-        if dest_loc.data == Params.AUX_EXCHANGE:
-            return
-        else:
-            coin = get_coin_by_longname(self.dest_coin.data)
-            if coin:
-                valid_coins = get_active_coins()
-                # Only raise error is 'dest_coin' exist
-                if coin.id in valid_coins:
-                    valid_exchs = get_exch_by_coin(coin.id)
-                    if valid_exchs:
-                        valid_exchs.add(Params.AUX_EXCHANGE)
-                    else:
-                        valid_exchs = (Params.AUX_EXCHANGE)
-                    if dest_loc.data not in valid_exchs:
-                        raise ValidationError("'{}' not available in '{}'"
-                                              .format(coin.id, dest_loc.data))
+        coin = get_coin_by_longname(self.dest_coin.data)
+        if coin:
+            valid_coins = get_active_coins()
+            # Only raise error is 'dest_coin' exist
+            if coin.id in valid_coins:
+                # If valid coin but no exchange, set default exchange
+                if not dest_loc.data or dest_loc.data in ['Wallet', 'Bank']:
+                    dest_loc.data = set_default_exch(coin.id)
+                    return
+                valid_exchs = get_exch_by_coin(coin.id)
+                if dest_loc.data not in valid_exchs:
+                    raise ValidationError("'{}' not available in '{}'"
+                                          .format(coin.id, dest_loc.data))
 
 
 class FeedbackForm(FlaskForm):

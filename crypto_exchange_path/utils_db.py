@@ -53,11 +53,13 @@ def get_exchange(id):
         return None
 
 
-def get_exchanges(type=None):
+def get_exchanges(types=[]):
     """Returns the list of exchanges available in 'Exchange' table.
     """
-    if type:
-        exchanges = Exchange.query.filter_by(type=type).all()
+    exchanges = []
+    if types:
+        for type in types:
+            exchanges += Exchange.query.filter_by(type=type).all()
     else:
         exchanges = Exchange.query.all()
     return exchanges
@@ -178,6 +180,16 @@ def is_crypto(crypto):
         return True
     else:
         return False
+
+
+def set_default_exch(coin_id):
+    """ Set default exchange ('Wallet' or 'Bank') depending on the coin
+    provided.
+    """
+    if is_crypto(coin_id):
+        return 'Wallet'
+    else:
+        return 'Bank'
 
 
 def fx_exchange(orig_coin, dest_coin, amount, logger):

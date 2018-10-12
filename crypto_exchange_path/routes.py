@@ -59,7 +59,7 @@ def home():
     else:
         curr = Params.DEFAULT_CURRENCY
     feedback_form = FeedbackForm()
-    exchanges = get_exchanges('Exchange')
+    exchanges = get_exchanges(['Exchange'])
     user_exchanges = [exch.id for exch in exchanges]
     open_fbck_modal = False
     # Actions if Feedback Form was filled
@@ -114,7 +114,7 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
         input_form.currency.data = curr
     auto_search = False
     feedback_form = FeedbackForm()
-    exchanges = get_exchanges('Exchange')
+    exchanges = get_exchanges(['Exchange'])
     user_exchanges = [exch.id for exch in exchanges]
     path_results = None
     open_fbck_modal = False
@@ -239,7 +239,7 @@ def auto_search(url_orig_coin=None, url_dest_coin=None):
         input_form.currency.data = curr
     auto_search = False
     feedback_form = FeedbackForm()
-    exchanges = get_exchanges('Exchange')
+    exchanges = get_exchanges(['Exchange'])
     user_exchanges = [exch.id for exch in exchanges]
     path_results = None
     open_fbck_modal = False

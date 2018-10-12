@@ -4,9 +4,9 @@
 
             <div class="container py-4 py-md-5">
 
-                <h2 class="mt-0 mb-2 font-weight-bold text-center">Cryptoasset exchange engine</h2>
+                <h2 class="mt-0 mt-xl-4 mb-2 font-weight-bold text-center">Cryptoasset exchange engine</h2>
 
-                <h5 class="text-center my-4">Find the cheapest way to buy or exchange cryptoassets</h5>
+                <h5 class="text-center my-4 mb-xl-5">Find the cheapest way to buy or exchange cryptoassets</h5>
 
                 <div class="row no-gutters d-flex justify-content-center">
                     <div class="col-12 col-md-10 col-lg-11 col-xl-12">
@@ -15,14 +15,14 @@
                                 {{ form.hidden_tag() }}
                                 <div class="row d-flex justify-content-between no-gutters">
                                     <!-- <fieldset class="form-group"> -->
-                                        <div class="col-12 col-lg-6 mb-2">
+                                        <div class="col-12 col-xl-6 mb-3 pr-xl-4">
                                             <div class="d-flex align-items-center justify-content-start">
-                                                <p class="font-weight-bold mb-0 mb-lg-1">From</p>
+                                                <p class="large-font font-weight-bold mb-1 mb-lg-2">From</p>
                                                 <a class="no-link-tooltip text-right ml-2 mb-1" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="<em><b>Origin details: (1)</b> Amount of the original coin you want to exchange; <b>(2)</b> The coin (either fiat or crypto) to be exchanged; and <b>(3)</b> The place from where to start the operation (i.e. where you have the coins now).</em>">
                                                     <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
                                                 </a>
                                             </div>
-                                            <div class="row d-flex justify-content-start no-gutters pr-lg-4">
+                                            <div class="row d-flex justify-content-start no-gutters">
                                                 <!-- Currency (HIDDEN TO USER) -->
                                                 <div class="col-12 d-none">
                                                     <div class="form-group mb-0">
@@ -33,14 +33,14 @@
                                                 <div class="col-4 pr-1 pr-sm-2">
                                                     <div class="form-group mb-0">
                                                         {% if form.orig_amt.errors %}
-                                                            {{ form.orig_amt(class="form-control is-invalid", autocomplete="off", spellcheck="false") }}
+                                                            {{ form.orig_amt(class="form-control track-filled is-invalid", autocomplete="off", spellcheck="false") }}
                                                             <div class="invalid-feedback">
                                                                 {% for error in form.orig_amt.errors %}
                                                                     <span>{{ error }}</span>
                                                                 {% endfor %}
                                                             </div>
                                                         {% else %}
-                                                            {{ form.orig_amt(class="form-control", placeholder="Amount", autocomplete="off", spellcheck="false") }}
+                                                            {{ form.orig_amt(class="form-control track-filled", placeholder="Amount", autocomplete="off", spellcheck="false") }}
                                                         {% endif %}
                                                     </div>
                                                 </div>
@@ -48,37 +48,37 @@
                                                 <div class="col-4 pr-1 pr-sm-2">
                                                     <div id="input-orig-coin" class="form-group mb-0">
                                                         {% if form.orig_coin.errors %}
-                                                            {{ form.orig_coin(class="form-control typeahead is-invalid", type="text", autocomplete="off", spellcheck="false") }}
+                                                            {{ form.orig_coin(class="form-control track-filled typeahead is-invalid", type="text", autocomplete="off", spellcheck="false") }}
                                                             <div class="invalid-feedback">
                                                                 {% for error in form.orig_coin.errors %}
                                                                     <span>{{ error }}</span>
                                                                 {% endfor %}
                                                             </div>
                                                         {% else %}
-                                                            {{ form.orig_coin(class="form-control typeahead", type="text", placeholder="Coin", autocomplete="off", spellcheck="false") }}
+                                                            {{ form.orig_coin(class="form-control track-filled typeahead", type="text", placeholder="Coin", autocomplete="off", spellcheck="false") }}
                                                         {% endif %}
                                                     </div>
                                                 </div>
                                                 <!-- Origin location -->
                                                 <div class="col-4 pr-1 pr-sm-2">
-                                                    <div class="form-group mb-0">
+                                                    <div id="input-orig-loc" class="form-group mb-0">
                                                         {% if form.orig_loc.errors %}
-                                                            {{ form.orig_loc(class="form-control is-invalid", type="text", autocomplete="off", spellcheck="false") }}
+                                                            {{ form.orig_loc(class="form-control track-filled typeahead is-invalid", type="text", autocomplete="off", spellcheck="false") }}
                                                             <div class="invalid-feedback">
                                                                 {% for error in form.orig_loc.errors %}
                                                                     <span>{{ error }}</span>
                                                                 {% endfor %}
                                                             </div>
                                                         {% else %}
-                                                            {{ form.orig_loc(class="form-control", type="text", placeholder="Location", autocomplete="off", spellcheck="false") }}
+                                                            {{ form.orig_loc(class="form-control track-filled typeahead", type="text", placeholder="Location", autocomplete="off", spellcheck="false") }}
                                                         {% endif %}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-8 col-lg-4 mb-2">
+                                        <div class="col-8 col-xl-4 mb-3">
                                             <div class="d-flex align-items-center justify-content-start">
-                                                <p class="font-weight-bold mb-0 mb-lg-1">To</p>
+                                                <p class="large-font font-weight-bold mb-1 mb-lg-2">To</p>
                                                 <a class="no-link-tooltip text-right ml-2 mb-1" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="<em><b>Destination details: (1)</b> The coin (either fiat or crypto) you want to buy; and <b>(2)</b> The place where you want to store the coin after performing the operation.</em>">
                                                     <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
                                                 </a>
@@ -88,37 +88,36 @@
                                                 <div class="col-6 pr-1 pr-sm-2">
                                                     <div id="input-dest-coin" class="form-group mb-0">
                                                         {% if form.dest_coin.errors %}
-                                                            {{ form.dest_coin(class="form-control typeahead is-invalid", type="text", autocomplete="off", spellcheck="false") }}
+                                                            {{ form.dest_coin(class="form-control track-filled typeahead is-invalid", type="text", autocomplete="off", spellcheck="false") }}
                                                             <div class="invalid-feedback">
                                                                 {% for error in form.dest_coin.errors %}
                                                                     <span>{{ error }}</span>
                                                                 {% endfor %}
                                                             </div>
                                                         {% else %}
-                                                            {{ form.dest_coin(class="form-control typeahead", type="text", placeholder="Coin", autocomplete="off", spellcheck="false") }}
+                                                            {{ form.dest_coin(class="form-control track-filled typeahead", type="text", placeholder="Coin", autocomplete="off", spellcheck="false") }}
                                                         {% endif %}
                                                     </div>
                                                 </div>
                                                 <!-- Destination location -->
                                                 <div class="col-6 pr-1 pr-sm-2">
-                                                    <div class="form-group mb-0">
+                                                    <div id="input-dest-loc" class="form-group mb-0">
                                                         {% if form.dest_loc.errors %}
-                                                            {{ form.dest_loc(class="form-control is-invalid", type="text", autocomplete="off", spellcheck="false") }}
+                                                            {{ form.dest_loc(class="form-control track-filled typeahead is-invalid", type="text", autocomplete="off", spellcheck="false") }}
                                                             <div class="invalid-feedback">
                                                                 {% for error in form.dest_loc.errors %}
                                                                     <span>{{ error }}</span>
                                                                 {% endfor %}
                                                             </div>
                                                         {% else %}
-                                                            {{ form.dest_loc(class="form-control", type="text", placeholder="Destination", autocomplete="off", spellcheck="false") }}
+                                                            {{ form.dest_loc(class="form-control track-filled typeahead", type="text", placeholder="Location", autocomplete="off", spellcheck="false") }}
                                                         {% endif %}
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                         <!-- </fieldset> -->
-                                        <div class="col-4 col-lg-2 d-flex justify-content-center align-items-start" style="margin-top: 1.7rem">
+                                        <div class="col-4 col-xl-2 d-flex justify-content-center align-items-start" style="margin-top: 2rem">
                                             <div class="form-group mb-0">
                                                 {{ form.search_submit(id="submit-btn", class="btn btn-deep-orange m-0") }}
                                             </div>
@@ -134,7 +133,7 @@
                                 <div class="col d-flex justify-content-start">
                                     <a class="text-white collapse-animation" data-toggle="collapse" href="#options-collapse" role="button" aria-expanded="false" aria-controls="options-collapse">
                                         <div class="d-block d-flex align-items-center">
-                                            <span>Search options</span>
+                                            <span class="large-font">Search options</span>
                                             <i class="fa fa-chevron-down px-2" aria-hidden="true"></i>
                                         </div>
                                     </a>

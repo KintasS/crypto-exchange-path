@@ -1,3 +1,7 @@
+/* /////////////////////////////////////////////////////////
+////////////  STRUCTURAL FORMATING  ///////////////////////
+///////////////////////////////////////////////////////// */
+
 .lead, .display-4, .display-5 {
     font-weight: 400
 }
@@ -6,16 +10,11 @@ body, h1, h2, h3, h4, h5, h6 {
     font-weight: 400;
 }
 
-/* /////////////////////////////////////////////////////////
-////////////  STRUCTURAL FORMATING  ///////////////////////
-///////////////////////////////////////////////////////// */
-
 @media (max-width: 410px) {
     html {
         font-size: 11px;
     }
     main {
-        padding-top: 4.2rem;
         min-height: 88vh;
     }
     img.img-exchange-lg {
@@ -48,7 +47,6 @@ body, h1, h2, h3, h4, h5, h6 {
         font-size: 12px;
     }
     main {
-        padding-top: 4.2rem;
         min-height: 86.5vh;
     }
     img.img-exchange-lg {
@@ -81,7 +79,6 @@ body, h1, h2, h3, h4, h5, h6 {
         font-size: 13px;
     }
     main {
-        padding-top: 4.2rem;
         min-height: 86vh;
     }
     img.img-exchange-lg {
@@ -114,7 +111,6 @@ body, h1, h2, h3, h4, h5, h6 {
         font-size: 14px;
     }
     main {
-        padding-top: 5.5rem;
         min-height: 85vh;
     }
     img.img-exchange-lg {
@@ -147,7 +143,6 @@ body, h1, h2, h3, h4, h5, h6 {
         font-size: 14px;
     }
     main {
-        padding-top: 5.5rem;
         min-height: 85vh;
     }
     img.img-exchange-lg {
@@ -176,11 +171,10 @@ body, h1, h2, h3, h4, h5, h6 {
 }
 
 @media (min-width: 992px) {
-    html {
-        font-size: 14px;
-    }
+    /* html {
+        font-size: 16px;
+    } */
     main {
-        padding-top: 5.5rem;
         min-height: 85vh;
     }
     img.img-exchange-lg {
@@ -192,8 +186,8 @@ body, h1, h2, h3, h4, h5, h6 {
         height: 16px;
     }
     img.img-coin {
-        width: 14px;
-        height: 14px
+        width: 16px;
+        height: 16px
     }
     img.img-trending-coin {
         width: 60px;
@@ -208,9 +202,9 @@ body, h1, h2, h3, h4, h5, h6 {
     }
 }
 
-/* a, a.disabled:hover, a:disabled:hover {
-    color: #5c5c5c;
-} */
+.large-font {
+    font-size: 1.2rem;
+}
 
 .light-grey-color {
     color: #DCDCDC;
@@ -250,9 +244,9 @@ body, h1, h2, h3, h4, h5, h6 {
 }
 
 #submit-btn {
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: bold;
-    padding: .7rem 1.3rem;
+    padding: .6rem 1.3rem;
 }
 
 /* Typeahead results */
@@ -407,54 +401,6 @@ body, h1, h2, h3, h4, h5, h6 {
         padding: .4rem 0.8rem;
         margin: .2rem 0rem;
     }
-}
-
-/* /////////////////////////////////////////////////////////
-////////////  NAVBAR  /////////////////////////////////////
-///////////////////////////////////////////////////////// */
-
-#currency-btn .dropdown-toggle {
-    padding: .4rem 1rem .4rem 0.8rem;
-}
-
-#currency-btn .dropdown-menu {
-    min-width: 5.8rem;
-}
-
-#currency-btn .dropdown-menu .dropdown-item {
-    padding: .3rem .0rem .3rem .75rem;
-    font-size: 85%;
-}
-
-.navbar {
-    background-color: #ffffff;
-    font-weight: 400;
-}
-
-.navbar-light .navbar-nav .nav-link {
-    color: #000;
-}
-
-.navbar-light .navbar-nav .nav-link.no-link-tooltip {
-    color: #797979 !important;
-}
-
-/* .top-nav-collapse {
-    background-color: #ffffff;
-} */
-
-/* /////////////////////////////////////////////////////////
-////////////  FOOTER  ////////////////////////////////////
-///////////////////////////////////////////////////////// */
-
-/* .page-footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-} */
-
-footer {
-    background-color: #212121;
 }
 
 /* /////////////////////////////////////////////////////////

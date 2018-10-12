@@ -5,7 +5,7 @@ from crypto_exchange_path import db
 from crypto_exchange_path.models import Coin, TradePair, Exchange, Price, Fee
 from crypto_exchange_path.config import Params
 from crypto_exchange_path.utils_db import (get_active_coins, get_exch_by_coin,
-                                           get_coin_by_price_id)
+                                           get_coin_by_price_id, get_exchanges)
 from crypto_exchange_path.utils import generate_file_path, resize_image
 
 
@@ -356,17 +356,39 @@ def update_coins_file(file):
 
 
 def generate_exchs_file(file):
+    """Updates the JSON file that is used to populate locations in
+    the exchange search form.
+    """
+    result_dict = {}
+    exchs = get_exchanges(['Wallet', 'Exchange'])
+    exch_order = 1
+    for exch in exchs:
+        exch_dic = {"id": exch.id,
+                    "name": exch.name,
+                    "img": exch.img_fn,
+                    "ranking": exch_order}
+        result_dict[exch.id] = exch_dic
+        exch_order = exch_order + 1
+    # Repleace data in JSON with merged data and save to file:
+    with open(file, "w") as f:
+        json.dump(result_dict, f)
+
+
+def generate_exchs_by_coin_file(file):
     """Updates the JSON file that is used by Javascript for tests.
     """
     result_dict = {}
     coins = Coin.query.filter_by(status='Active')
     for coin in coins:
+        wallet_bank = 'Wallet'
+        if coin.type == 'Fiat':
+            wallet_bank = 'Bank'
         try:
             exchs = list(get_exch_by_coin(coin.symbol))
-            exchs.append('Wallet')
+            exchs.append(wallet_bank)
             result_dict[coin.long_name] = exchs
         except Exception as e:
-            result_dict[coin.long_name] = ['Wallet']
+            result_dict[coin.long_name] = [wallet_bank]
     # Repleace data in JSON with merged data and save to file:
     with open(file, "w") as f:
         json.dump(result_dict, f)

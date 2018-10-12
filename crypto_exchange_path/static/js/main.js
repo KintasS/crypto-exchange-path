@@ -10,17 +10,21 @@ $(document).ready(function() {
         return 0;
     }
 
-    $.get("/static/data/coins.json", function(data) {
+    var inputOrigCoinChanged = true;
+    var inputDestCoinChanged = true;
+    $.get("/static/data/coins.json", function(coinData) {
 
         // Typeahead for origin coin
         var $input_orig_coin = $("#input-orig-coin .typeahead");
         $input_orig_coin.typeahead({
-            source: data,
-            autoSelect: true,
+            source: coinData,
+            autoSelect: false,
             changeInputOnMove: false,
-            items: 20,
+            showHintOnFocus: true,
+            selectOnBlur: false,
+            items: 50,
             displayText: function(item) {
-                return '<div class="d-flex align-items-center"><img class="mr-1" src="/static/img/coins/16/' + item.img + '" alt="" width="16" height="16"> ' +
+                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/coins/16/' + item.img + '" alt="" width="16" height="16"> ' +
                     item.long_name + ' (' + item.name + ')</div>'
             },
             highlighter: Object,
@@ -40,12 +44,14 @@ $(document).ready(function() {
         // Typeahead for destination coin
         var $input_dest_coin = $("#input-dest-coin .typeahead");
         $input_dest_coin.typeahead({
-            source: data,
-            autoSelect: true,
+            source: coinData,
+            autoSelect: false,
             changeInputOnMove: false,
-            items: 20,
+            showHintOnFocus: true,
+            selectOnBlur: false,
+            items: 50,
             displayText: function(item) {
-                return '<div class="d-flex align-items-center"><img class="mr-1" src="/static/img/coins/16/' + item.img + '" alt="" width="16" height="16"> ' +
+                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/coins/16/' + item.img + '" alt="" width="16" height="16"> ' +
                     item.long_name + ' (' + item.name + ')</div>'
             },
             highlighter: Object,
@@ -65,6 +71,184 @@ $(document).ready(function() {
 
     }, 'json');
 
+    // Typeahead for origin location
+    var inputOrigExchanges = []
+    var $input_orig_loc = $("#input-orig-loc .typeahead");
+    $input_orig_loc.typeahead({
+        source: function(query, process) {
+            // Open file with Exchange attributes
+            $.get("/static/data/exchanges.json", function(exchangeData) {
+                // Open file with exchanges for each coin
+                $.get("/static/data/exchanges_by_coin.json", function(exchsByCoin) {
+                    console.log(inputOrigCoinChanged)
+                    inputCoin = $('#orig_coin').val()
+                    console.log(inputCoin)
+                    // If there is input coin, get exchanges for that coin
+                    if ((inputOrigCoinChanged == true) && (inputCoin.length > 0)) {
+                        console.log("entro a cambiar exchanges")
+
+                        if (inputCoin in exchsByCoin) {
+                            console.log("cambio exchanges!")
+                            inputOrigExchanges = exchsByCoin[inputCoin];
+                        }
+                        inputOrigCoinChanged = false;
+                    }
+                    // Generate JSON object with options to display in Typeahead
+                    var returnValue = []
+                    // If there was no coin properly field, display all exchanges
+                    if (inputOrigExchanges.length == 0) {
+                        console.log("muestro todos");
+                        for (const [key, value] of Object.entries(exchangeData)) {
+                            returnValue.push(value);
+                        }
+                        return process(returnValue);
+                        // If there was a coin, display only exchanges for that coin
+                    } else {
+                        console.log("muestro solo los exchanges de la moneda");
+                        for (var i = 0; i < inputOrigExchanges.length; i++) {
+                            if (inputOrigExchanges[i] in exchangeData) {
+                                returnValue.push(exchangeData[inputOrigExchanges[i]]);
+                            }
+                        }
+                        return process(returnValue);
+                    }
+                }, 'json');
+            }, 'json');
+        },
+        autoSelect: false,
+        changeInputOnMove: false,
+        showHintOnFocus: true,
+        selectOnBlur: false,
+        items: 100,
+        displayText: function(item) {
+            if ((item.name == 'Bank') || (item.name == 'Wallet')) {
+                return '<div class="font-weight-bold d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16"> ' +
+                    item.name + '<span class="badge badge-warning ml-2">Default</span></div>'
+            } else {
+                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16"> ' +
+                    item.name + '</div>'
+            }
+        },
+        highlighter: Object,
+        afterSelect: function(item) {
+            // Change input to the selected coin's longname
+            $input_orig_loc.val(item.name).change();
+        },
+        sorter: function(items) {
+            return items.sort(Comparator);
+        }
+    });
+
+    // Typeahead for destination location
+    var inputDestExchanges = []
+    var $input_dest_loc = $("#input-dest-loc .typeahead");
+    $input_dest_loc.typeahead({
+        source: function(query, process) {
+            // Open file with Exchange attributes
+            $.get("/static/data/exchanges.json", function(exchangeData) {
+                // Open file with exchanges for each coin
+                $.get("/static/data/exchanges_by_coin.json", function(exchsByCoin) {
+                    console.log(inputDestCoinChanged)
+                    inputCoin = $('#dest_coin').val()
+                    console.log(inputCoin)
+                    // If there is input coin, get exchanges for that coin
+                    if ((inputDestCoinChanged == true) && (inputCoin.length > 0)) {
+                        console.log("entro a cambiar exchanges")
+
+                        if (inputCoin in exchsByCoin) {
+                            console.log("cambio exchanges!")
+                            inputDestExchanges = exchsByCoin[inputCoin];
+                        }
+                        inputDestCoinChanged = false;
+                    }
+                    // Generate JSON object with options to display in Typeahead
+                    var returnValue = []
+                    // If there was no coin properly field, display all exchanges
+                    if (inputDestExchanges.length == 0) {
+                        console.log("muestro todos");
+                        for (const [key, value] of Object.entries(exchangeData)) {
+                            returnValue.push(value);
+                        }
+                        return process(returnValue);
+                        // If there was a coin, display only exchanges for that coin
+                    } else {
+                        console.log("muestro solo los exchanges de la moneda");
+                        for (var i = 0; i < inputDestExchanges.length; i++) {
+                            if (inputDestExchanges[i] in exchangeData) {
+                                returnValue.push(exchangeData[inputDestExchanges[i]]);
+                            }
+                        }
+                        return process(returnValue);
+                    }
+                }, 'json');
+            }, 'json');
+        },
+        autoSelect: false,
+        changeInputOnMove: false,
+        showHintOnFocus: true,
+        selectOnBlur: false,
+        items: 100,
+        displayText: function(item) {
+            if ((item.name == 'Bank') || (item.name == 'Wallet')) {
+                return '<div class="font-weight-bold d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16"> ' +
+                    item.name + '<span class="badge badge-warning ml-2">Default</span></div>'
+            } else {
+                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16"> ' +
+                    item.name + '</div>'
+            }
+        },
+        highlighter: Object,
+        afterSelect: function(item) {
+            // Change input to the selected coin's longname
+            $input_dest_loc.val(item.name).change();
+        },
+        sorter: function(items) {
+            return items.sort(Comparator);
+        }
+    });
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    /////   SEARCH INPUT ACTIONS
+    ///////////////////////////////////////////////////////////////////////////
+
+    // Checks whether there is input in the forms to make it bold
+    function CheckSearchInput($input) {
+        var changeFont = false;
+        var value = $input.val();
+        if (value.length > 0) {
+            $input.css({
+                'font-weight': 'bold',
+                'font-style': 'normal'
+            });
+        } else {
+            $input.css({
+                'font-weight': 400,
+                'font-style': 'italic'
+            });
+        }
+    }
+
+    // Actions if Form inputs change
+    $('.track-filled').on('change', function() {
+        CheckSearchInput($(this));
+        // Check if coin changed to search for exchanges in Typeahead
+        var id = $(this).attr('id');
+        if (id == 'orig_coin') {
+            inputOrigCoinChanged = true;
+            inputOrigExchanges = [];
+        } else if (id == 'dest_coin') {
+            inputDestCoinChanged = true;
+            inputDestExchanges = [];
+        }
+    });
+
+    // Check when page loads (in case form was prefilled!)
+    CheckSearchInput($('#orig_amt'));
+    CheckSearchInput($('#orig_coin'));
+    CheckSearchInput($('#orig_loc'));
+    CheckSearchInput($('#dest_coin'));
+    CheckSearchInput($('#dest_loc'));
 
     ///////////////////////////////////////////////////////////////////////////
     /////   EXCHANGE OPTIONS CODE
