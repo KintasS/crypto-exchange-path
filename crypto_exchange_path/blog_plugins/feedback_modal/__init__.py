@@ -24,6 +24,9 @@ def get_feedback_modal_post(app, engine, post, meta):
 
 
 def register(app):
-    signals.index_posts_fetched.connect(get_feedback_modal_index)
     signals.page_by_id_fetched.connect(get_feedback_modal_post)
+    signals.index_posts_fetched.connect(get_feedback_modal_index)
+    signals.posts_by_tag_fetched.connect(get_feedback_modal_index)
+    signals.posts_by_author_fetched.connect(get_feedback_modal_index)
+    signals.feed_posts_fetched.connect(get_feedback_modal_index)
     return

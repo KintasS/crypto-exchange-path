@@ -113,10 +113,6 @@ h1:hover a {
     font-size: 13px;
 }
 
-.post-content .category a {
-    font-size: 1rem;
-}
-
 .category a::after {
     content: ',';
     color: #2b90d9;
@@ -470,7 +466,7 @@ section.featured-posts p {
 }
 
 section.featured-posts .text-inner {
-    padding: 50px 15px;
+    padding: 0px 15px;
     height: 100%;
     -webkit-transition: all 0.3s;
     transition: all 0.3s;
@@ -535,11 +531,11 @@ section.featured-posts .image img {
 }
 
 section.featured-posts .post-header {
-    margin-bottom: 10px;
+    margin-bottom: 0.5rem;
 }
 
 section.featured-posts .post-footer {
-    margin-top: 30px;
+    margin-top: 0.5rem;
 }
 
 /* Featured Posts Section Media Query ------------------------------------- */
@@ -575,7 +571,7 @@ section.featured-posts .post-footer {
         padding: 15px;
     }
     section.featured-posts .post-footer {
-        font-size: 0.75em;
+        font-size: 0.9rem;
         margin-top: 15px;
     }
 }
@@ -585,7 +581,7 @@ section.featured-posts .post-footer {
         padding: 15px;
     }
     section.featured-posts .post-footer {
-        font-size: 0.9em;
+        font-size: 0.9rem;
         margin-top: 15px;
     }
 }
@@ -786,20 +782,6 @@ section.newsletter .submit {
 
 /* Footer Media Query ------------------------------------- */
 
-main.posts-listing {
-    padding-top: 50px;
-    padding-left: 0;
-    padding-right: 0;
-}
-
-main.posts-listing .post {
-    margin-bottom: 50px;
-}
-
-main.posts-listing .post-footer {
-    font-size: 0.8em;
-}
-
 .widget.latest-posts a {
     display: block;
     color: #555;
@@ -900,7 +882,7 @@ main.posts-listing .post-footer {
 } */
 
 .blog-post .post-footer {
-    font-size: 0.8em;
+    font-size: 0.8rem;
 }
 
 .blog-post .post-thumbnail img {
@@ -1132,51 +1114,35 @@ blockquote.blockquote p {
     .blog-post .author {
         margin-bottom: 10px;
     }
-    section.post-content h1 {
+}
+
+/*
+* ==========================================================
+*     POST-CONTENT SECTION
+* ==========================================================
+*/
+
+section.post-content .category a {
+    font-size: 1rem;
+}
+
+section.post-content h4 {
+    margin-top: 1.5rem;
+}
+
+section.post-content ul li {
+    list-style-type: square;
+    list-style-position: outside;
+    margin-left: 2.5rem;
+}
+
+@media (max-width: 575px) {
+    /* section.post-content h1 {
         font-size: 1.5rem;
     }
     section.post-content .blog-post .post-body p {
         font-size: 0.9rem;
-    }
-}
-
-/*
-
-=====================
-STYLE SWITCHER FOR DEMO
-=====================
-
-*/
-
-#style-switch-button {
-    position: fixed;
-    top: 120px;
-    left: 0px;
-    border-radius: 0;
-    z-index: 100000;
-}
-
-#style-switch {
-    width: 300px;
-    padding: 20px;
-    position: fixed;
-    top: 160px;
-    left: 0;
-    background: #fff;
-    border: solid 1px #ced4da;
-    z-index: 100000;
-}
-
-#style-switch h4 {
-    color: #495057;
-}
-
-#style-switch .text-small {
-    font-size: .8em;
-}
-
-#style-switch select {
-    font-size: 0.85em;
+    } */
 }
 
 /* =========================================
@@ -1187,7 +1153,7 @@ STYLE SWITCHER FOR DEMO
  * 2. BUTTONS
  */
 
-.btn {
+/* .btn {
     font-weight: normal;
     border: 1px solid transparent;
     padding: 0.5rem 1rem;
@@ -1676,7 +1642,7 @@ STYLE SWITCHER FOR DEMO
     font-size: 0.875rem;
     line-height: 1.5;
     border-radius: 0.2rem;
-}
+} */
 
 /*
  * 3. TYPE
@@ -1709,7 +1675,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     color: inherit;
 }
 
-h1, .h1 {
+/* h1, .h1 {
     font-size: 2.5rem;
 }
 
@@ -1797,13 +1763,13 @@ mark, .mark {
 
 a.text-primary:focus, a.text-primary:hover {
     color: #2074b1 !important;
-}
+} */
 
 /*
  * 4. PAGINATION
  */
 
-.page-item:first-child .page-link {
+/* .page-item:first-child .page-link {
     border-top-left-radius: 0.25rem;
     border-bottom-left-radius: 0.25rem;
 }
@@ -1870,13 +1836,13 @@ a.text-primary:focus, a.text-primary:hover {
 .pagination-sm .page-item:last-child .page-link {
     border-top-right-radius: 0.2rem;
     border-bottom-right-radius: 0.2rem;
-}
+} */
 
 /*
 * 5. UTILITIES
 */
 
-.bg-primary {
+/* .bg-primary {
     background-color: #2b90d9 !important;
 }
 
@@ -2034,4 +2000,4 @@ a.text-light:focus, a.text-light:hover {
 
 a.text-dark:focus, a.text-dark:hover {
     color: #1d2124 !important;
-}
+} */

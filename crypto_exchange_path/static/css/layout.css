@@ -1,4 +1,40 @@
 /* /////////////////////////////////////////////////////////
+////////////  STRUCTURAL FORMATING  ///////////////////////
+///////////////////////////////////////////////////////// */
+
+.lead, .display-4, .display-5 {
+    font-weight: 400
+}
+
+body, h1, h2, h3, h4, h5, h6 {
+    font-weight: 400;
+}
+
+.large-font {
+    font-size: 1.2rem;
+}
+
+.light-grey-color {
+    color: #DCDCDC;
+}
+
+.btn-grey {
+    background-color: #797878;
+}
+
+.btn-dark-grey {
+    background-color: #525050;
+}
+
+.rotateimg180 {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+/* /////////////////////////////////////////////////////////
 ////////////  NAVBAR  /////////////////////////////////////
 ///////////////////////////////////////////////////////// */
 

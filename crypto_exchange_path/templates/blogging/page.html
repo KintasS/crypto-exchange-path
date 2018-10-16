@@ -57,7 +57,7 @@
                                             <!-- article tags-->
                                             {% if post.tags %}
                                                 {% for tag in post.tags %}
-                                                    <a href="{{ url_for('blogging.posts_by_tag', tag=tag.lower(), count=10, offset=0) }}">{{ tag }}</a>
+                                                    <a href="{{ url_for('blogging.posts_by_tag', tag=tag.lower()) }}">{{ tag }}</a>
                                                 {% endfor %}
                                             {% endif %}
                                         </div>
@@ -83,7 +83,7 @@
                                         <!-- article tags-->
                                         {% if post.tags %}
                                             {% for tag in post.tags %}
-                                                <a href="{{ url_for('blogging.posts_by_tag', tag=tag.lower(), count=10, offset=0) }}" class="tag">#{{ tag }}</a>
+                                                <a href="{{ url_for('blogging.posts_by_tag', tag=tag.lower()) }}" class="tag">#{{ tag }}</a>
                                             {% endfor %}
                                         {% endif %}
                                     </div>
@@ -120,5 +120,5 @@
 
 {% block extrajs %}
 <!-- MDB core JavaScript -->
-<script type="text/javascript" src="{{ url_for('static', filename='js/blog_index.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/blog_page.js') }}"></script>
 {% endblock extrajs %}
