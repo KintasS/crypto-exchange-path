@@ -18,6 +18,10 @@ body, h1, h2, h3, h4, h5, h6 {
     color: #DCDCDC;
 }
 
+.orange-color {
+    color: #ff7043 !important;
+}
+
 .btn-grey {
     background-color: #797878;
 }
@@ -62,7 +66,7 @@ body, h1, h2, h3, h4, h5, h6 {
 }
 
 .navbar .navbar-nav a.nav-link.active {
-    color: #3f51b5 !important;
+    color: #ff7043 !important;
     font-weight: bold;
 }
 

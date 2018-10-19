@@ -3,8 +3,9 @@
 
 {% block style %}
     <!-- Your custom styles -->
-    <link href="{{ url_for('static', filename='css/home.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/exch_search.css') }}" rel="stylesheet">
 {% endblock style %}
+
 
 {% block title %}
     {% if title %}
@@ -15,70 +16,14 @@
 {% endblock title %}
 
 
-{% block navbar %}
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <a class="navbar-brand" href="{{ url_for('exchanges') }}">
-                <div class="d-block d-flex align-items-center">
-                    <!-- <span style="font-size: 1.5rem"><em>Crypto<b>FeeSaver</b></em><span class="grey-text">.com</span></span> -->
-                    <img class="img-logo" src="/static/img/logo/CFS_Logo_Left2_206x28.png" alt="CryptoFeeSaver">
-                    <span class="badge badge-warning ml-2 mr-0 mr-md-4">Beta</span>
-                </div>
-            </a>
-            <div id="navbarToggler" class="collapse navbar-collapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('exchanges') }}">Exchanges</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link under-construction" href="#">DEXs</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link under-construction" href="#">Wallets</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('blogging.index') }}">Blog</a>
-                    </li>
-                </ul>
-                <!-- Navbar Right Side -->
-                <ul class="navbar-nav ml-md-auto mr-md-3">
-                    <li class="nav-item">
-                        <a class="nav-item nav-link" href="#" data-toggle="modal" data-target="#modalFeedbackForm">Feedback</a>
-                    </li>
-                </ul>
-                <div id="currency-btn" class="btn-group">
-                    {% if curr == 'USD' %}
-                        <button class="btn btn-dark-grey dropdown-toggle" data-currency="USD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-dollar mx-2" aria-hidden="true"></i>USD</b></button>
-                    {% elif curr == 'GBP' %}
-                        <button class="btn btn-dark-grey dropdown-toggle" data-currency="GBP" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-gbp mx-2" aria-hidden="true"></i>GBP</b></button>
-                    {% elif curr == 'JPY' %}
-                        <button class="btn btn-dark-grey dropdown-toggle" data-currency="JPY" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-jpy mx-2" aria-hidden="true"></i>JPY</b></button>
-                    {% elif curr == 'EUR' %}
-                        <button class="btn btn-dark-grey dropdown-toggle" data-currency="EUR" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-eur mx-2" aria-hidden="true"></i>EUR</b></button>
-                    {% else %}
-                        <button class="btn btn-dark-grey dropdown-toggle" data-currency="WON" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-won mx-2" aria-hidden="true"></i>WON</b></button>
-                    {% endif %}
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" data-currency="USD" href="#"><i class="fa fa-dollar mx-2" aria-hidden="true"></i>USD</a>
-                        <a class="dropdown-item" data-currency="GBP" href="#"><i class="fa fa-gbp mx-2" aria-hidden="true"></i>GBP</a>
-                        <a class="dropdown-item" data-currency="JPY" href="#"><i class="fa fa-jpy mx-2" aria-hidden="true"></i>JPY</a>
-                        <a class="dropdown-item" data-currency="EUR" href="#"><i class="fa fa-euro mx-2" aria-hidden="true"></i>EUR</a>
-                        <a class="dropdown-item" data-currency="KRW" href="#"><i class="fa fa-won ml-2 mr-1" aria-hidden="true"></i>KRW</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-{% endblock navbar %}
+{% block activepage %}
+    <div id="navlink-selector" class="d-none" data-active="nav-link-exchanges"></div>
+{% endblock activepage %}
 
 
 {% block main %}
 
-    {% include '_search_canvas.html' %}
+    {% include '_search_canvas_easy.html' %}
 
     <!-- Variable to store promotions that have been displayed and must not to be displayed again. -->
     {% set promotions_displayed = [] %}
@@ -114,7 +59,7 @@
                     {% endif %}
 
                     {% for path in paths %}
-                        <div class="card mb-3">
+                        <div class="card mb-4">
                             <div class="card-header px-0 pt-3 pb-0" id="headingOne">
                                 <div class="d-block">
                                     <!-- Origin -->
@@ -126,7 +71,7 @@
                                             </div>
                                             <div class="d-block d-flex align-items-center path-format mt-3">
                                                 <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.origin.coin.local_fn }}" alt="{{ path.origin.coin.long_name }} logo">
-                                                <small>{{ path.origin.coin.symbol }}<i class="fa fa-long-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i></small>
+                                                <small class="font-weight-bold">{{ path.origin.coin.symbol }}<i class="fa fa-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i></small>
                                             </div>
                                         {% endif %}
                                     </div>
@@ -140,23 +85,23 @@
                                             <small class="d-flex align-items-center path-format">
                                                 <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_1.trade.sell_coin.local_fn }}" alt="{{ path.hop_1.trade.sell_coin.long_name }} logo">
                                                 <span>{{ path.hop_1.trade.sell_coin.symbol }}</span>
-                                                <i class="fa fa-exchange mx-1 mx-sm-2" aria-hidden="true"></i>
+                                                <i class="fa fa-refresh mx-1 mx-sm-2" aria-hidden="true"></i>
                                                 <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_1.trade.buy_coin.local_fn }}" alt="{{ path.hop_1.trade.buy_coin.long_name }} logo">
                                                 <span>{{ path.hop_1.trade.buy_coin.symbol }}</span>
                                                 {% if path.hop_2 %}
                                                     {% if path.hop_1.exchange.id == path.hop_2.exchange.id %}
-                                                        <i class="fa fa-exchange mx-1 mx-sm-2" aria-hidden="true"></i>
+                                                        <i class="fa fa-refresh mx-1 mx-sm-2" aria-hidden="true"></i>
                                                         <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_2.trade.buy_coin.local_fn }}" alt="{{ path.hop_2.trade.buy_coin.long_name }} logo">
                                                         <span>{{ path.hop_2.trade.buy_coin.symbol }}</span>
                                                         {% if path.hop_1.exchange.id != path.destination.exchange.id %}
-                                                            <i class="fa fa-long-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i>
+                                                            <i class="fa fa-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i>
                                                         {% endif %}
                                                     {% else %}
-                                                        <i class="fa fa-long-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i>
+                                                        <i class="fa fa-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i>
                                                     {% endif %}
                                                 {% else %}
                                                     {% if path.hop_1.exchange.id != path.destination.exchange.id %}
-                                                        <i class="fa fa-long-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i>
+                                                        <i class="fa fa-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i>
                                                     {% endif %}
                                                 {% endif %}
                                             </small>
@@ -173,11 +118,11 @@
                                                 <small class="d-flex align-items-center path-format">
                                                     <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_2.trade.sell_coin.local_fn }}" alt="{{ path.hop_2.trade.sell_coin.long_name }} logo">
                                                     <span>{{ path.hop_2.trade.sell_coin.symbol }}</span>
-                                                    <i class="fa fa-exchange mx-1 mx-sm-2" aria-hidden="true"></i>
+                                                    <i class="fa fa-refresh mx-1 mx-sm-2" aria-hidden="true"></i>
                                                     <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_2.trade.buy_coin.local_fn }}" alt="{{ path.hop_2.trade.buy_coin.long_name }} logo">
                                                     <span>{{ path.hop_2.trade.buy_coin.symbol }}</span>
                                                     {% if path.hop_2.exchange.id != path.destination.exchange.id %}
-                                                        <i class="fa fa-long-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i>
+                                                        <i class="fa fa-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i>
                                                     {% endif %}
                                                 </small>
                                             </div>
@@ -195,7 +140,7 @@
                                             </div>
                                             <div class="d-block d-flex align-items-center path-format mt-3">
                                                 <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.destination.coin.local_fn }}" alt="{{ path.destination.coin.long_name }} logo">
-                                                <small>{{ path.destination.coin.symbol }}</small>
+                                                <small class="font-weight-bold">{{ path.destination.coin.symbol }}</small>
                                             </div>
                                         {% else %}
                                             <div class="d-block d-flex align-items-center">
@@ -213,11 +158,11 @@
                                         </div>
                                         <div class="d-block d-flex justify-content-center pl-md-2 mt-2">
                                             {% if path.hop_1.exchange.affiliate == 'Yes' %}
-                                                <a class="referral-result-btn select-btn btn btn-indigo m-0" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}">Select</a>
+                                                <a class="referral-result-btn select-btn btn btn-deep-orange m-0" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}">Select</a>
                                             {% elif path.hop_2 and path.hop_2.exchange.affiliate == 'Yes' %}
-                                                <a class="referral-result-btn select-btn btn btn-indigo m-0" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button" data-exch="{{ path.hop_2.exchange.name }}">Select</a>
+                                                <a class="referral-result-btn select-btn btn btn-deep-orange m-0" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button" data-exch="{{ path.hop_2.exchange.name }}">Select</a>
                                             {% else %}
-                                                <a class="referral-result-btn select-btn btn btn-indigo m-0" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}">Select</a>
+                                                <a class="referral-result-btn select-btn btn btn-deep-orange m-0" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}">Select</a>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -227,25 +172,34 @@
                                 {% if path.hop_1.exch_promo %}
                                     {% if path.hop_1.exchange.id not in promotions_displayed %}
                                         {% set promotions_displayed = promotions_displayed.append( path.hop_1.exchange.id ) %}
-                                        <div class="px-2 px-sm-3 px-lg-4 pt-3 pb-2 text-center">
-                                            <span class="badge badge-danger">Promo!</span><span class="text-danger font-italic"> Use <a class="promo-link" href="{{ path.hop_1.exchange.site_url }}" target="_blank" data-exch="{{ path.hop_1.exchange.name }}">this link</a> {{ path.hop_1.exch_promo }}</span>
+                                        <div class="d-flex justify-content-center">
+                                            <div class="promo text-center">
+                                                <span class="badge badge-danger mr-1">Promo</span><span class="text-danger font-italic smaller-font"> Use <a class="promo-link" href="{{ path.hop_1.exchange.site_url }}" target="_blank" data-exch="{{ path.hop_1.exchange.name }}">this link</a> {{ path.hop_1.exch_promo }}</span>
+                                            </div>
                                         </div>
                                     {% endif %}
                                 <!-- Look for promotions in Exchange 2 -->
                                 {% elif path.hop_2 and path.hop_1.exchange.id != path.hop_2.exchange.id and path.hop_2.exch_promo %}
                                     {% if path.hop_2.exchange.id not in promotions_displayed %}
                                         {% set promotions_displayed = promotions_displayed.append( path.hop_2.exchange.id ) %}
-                                        <div class="px-2 px-sm-3 px-lg-4 pt-3 pb-2 text-center">
-                                            <span class="badge badge-danger">Promo!</span><span class="text-danger font-italic"> Use <a class="promo-link" href="{{ path.hop_2.exchange.site_url }}" target="_blank" data-exch="{{ path.hop_2.exchange.name }}">this link</a> {{ path.hop_2.exch_promo }}</span>
+                                        <div class="d-flex justify-content-center">
+                                            <div class="promo text-center">
+                                                <span class="badge badge-danger mr-1">Promo</span><span class="text-danger font-italic smaller-font"> Use <a class="promo-link" href="{{ path.hop_2.exchange.site_url }}" target="_blank" data-exch="{{ path.hop_2.exchange.name }}">this link</a> {{ path.hop_2.exch_promo }}</span>
+                                            </div>
                                         </div>
                                     {% endif %}
                                 {% endif %}
                                 <!-- Collapse animation section -->
                                 <div class="d-block d-flex align-items-center justify-content-between">
                                     <div class="pl-2 pl-sm-3 pl-lg-4 smaller-font pt-1 pb-2">
-                                        <a id="path-fee-details-collapse" class="collapse-animation" data-toggle="collapse" href="#{{ path.id }}" role="button" aria-expanded="false" aria-controls="{{ path.id }}">
+                                        <!-- If it is the first iteration, open detail. Else leave it closed -->
+                                        {% if loop.index == 1 %}
+                                            <a id="path-fee-details-collapse" class="collapse-animation" data-toggle="collapse" href="#{{ path.id }}" role="button" aria-expanded="false" aria-controls="{{ path.id }}">
+                                        {% else %}
+                                            <a id="path-fee-details-collapse" class="collapse-animation" data-toggle="collapse" href="#{{ path.id }}" role="button" aria-expanded="false" aria-controls="{{ path.id }}">
+                                        {% endif %}
                                             <div class="d-block d-flex align-items-center">
-                                                <span>Path & fee details</span>
+                                                <span>Details</span>
                                                 <i class="fa fa-chevron-down px-1" aria-hidden="true"></i>
                                             </div>
                                         </a>
@@ -261,37 +215,42 @@
 
 
                             <!-- COLLAPSED INFORMATION -->
+                            <!-- If it is the first iteration, open detail. Else leave it closed -->
+                            {% if loop.index == 1 %}
                             <div id="{{ path.id }}" class="collapse">
-                                <div class="card-body px-0 py-2">
+                            {% else %}
+                            <div id="{{ path.id }}" class="collapse">
+                            {% endif %}
+                                <div class="card-body px-0 pt-2 pb-0">
                                     <!-- <p class="card-title font-weight-bold ml-3 smaller-font">Path details</p> -->
 
                                     <!-- 1st Steps: ORIGIN. If Origin != Exch.1, transfer from Origin to Exch1 -->
                                     {% if path.origin.exchange.id != path.hop_1.exchange.id %}
-                                        <div class="row no-gutters pl-3 mt-2 mb-4 smaller-font path-format">
+                                        <div class="row no-gutters pl-3 mt-2 mb-3 smaller-font">
                                             <div class="col-auto px-1">
-                                                <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true"></i>
+                                                <i class="fa fa-chevron-circle-right fa-lg orange-color" aria-hidden="true"></i>
                                             </div>
                                             <div class="col-3 pl-2">
                                                 {% if path.origin.exchange.id == 'Wallet' %}
-                                                    <span>Transfer your <b>{{ path.origin.coin.symbol }}</b> from <b>your wallet</b> to <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a>.</span>
+                                                    <span>Transfer your <b>{{ path.origin.coin.symbol }}</b> from <b>your wallet</b> to <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a></span>
                                                 {% elif path.origin.exchange.id == 'Bank' %}
-                                                    <span>Transfer your <b>{{ path.origin.coin.symbol }}</b> from <b>your bank</b> to <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a>.</span>
+                                                    <span>Transfer your <b>{{ path.origin.coin.symbol }}</b> from <b>your bank</b> to <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a></span>
                                                 {% else %}
-                                                    <span>Transfer your <b>{{ path.origin.coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.origin.exchange.site_url }}" target="_blank" role="button">{{ path.origin.exchange.name }}</a> to <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a>.</span>
+                                                    <span>Transfer your <b>{{ path.origin.coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.origin.exchange.site_url }}" target="_blank" role="button">{{ path.origin.exchange.name }}</a> to <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a></span>
                                                 {% endif %}
                                                 {% if (path.origin.exchange.id == 'Wallet') or (path.origin.exchange.id == 'Bank') %}
                                                     {% if path.hop_1.deposit_details == '' %}
                                                         <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="Withdrawal fees may apply depending on the wallet or bank you use. Please, take them into account as well.</em>">
-                                                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                            <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
                                                         </a>
                                                     {% else %}
                                                         <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_1.deposit_details }}<br>- - -</br><em>Withdrawal fees may apply depending on the wallet or bank you use. Please, take them into account as well.</em>">
-                                                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                            <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
                                                         </a>
                                                     {% endif %}
                                                 {% else %}
                                                     <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.origin.withdraw_details }}<br>{{ path.hop_1.deposit_details }}">
-                                                        <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                        <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
                                                     </a>
                                                 {% endif %}
                                             </div>
@@ -313,7 +272,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-2 d-flex align-items-center justify-content-center">
-                                                                <i class="fa fa-long-arrow-right fa-lg pl-2 pl-md-4" aria-hidden="true"></i>
+                                                                <i class="fa fa-arrow-right pl-2 pl-md-4" aria-hidden="true"></i>
                                                             </div>
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column justify-content-end">
@@ -345,14 +304,14 @@
 
                                     <!-- # EXCHANGE 1 -->
                                     <!-- # 2nd Step: Trade Exch 1 -->
-                                    <div class="row no-gutters pl-3 mb-4 smaller-font path-format">
+                                    <div class="row no-gutters pl-3 mt-4 mb-3 smaller-font">
                                         <div class="col-auto px-1">
-                                            <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true"></i>
+                                            <i class="fa fa-chevron-circle-right fa-lg orange-color" aria-hidden="true"></i>
                                         </div>
                                         <div class="col-3 pl-2">
-                                            <span>In <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a>, trade your <b>{{ path.hop_1.trade.sell_coin.symbol }}</b> for <b>{{ path.hop_1.trade.buy_coin.symbol }}</b>.</span>
+                                            <span>In <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a>, trade your <b>{{ path.hop_1.trade.sell_coin.symbol }}</b> for <b>{{ path.hop_1.trade.buy_coin.symbol }}</b></span>
                                             <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_1.trade_details }}">
-                                                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
                                             </a>
                                         </div>
                                         <div class="col">
@@ -369,7 +328,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-2 d-flex align-items-center justify-content-center">
-                                                            <i class="fa fa-exchange fa-lg pl-2 pl-md-4" aria-hidden="true"></i>
+                                                            <i class="fa fa-refresh fa-lg pl-2 pl-md-4" aria-hidden="true"></i>
                                                         </div>
                                                         <div class="col-5">
                                                             <div class="d-flex flex-column justify-content-end">
@@ -408,20 +367,20 @@
                                             {% set step2b_dest = path.hop_2.exchange %}
                                             {% set step2b_dest_amt = path.hop_2.trade.sell_amt_str %}
                                         {% endif %}
-                                        <div class="row no-gutters pl-3 mb-4 smaller-font path-format">
+                                        <div class="row no-gutters pl-3 mt-4 mb-3 smaller-font">
                                             <div class="col-auto px-1">
-                                                <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true"></i>
+                                                <i class="fa fa-chevron-circle-right fa-lg orange-color" aria-hidden="true"></i>
                                             </div>
                                             <div class="col-3 pl-2">
                                                 {% if step2b_dest.id == 'Wallet' %}
-                                                    <span>Transfer your <b>{{ path.hop_1.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a> to <b>your wallet</b>.</span>
+                                                    <span>Transfer your <b>{{ path.hop_1.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a> to <b>your wallet</b></span>
                                                 {% elif step2b_dest.id == 'Bank' %}
-                                                    <span>Transfer your <b>{{ path.hop_1.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a> to <b>your bank</b>.</span>
+                                                    <span>Transfer your <b>{{ path.hop_1.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a> to <b>your bank</b></span>
                                                 {% else %}
-                                                    <span>Transfer your <b>{{ path.hop_1.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a> to <a class="referral-detail-link-1 font-weight-bold" href="{{ step2b_dest.site_url }}" target="_blank" role="button">{{ step2b_dest.name }}</a>.</span>
+                                                    <span>Transfer your <b>{{ path.hop_1.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a> to <a class="referral-detail-link-1 font-weight-bold" href="{{ step2b_dest.site_url }}" target="_blank" role="button">{{ step2b_dest.name }}</a></span>
                                                 {% endif %}
                                                 <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="<p class='mb-1'>{{ path.hop_1.withdraw_details }}</p><p class='mb-1'>{{ path.hop_2.deposit_details }}</p>">
-                                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                    <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
@@ -438,7 +397,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-2 d-flex align-items-center justify-content-center">
-                                                                <i class="fa fa-long-arrow-right fa-lg pl-2 pl-md-4" aria-hidden="true"></i>
+                                                                <i class="fa fa-arrow-right pl-2 pl-md-4" aria-hidden="true"></i>
                                                             </div>
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column justify-content-end">
@@ -475,14 +434,14 @@
                                     <!-- # EXCHANGE 2 -->
                                     <!-- # 4th Step: Trade in Exch 2. -->
                                     {% if path.hop_2 %}
-                                        <div class="row no-gutters pl-3 mb-4 smaller-font path-format">
+                                        <div class="row no-gutters pl-3 mt-4 mb-3 smaller-font">
                                             <div class="col-auto px-1">
-                                                <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true"></i>
+                                                <i class="fa fa-chevron-circle-right fa-lg orange-color" aria-hidden="true"></i>
                                             </div>
                                             <div class="col-3 pl-2">
-                                                <span>In <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a>, trade your <b>{{ path.hop_2.trade.sell_coin.symbol }}</b> for <b>{{ path.hop_2.trade.buy_coin.symbol }}</b>.</span>
+                                                <span>In <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a>, trade your <b>{{ path.hop_2.trade.sell_coin.symbol }}</b> for <b>{{ path.hop_2.trade.buy_coin.symbol }}</b></span>
                                                 <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_2.trade_details }}">
-                                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                    <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
@@ -499,7 +458,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-2 d-flex align-items-center justify-content-center">
-                                                                <i class="fa fa-exchange fa-lg pl-2 pl-md-4" aria-hidden="true"></i>
+                                                                <i class="fa fa-refresh fa-lg pl-2 pl-md-4" aria-hidden="true"></i>
                                                             </div>
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column justify-content-end">
@@ -531,20 +490,20 @@
 
                                     <!-- # 5th Step: Transfer from Exch2 to Destination (if it applies) -->
                                     {% if path.hop_2 and path.hop_2.exchange.id != path.destination.exchange.id %}
-                                        <div class="row no-gutters pl-3 mb-4 smaller-font path-format">
+                                        <div class="row no-gutters pl-3 mt-4 mb-3 smaller-font">
                                             <div class="col-auto px-1">
-                                                <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true"></i>
+                                                <i class="fa fa-chevron-circle-right fa-lg orange-color" aria-hidden="true"></i>
                                             </div>
                                             <div class="col-3 pl-2">
                                                 {% if path.destination.exchange.id == 'Wallet' %}
-                                                    <span>Transfer your <b>{{ path.hop_2.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a> to <b>your wallet</b>.</span>
+                                                    <span>Transfer your <b>{{ path.hop_2.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a> to <b>your wallet</b></span>
                                                 {% elif path.destination.exchange.id == 'Bank' %}
-                                                    <span>Transfer your <b>{{ path.hop_2.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a> to <b>your bank</b>.</span>
+                                                    <span>Transfer your <b>{{ path.hop_2.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a> to <b>your bank</b></span>
                                                 {% else %}
-                                                    <span>Transfer your <b>{{ path.hop_2.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a> to <a class="referral-detail-link-1 font-weight-bold" href="{{ path.destination.exchange.site_url }}" target="_blank" role="button">{{ path.destination.exchange.name }}</a>.</span>
+                                                    <span>Transfer your <b>{{ path.hop_2.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a> to <a class="referral-detail-link-1 font-weight-bold" href="{{ path.destination.exchange.site_url }}" target="_blank" role="button">{{ path.destination.exchange.name }}</a></span>
                                                 {% endif %}
                                                 <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_2.withdraw_details }}<br>{{ path.destination.deposit_details }}">
-                                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                    <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
@@ -561,7 +520,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-2 d-flex align-items-center justify-content-center">
-                                                                <i class="fa fa-long-arrow-right fa-lg pl-2 pl-md-4" aria-hidden="true"></i>
+                                                                <i class="fa fa-arrow-right pl-2 pl-md-4" aria-hidden="true"></i>
                                                             </div>
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column justify-content-end">
@@ -609,6 +568,12 @@
 
     </section>
 
+    <section id="back-to-top-btn">
+        <a id="myBtn" class="" href="#">
+            <i class="fa fa-chevron-circle-up fa-4x" aria-hidden="true"></i>
+        </a>
+    </section>
+
 {% endblock main %}
 
 
@@ -633,77 +598,6 @@
                         <li></li>
                     </ul>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Feedback Modal -->
-    <div class="modal fade" id="modalFeedbackForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-modal-open={{open_feedback_modal}}>
-        <div class="modal-dialog modal-lg modal-notify modal-info" role="document">
-            <div class="modal-content">
-                <div class="modal-header text-center" style="background-color: #212121;">
-                    <p class="heading lead font-weight-bold">Feedback</p>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true" class="white-text">&times;</span>
-                    </button>
-                </div>
-                <form id="feedback-form" method="POST" action="">
-                    {{ feedback_form.hidden_tag() }}
-                    <div class="modal-body mx-0 mx-sm-3">
-                        <h2 class="font-weight-bold text-center mt-2 mb-4" style="color: #212529;">We are listening</h2>
-                        <p class="grey-text text-center mx-0 mx-md-5">Let us know what you think about our platform. We are working hard to improve it every day,
-                            and your feedback is priceless to us... We are listening to you and will do our best to add the functionality you miss or to
-                            fix the bugs you might encounter.</p>
-                        <p class="grey-text text-center mx-5">Keep in touch!</p>
-                        <div class="form-group mb-3">
-                            <!-- <i class="fa fa-user fa-lg prefix grey-text d-inline"></i> -->
-                            <!-- {{ feedback_form.topic.label(class="form-control-label text-bigger") }} -->
-                            {% if feedback_form.topic.errors %}
-                                {{ feedback_form.topic(id="feedback-topic", class="form-control d-inline is-invalid", type="text", autocomplete="off") }}
-                                <div class="invalid-feedback">
-                                    {% for error in feedback_form.topic.errors %}
-                                        <span>{{ error }}</span>
-                                    {% endfor %}
-                                </div>
-                            {% else %}
-                                {{ feedback_form.topic(id="feedback-topic", class="form-control d-inline", type="text", placeholder="Location", autocomplete="off") }}
-                            {% endif %}
-                        </div>
-                        <div class="md-form mb-5">
-                            <i class="fa fa-tag prefix grey-text"></i>
-                            {% if feedback_form.subject.errors %}
-                                {{ feedback_form.subject(id="feedback-subject", class="form-control is-invalid", type="text", autocomplete="off") }}
-                                <div class="invalid-feedback">
-                                    {% for error in feedback_form.subject.errors %}
-                                        <span>{{ error }}</span>
-                                    {% endfor %}
-                                </div>
-                            {% else %}
-                                {{ feedback_form.subject(id="feedback-subject", class="form-control", type="text", autocomplete="off") }}
-                            {% endif %}
-                            <label data-error="wrong" data-success="right" for="feedback-subject">Subject</label>
-                        </div>
-                        <div class="md-form">
-                            <i class="fa fa-pencil prefix grey-text"></i>
-                            {% if feedback_form.detail.errors %}
-                                {{ feedback_form.detail(class="form-control is-invalid") }}
-                                <div class="invalid-feedback">
-                                    {% for error in feedback_form.detail.errors %}
-                                        <span>{{ error }}</span>
-                                    {% endfor %}
-                                </div>
-                            {% else %}
-                                {{ feedback_form.detail(id="feedback-text", class="md-textarea form-control", rows="4", type="text") }}
-                            {% endif %}
-                            <label data-error="wrong" data-success="right" for="feedback-text">Your feedback</label>
-                        </div>
-                    </div>
-                    <div class="modal-footer d-flex justify-content-center">
-                        <div class="form-group">
-                            {{ feedback_form.feedback_submit(class="send-feedback-btn btn btn-dark-grey") }}
-                        </div>
-                    </div>
-                </form>
             </div>
         </div>
     </div>

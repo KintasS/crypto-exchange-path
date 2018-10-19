@@ -9,7 +9,7 @@ from crypto_exchange_path.forms import SearchForm, FeedbackForm
 from crypto_exchange_path.path_calculator import calc_paths
 from crypto_exchange_path.utils import (set_logger, error_notifier,
                                         feedback_notifier)
-from crypto_exchange_path.utils_db import (get_exchange, get_exchanges,
+from crypto_exchange_path.utils_db import (get_exch_by_name, get_exchanges,
                                            get_coin_by_longname, get_coin,
                                            fx_exchange)
 from crypto_exchange_path.models import Feedback, QueryRegister
@@ -40,11 +40,6 @@ def manage_feedback_form(feedback_form):
     db.session.commit()
 
 
-@app.route("/exchanges", methods=['GET', 'POST'])
-def exchanges():
-    return redirect(url_for('home'))
-
-
 @app.route("/home", methods=['GET', 'POST'])
 @app.route("/", methods=['GET', 'POST'])
 def home():
@@ -72,6 +67,47 @@ def home():
             manage_feedback_form(feedback_form)
             return redirect(url_for('home'))
     resp = make_response(render_template('home.html', form=input_form,
+                                         curr=curr, exchanges=exchanges,
+                                         user_exchanges=user_exchanges,
+                                         title='Exchanges',
+                                         feedback_form=feedback_form,
+                                         open_feedback_modal=open_fbck_modal,
+                                         url_orig_coin=url_orig_coin,
+                                         url_dest_coin=url_dest_coin))
+    # Store session ID in cookie if it is not already stored
+    session_id = request.cookies.get('session')
+    if not session_id:
+        resp.set_cookie('session', token_hex(8))
+        session_id = request.cookies.get('session')
+    return resp
+
+
+@app.route("/exchanges", methods=['GET', 'POST'])
+def exchanges():
+    url_orig_coin = 'empty'
+    url_dest_coin = 'empty'
+    input_form = SearchForm()
+    # If 'calc_currency' exists in cockie, use it
+    currency = request.cookies.get('calc_currency')
+    if currency:
+        curr = currency
+        input_form.currency.data = currency
+    else:
+        curr = Params.DEFAULT_CURRENCY
+    feedback_form = FeedbackForm()
+    exchanges = get_exchanges(['Exchange'])
+    user_exchanges = [exch.id for exch in exchanges]
+    open_fbck_modal = False
+    # Actions if Feedback Form was filled
+    if feedback_form.feedback_submit.data:
+        # If form was filled, but with errors, open modal again
+        open_fbck_modal = True
+        if feedback_form.validate():
+            # If form was properly filled, close modal again
+            open_fbck_modal = False
+            manage_feedback_form(feedback_form)
+            return redirect(url_for('home'))
+    resp = make_response(render_template('exchanges.html', form=input_form,
                                          curr=curr, exchanges=exchanges,
                                          user_exchanges=user_exchanges,
                                          title='Exchanges',
@@ -122,10 +158,10 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
     if input_form.search_submit.data:
         if input_form.validate():
             curr = input_form.currency.data
-            orig_loc = get_exchange(input_form.orig_loc.data)
+            orig_loc = get_exch_by_name(input_form.orig_loc.data)
             orig_coin = get_coin_by_longname(input_form.orig_coin.data)
             orig_amt = float(input_form.orig_amt.data)
-            dest_loc = get_exchange(input_form.dest_loc.data)
+            dest_loc = get_exch_by_name(input_form.dest_loc.data)
             dest_coin = get_coin_by_longname(input_form.dest_coin.data)
             connection_type = input_form.connection_type.data
             user_exchanges = input_form.exchanges.data
@@ -261,7 +297,7 @@ def auto_search(url_orig_coin=None, url_dest_coin=None):
             if orig_coin:
                 input_form.orig_coin.data = orig_coin.long_name
                 amt = fx_exchange("USD", orig_coin.id, 3000, logger)
-                input_form.orig_amt.data = str(math.ceil(amt))
+                input_form.orig_amt.data = str(math.ceil(amt)) + " "
             if dest_coin:
                 input_form.dest_coin.data = dest_coin.long_name
             auto_search = True

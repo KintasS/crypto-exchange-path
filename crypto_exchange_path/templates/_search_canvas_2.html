@@ -1,0 +1,267 @@
+    <!--Section: Search Canvas-->
+    <section id="search-canvas">
+        <div class="mask rgba-black-strong">
+
+            <div class="container py-4">
+
+                <h2 class="mt-0 mt-xl-4 mb-2 font-weight-bold text-center">Cryptoasset exchange engine</h2>
+
+                <h6 class="text-center font-italic mt-2 mb-5">Find the cheapest way to buy or exchange cryptoassets</h6>
+
+                <div class="row no-gutters d-flex justify-content-center">
+                    <div class="col-12 col-md-10 col-lg-11 col-xl-8">
+
+                        <form id="search-form" method="POST" action="{{ url_for('exch_results', url_orig_coin=url_orig_coin, url_dest_coin=url_dest_coin) }}">
+                            {{ form.hidden_tag() }}
+
+
+                            <div class="search-box">
+
+                                <h5 class="text-center font-italic my-3">CryptoFeeSaver, help me find the cheapest path to...</h5>
+
+                                <!-- VISIBLE FORM ELEMENTS -->
+                                <div class="d-flex flex-row justify-content-center align-items-center my-4">
+                                    <div class="large-font font-italic font-weight-bold">Buy</div>
+                                    <div id="input-dest-coin" class="large-font group mx-4">
+                                        {% if form.dest_coin.errors %}
+                                            {{ form.dest_coin(class="typeahead invalid",  style="width: 150px", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                            <div class="form-errors">
+                                                {% for error in form.dest_coin.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ form.dest_coin(class="typeahead", style="width: 150px", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                        {% endif %}
+                                            <span class="highlight" style="width: 150px"></span>
+                                            <span class="bar" style="width: 150px"></span>
+                                            <label>Coin</label>
+                                    </div>
+                                    <div class="large-font font-italic font-weight-bold">with</div>
+                                    <div class="large-font group ml-4 mr-2">
+                                        {% if form.orig_amt.errors %}
+                                            {{ form.orig_amt(class="align-right typeahead invalid",  style="width: 90px", autocomplete="off", spellcheck="false", required="true") }}
+                                            <div class="form-errors">
+                                                {% for error in form.orig_amt.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ form.orig_amt(class="align-right typeahead", style="width: 90px", autocomplete="off", spellcheck="false", required="true") }}
+                                        {% endif %}
+                                            <span class="highlight" style="width: 90px"></span>
+                                            <span class="bar" style="width: 90px"></span>
+                                            <label class="align-right">Amount</label>
+                                    </div>
+                                    <div id="input-orig-coin" class="large-font group mx-2">
+                                        {% if form.orig_coin.errors %}
+                                            {{ form.orig_coin(class="typeahead invalid",  style="width: 150px", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                            <div class="form-errors">
+                                                {% for error in form.orig_coin.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ form.orig_coin(class="typeahead", style="width: 150px", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                        {% endif %}
+                                            <span class="highlight" style="width: 150px"></span>
+                                            <span class="bar" style="width: 150px"></span>
+                                            <label>Coin</label>
+                                    </div>
+                                    <div class="form-group mb-0 ml-4">
+                                        {{ form.search_submit(id="submit-btn", class="btn btn-deep-orange m-0") }}
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row justify-content-center align-items-center">
+                                </div>
+
+                            </div>
+
+                            <!-- HIDDEN FORM ELEMENTS -->
+                            <div class="d-none">
+                                <div class="form-group">
+                                    {{ form.currency(class="form-control", type="text", placeholder="Location", autocomplete="off") }}
+                                </div>
+                            </div>
+
+
+
+
+
+
+                            <!-- Connecting Options -->
+                            <div class="row no-gutters mt-1 mt-lg-4 mb-3">
+                                <div class="col d-flex justify-content-start">
+                                    <a class="text-white collapse-animation" data-toggle="collapse" href="#options-collapse" role="button" aria-expanded="false" aria-controls="options-collapse">
+                                        <div class="d-block d-flex align-items-center">
+                                            <span class="">Advanced search</span>
+                                            <i class="fa fa-chevron-down px-2" aria-hidden="true"></i>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div id="options-collapse" class="collapse my-2">
+                                <hr class="my-3" style="border-top-color: #525252">
+                                <!-- location input boxes -->
+                                <div class="row mb-4 d-flex align-items-center">
+                                    <div class="col-auto pr-0">
+                                        <p class="fixed-min-width mb-0">Location</p>
+                                    </div>
+                                    <div class="d-flex flex-row col pl-0">
+                                        <div id="input-orig-loc" class="group">
+                                            {% if form.orig_loc.errors %}
+                                                {{ form.orig_loc(class="typeahead invalid",  style="width: 200px", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                                <div class="form-errors">
+                                                    {% for error in form.orig_loc.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.orig_loc(class="typeahead", style="width: 200px", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                            {% endif %}
+                                                <span class="highlight" style="width: 200px"></span>
+                                                <span class="bar" style="width: 200px"></span>
+                                                <label>Origin location</label>
+                                        </div>
+
+                                        <div id="input-dest-loc" class="group ml-5">
+                                            {% if form.dest_loc.errors %}
+                                                {{ form.dest_loc(class="typeahead invalid",  style="width: 200px", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                                <div class="form-errors">
+                                                    {% for error in form.dest_loc.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.dest_loc(class="typeahead", style="width: 200px", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                            {% endif %}
+                                                <span class="highlight" style="width: 200px"></span>
+                                                <span class="bar" style="width: 200px"></span>
+                                                <label>Destionation location</label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- Exchanges checkboxes -->
+                                <div id="exchange-options" class="row mb-3">
+                                    <div class="col-auto pt-1 pr-0">
+                                        <p class="fixed-min-width">Exchanges</p>
+                                    </div>
+                                    <!-- Real form field. Not displayed, filled with JS -->
+                                    <div class="form-group d-none">
+                                        {{ form.exchanges(size=40) }}
+                                    </div>
+                                    <!-- Exchanges checkboxes. Used to populate form -->
+                                    <div class="col pl-0">
+                                        <div class="row no-gutters">
+                                            <div class="col mb-1">
+                                                <button id="select-all-btn" type="button" class="btn btn-deep-orange ml-0 px-2 py-1">Select All</button>
+                                                <button id="deselect-all-btn" type="button" class="btn btn-deep-orange px-2 py-1">Clear All</button>
+                                            </div>
+                                        </div>
+                                        <div class="row no-gutters">
+                                            {% for exch in exchanges %}
+                                                <div class="col-4 col-lg-3">
+                                                    <div class="custom-control custom-checkbox">
+                                                        {% if exch.id in user_exchanges %}
+                                                            <input type="checkbox" class="custom-control-input" id="exch-{{ exch.id }}" checked>
+                                                        {% else %}
+                                                            <input type="checkbox" class="custom-control-input" id="exch-{{ exch.id }}">
+                                                        {% endif %}
+                                                        <label class="custom-control-label" for="exch-{{ exch.id }}">{{ exch.name }}</label>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Connections radio button -->
+                                <div class="row">
+                                    <div class="col-auto pr-0">
+                                        <p class="fixed-min-width mb-0">Connections</p>
+                                    </div>
+                                    <div class="col pl-0 d-flex justify-content-start">
+                                        <div class="form-group mb-0">
+                                            {% for subfield in form.connection_type %}
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <td>{{ subfield(class="custom-control-input") }}</td>
+                                                    <td>{{ subfield.label(class="custom-control-label") }}</td>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Fees settings -->
+                                <hr class="my-3" style="border-top-color: #525252">
+                                <div class="mt-2 mt-lg-3">
+                                    <p class="font-weight-bold">Fee settings</p>
+                                </div>
+                                <!-- Default fee option -->
+                                <div class="row mb-2">
+                                    <div class="col-auto pr-0">
+                                        <p class="fixed-min-width">Default fee</p>
+                                    </div>
+                                    <div class="col pl-0 d-flex justify-content-start">
+                                        <div class="form-group">
+                                            <div class="row no-gutters">
+                                                {% for subfield in form.default_fee %}
+                                                    <div class="col-12 col-sm-auto">
+                                                        <div class="custom-control custom-radio custom-control-inline">
+                                                            <td>{{ subfield(class="custom-control-input") }}</td>
+                                                            <td>{{ subfield.label(class="custom-control-label") }}</td>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- CEP promos -->
+                                <div class="d-none row mb-2">
+                                    <div class="col-auto pr-0">
+                                        <p class="fixed-min-width">Site Promos</p>
+                                    </div>
+                                    <div class="col pl-0 d-flex justify-content-start">
+                                        <div class="form-group">
+                                            <div class="row no-gutters">
+                                                {% for subfield in form.cep_promos %}
+                                                    <div class="col-12 col-sm-auto">
+                                                        <div class="custom-control custom-radio custom-control-inline">
+                                                            <td>{{ subfield(class="custom-control-input") }}</td>
+                                                            <td>{{ subfield.label(class="custom-control-label") }}</td>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Binance fees option -->
+                                <div class="row">
+                                    <div class="col-auto pr-0">
+                                        <p class="fixed-min-width">Binance fees</p>
+                                    </div>
+                                    <div class="col pl-0 d-flex justify-content-start">
+                                        <div class="form-group">
+                                            <div class="row no-gutters">
+                                                {% for subfield in form.binance_fee %}
+                                                    <div class="col-12 col-sm-auto">
+                                                        <div class="custom-control custom-radio custom-control-inline">
+                                                            <td>{{ subfield(class="custom-control-input") }}</td>
+                                                            <td>{{ subfield.label(class="custom-control-label") }}</td>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>

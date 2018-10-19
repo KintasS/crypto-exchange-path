@@ -17,41 +17,13 @@
 
 
 {% block activepage %}
-    <div id="navlink-selector" class="d-none" data-active="nav-link-home"></div>
+    <div id="navlink-selector" class="d-none" data-active="nav-link-exchanges"></div>
 {% endblock activepage %}
 
 
 {% block main %}
 
-    {% include '_search_canvas.html' %}
-
-
-    <!--Section: Why CryptoFeeSaver-->
-    <section id="why-cryptofeesaver" class="text-center">
-
-        <!-- Heading -->
-        <h2 class="mt-4 mt-md-5 mb-3 mb-md-4 font-weight-bold mx-3">What is CryptoFeeSaver?</h2>
-
-        <h4 class="font-weight-bold indigo-text pb-3 mx-3" style="line-height: 1.5"><em>CryptoFeeSaver is a search engine that computes <u>deposit</u>, <u>trading</u> and <u>withdrawal</u> fees of the top exchanges to find the cheapest path for each operation</em></h4>
-
-        <div class="container">
-            <div class="row d-flex justify-content-center mb-4">
-                <div class="col-md-12">
-                    <p style="font-size: 1.25rem">Most people just compare trading fees when choosing an exchange site, but they overlook the huge impact that deposit and withdrawal fees can have in the whole operation. Indeed, the latter can usually have a greater impact for low and medium size operations.</p>
-                    <p style="font-size: 1.25rem">You don't want to find yourself trapped in an exchange that charges you an outrageous amount for withdrawing your funds, and this happens everyday. Our end-to-end search engine allows you to estimate the fees for the whole operation so that you can always make the right decision.</p>
-                    <p class="mb-0" style="font-size: 1.25rem">The paths proposed by the search engine vary considerably depending on the amount and coins selected, so we encourage you to check our engine for every operation.</p>
-                </div>
-            </div>
-        </div>
-
-    </section>
-
-
-
-
-    <hr class="my-5">
-
-
+    {% include '_search_canvas_easy.html' %}
 
 
     <!--Section: Top-Coins-->
@@ -123,55 +95,61 @@
     </section>
 
 
+
+
     <hr class="my-5">
 
-
-    <!--Section: Recommended Wallets-->
-    <section id="recommended-wallets" class="text-center">
+    <!--Section: Popular Exchanges-->
+    <section id="popular-exchanges" class="text-center">
 
         <!-- Heading -->
-        <h2 class="mt-4 mt-md-5 mb-3 mb-md-4 font-weight-bold">Recommended Wallets</h2>
+        <h2 class="mt-4 mt-md-5 mb-3 mb-md-4 font-weight-bold">Popular Exchange Sites</h2>
 
         <div class="container">
 
             <div class="row d-flex justify-content-center mb-4">
                 <div class="col-md-8">
-                    <p class="mb-1 mb-md-3">Cryptoassets are all about keeping your financial freedom, and hardware wallets are regarded today as the safest way to store your funds. To avoid unnecessary risks, always buy your wallet from the official site (links below), and double-check the authenticity of the website on the top-left area of your browser.</p>
+                    <p class="mb-1 mb-md-3">Crypto exchange sites operate in a highly unregulated environment. Always proceed with caution and do your own research before starting to operate with any platform. These are currently the 3 top sites picked by our users.</p>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-4 px-2 px-md-3">
-                    <img class="img-popular-services" src="/static/img/wallets/60/Ledger.jpg" alt="Ledger logo" height="60" width="60">
-                    <h4 class="my-3 font-weight-bold">Ledger</h4>
-                    <p class="grey-text">The most popular and trusted hardware manufacture of wallets to store cryptocurrency on.</p>
+                    <img class="img-popular-services" src="/static/img/exchanges/60/Coinbase.jpg" alt="Coinbase PRO logo" height="60" width="60">
+                    <h4 class="my-3 font-weight-bold">Coinbase PRO</h4>
+                    <p class="grey-text">Coinbase is the most popular site to buy cryptocurrencies with USD or EUR. It currently supports BTC, BCH, ETH, LTC and ETC.</p>
                 </div>
+
                 <div class="col-4 px-2 px-md-3">
-                    <img class="img-popular-services" src="/static/img/wallets/60/Keepkey.jpg" alt="KeepKeey logo" height="60" width="60">
-                    <h4 class="my-3 font-weight-bold">KeepKey</h4>
-                    <p class="grey-text">KeepKey is a new kid on the block when it comes to crypto hardware wallets.</p>
+                    <img class="img-popular-services" src="/static/img/exchanges/60/Binance.jpg" alt="Binance logo" height="60" width="60">
+                    <h4 class="my-3 font-weight-bold">Binance</h4>
+                    <p class="grey-text">Binance is currently the exchange site with highest volume. Its trading fees are very competitive and supperts a very wide range of cryptoassets.</p>
                 </div>
+
                 <div class="col-4 px-2 px-md-3">
-                    <img class="img-popular-services" src="/static/img/wallets/60/Trezor.jpg" alt="Trezorlogo" height="60" width="60">
-                    <h4 class="my-3 font-weight-bold">Trezor</h4>
-                    <p class="grey-text">The original Bitcoin (BTC) and ERC-20 token wallet. hardware wallet on the market.</p>
+                    <img class="img-popular-services" src="/static/img/exchanges/60/Huobi.jpg" alt="Huobi logo" height="60" width="60">
+                    <h4 class="my-3 font-weight-bold">Huobi</h4>
+                    <p class="grey-text">The Singapore-based exchange already ranks among the top-three sites in trading volume, and offers its services worldwide in up to 15 different languages.</p>
                 </div>
             </div>
             <!-- Links -->
             <div class="row">
-                <div class="col-4 mb-3 mb-sm-5">
-                    <a class="referral-popular-wallet btn btn-indigo select-btn" href="https://www.ledger.com/products/ledger-nano-s?r=e9435a2e294a&tracker=MY_TRACKER" target="_blank" role="button" data-wallet="Ledger">Check webiste</a>
+                <div class="col-4 px-2 px-md-3 mb-0 mb-md-5">
+                    <a class="referral-popular-exch btn btn-indigo select-btn" href="https://www.coinbase.com/join/5b850192be8c8506e5572fb0" target="_blank" role="button" data-exch="Coinbase PRO">Sign up</a>
                 </div>
-                <div class="col-4 mb-3 mb-sm-5">
-                    <a class="referral-popular-wallet btn btn-indigo select-btn" href="http://keepkey.go2cloud.org/SHEt" target="_blank" role="button" data-wallet="KeepKey">Check webiste</a>
+
+                <div class="col-4 px-2 px-md-3 mb-0 mb-md-5">
+                    <a class="referral-popular-exch btn btn-indigo select-btn" href="https://www.binance.com/?ref=11020500" target="_blank" role="button" data-exch="Binance">Sign up</a>
                 </div>
-                <div class="col-4 mb-3 mb-sm-5">
-                    <a class="referral-popular-wallet btn btn-indigo select-btn" href="https://shop.trezor.io?a=cbxmujtk" target="_blank" role="button" data-wallet="Trezor">Check webiste</a>
+
+                <div class="col-4 px-2 px-md-3 mb-0 mb-md-5">
+                    <a class="referral-popular-exch btn btn-indigo select-btn" href="https://www.hbg.com/en-us/topic/invited/?invite_code=6gtv3" target="_blank" role="button" data-exch="Huobi">Sign up</a>
                 </div>
             </div>
         </div>
 
     </section>
+
 
 {% endblock main %}
 

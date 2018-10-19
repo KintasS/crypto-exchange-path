@@ -9,7 +9,9 @@ from crypto_exchange_path.utils_db import (get_active_coins,
                                            get_currency_choices,
                                            get_feedback_topics,
                                            get_coin_by_longname,
-                                           set_default_exch)
+                                           get_exch_by_name,
+                                           set_default_exch,
+                                           get_exchange)
 from crypto_exchange_path.utils import is_number
 
 
@@ -42,7 +44,7 @@ class SearchForm(FlaskForm):
                              choices=[('(BNB)', 'Pay fees in BNB (0.075%)'),
                                       ('(No-BNB)', 'Regular fees (0.1%)')],
                              default='(BNB)')
-    search_submit = SubmitField('Search')
+    search_submit = SubmitField("Go!")
 
     def validate_orig_amt(self, orig_amt):
         if not orig_amt.data:
@@ -70,7 +72,9 @@ class SearchForm(FlaskForm):
             # Only raise error is 'orig_coin' exist
             if coin.id in valid_coins:
                 # If valid coin but no exchange, set default exchange
-                if not orig_loc.data or orig_loc.data in ['Wallet', 'Bank']:
+                if not orig_loc.data or orig_loc.data in ['(Default)',
+                                                          'Wallet',
+                                                          'Bank']:
                     orig_loc.data = set_default_exch(coin.id)
                     return
                 valid_exchs = get_exch_by_coin(coin.id)
@@ -98,11 +102,26 @@ class SearchForm(FlaskForm):
             # Only raise error is 'dest_coin' exist
             if coin.id in valid_coins:
                 # If valid coin but no exchange, set default exchange
-                if not dest_loc.data or dest_loc.data in ['Wallet', 'Bank']:
+                if not dest_loc.data or dest_loc.data in ['(Default)',
+                                                          'Wallet',
+                                                          'Bank']:
                     dest_loc.data = set_default_exch(coin.id)
                     return
                 valid_exchs = get_exch_by_coin(coin.id)
-                if dest_loc.data not in valid_exchs:
+                exch_id = get_exch_by_name(dest_loc.data)
+                if exch_id:
+                    exch_id = exch_id.id
+                else:
+                    # Check if extra characters where added
+                    for valid_exch in valid_exchs:
+                        exch_desc = get_exchange(valid_exch).name
+                        if dest_loc.data.find(exch_desc) >= 0:
+                            self.dest_loc.data = exch_desc
+                            return
+                    raise ValidationError("'{}' is not a valid exchange name"
+                                          .format(dest_loc.data))
+                # Check that exchange is valid
+                if exch_id not in valid_exchs:
                     raise ValidationError("'{}' not available in '{}'"
                                           .format(coin.id, dest_loc.data))
 

@@ -53,6 +53,16 @@ def get_exchange(id):
         return None
 
 
+def get_exch_by_name(name):
+    """Returns the exchange object with the given 'name'.
+    """
+    exchange = Exchange.query.filter_by(name=name).first()
+    if exchange:
+        return exchange
+    else:
+        return None
+
+
 def get_exchanges(types=[]):
     """Returns the list of exchanges available in 'Exchange' table.
     """

@@ -23,6 +23,7 @@ $(document).ready(function() {
             showHintOnFocus: true,
             selectOnBlur: false,
             items: 50,
+            item: '<li class="dropdown-item"><a class="dropdown-item" href="#" role="option"></a></li>',
             displayText: function(item) {
                 return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/coins/16/' + item.img + '" alt="" width="16" height="16"> ' +
                     item.long_name + ' (' + item.name + ')</div>'
@@ -50,6 +51,7 @@ $(document).ready(function() {
             showHintOnFocus: true,
             selectOnBlur: false,
             items: 50,
+            item: '<li class="dropdown-item"><a class="dropdown-item" href="#" role="option"></a></li>',
             displayText: function(item) {
                 return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/coins/16/' + item.img + '" alt="" width="16" height="16"> ' +
                     item.long_name + ' (' + item.name + ')</div>'
@@ -80,15 +82,10 @@ $(document).ready(function() {
             $.get("/static/data/exchanges.json", function(exchangeData) {
                 // Open file with exchanges for each coin
                 $.get("/static/data/exchanges_by_coin.json", function(exchsByCoin) {
-                    console.log(inputOrigCoinChanged)
                     inputCoin = $('#orig_coin').val()
-                    console.log(inputCoin)
                     // If there is input coin, get exchanges for that coin
                     if ((inputOrigCoinChanged == true) && (inputCoin.length > 0)) {
-                        console.log("entro a cambiar exchanges")
-
                         if (inputCoin in exchsByCoin) {
-                            console.log("cambio exchanges!")
                             inputOrigExchanges = exchsByCoin[inputCoin];
                         }
                         inputOrigCoinChanged = false;
@@ -97,14 +94,12 @@ $(document).ready(function() {
                     var returnValue = []
                     // If there was no coin properly field, display all exchanges
                     if (inputOrigExchanges.length == 0) {
-                        console.log("muestro todos");
                         for (const [key, value] of Object.entries(exchangeData)) {
                             returnValue.push(value);
                         }
                         return process(returnValue);
                         // If there was a coin, display only exchanges for that coin
                     } else {
-                        console.log("muestro solo los exchanges de la moneda");
                         for (var i = 0; i < inputOrigExchanges.length; i++) {
                             if (inputOrigExchanges[i] in exchangeData) {
                                 returnValue.push(exchangeData[inputOrigExchanges[i]]);
@@ -120,6 +115,7 @@ $(document).ready(function() {
         showHintOnFocus: true,
         selectOnBlur: false,
         items: 100,
+        item: '<li class="dropdown-item"><a class="dropdown-item" href="#" role="option"></a></li>',
         displayText: function(item) {
             if ((item.name == 'Bank') || (item.name == 'Wallet')) {
                 return '<div class="font-weight-bold d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16"> ' +
@@ -148,15 +144,10 @@ $(document).ready(function() {
             $.get("/static/data/exchanges.json", function(exchangeData) {
                 // Open file with exchanges for each coin
                 $.get("/static/data/exchanges_by_coin.json", function(exchsByCoin) {
-                    console.log(inputDestCoinChanged)
                     inputCoin = $('#dest_coin').val()
-                    console.log(inputCoin)
                     // If there is input coin, get exchanges for that coin
                     if ((inputDestCoinChanged == true) && (inputCoin.length > 0)) {
-                        console.log("entro a cambiar exchanges")
-
                         if (inputCoin in exchsByCoin) {
-                            console.log("cambio exchanges!")
                             inputDestExchanges = exchsByCoin[inputCoin];
                         }
                         inputDestCoinChanged = false;
@@ -165,14 +156,12 @@ $(document).ready(function() {
                     var returnValue = []
                     // If there was no coin properly field, display all exchanges
                     if (inputDestExchanges.length == 0) {
-                        console.log("muestro todos");
                         for (const [key, value] of Object.entries(exchangeData)) {
                             returnValue.push(value);
                         }
                         return process(returnValue);
                         // If there was a coin, display only exchanges for that coin
                     } else {
-                        console.log("muestro solo los exchanges de la moneda");
                         for (var i = 0; i < inputDestExchanges.length; i++) {
                             if (inputDestExchanges[i] in exchangeData) {
                                 returnValue.push(exchangeData[inputDestExchanges[i]]);
@@ -188,6 +177,7 @@ $(document).ready(function() {
         showHintOnFocus: true,
         selectOnBlur: false,
         items: 100,
+        item: '<li class="dropdown-item"><a class="dropdown-item" href="#" role="option"></a></li>',
         displayText: function(item) {
             if ((item.name == 'Bank') || (item.name == 'Wallet')) {
                 return '<div class="font-weight-bold d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16"> ' +
@@ -208,6 +198,22 @@ $(document).ready(function() {
     });
 
 
+
+    ///////////////////////////////////////////////////////////////////////////
+    /////   ADD SPACE TO AMOUNT INPUT
+    ///////////////////////////////////////////////////////////////////////////
+
+    // Adds an space to the input amount so that italics don't get cut off.
+    $('#orig_amt').on('change', function() {
+        var value = $('#orig_amt').val();
+        if (value.length > 0) {
+            value = value.replace(' ', '');
+            $('#orig_amt').val(value + " ");
+        }
+    });
+
+
+
     ///////////////////////////////////////////////////////////////////////////
     /////   SEARCH INPUT ACTIONS
     ///////////////////////////////////////////////////////////////////////////
@@ -218,13 +224,7 @@ $(document).ready(function() {
         var value = $input.val();
         if (value.length > 0) {
             $input.css({
-                'font-weight': 'bold',
-                'font-style': 'normal'
-            });
-        } else {
-            $input.css({
-                'font-weight': 400,
-                'font-style': 'italic'
+                'color': 'white'
             });
         }
     }
@@ -244,11 +244,14 @@ $(document).ready(function() {
     });
 
     // Check when page loads (in case form was prefilled!)
-    CheckSearchInput($('#orig_amt'));
-    CheckSearchInput($('#orig_coin'));
-    CheckSearchInput($('#orig_loc'));
-    CheckSearchInput($('#dest_coin'));
-    CheckSearchInput($('#dest_loc'));
+    // CheckSearchInput($('#orig_amt'));
+    // CheckSearchInput($('#orig_coin'));
+    // CheckSearchInput($('#orig_loc'));
+    // CheckSearchInput($('#dest_coin'));
+    // CheckSearchInput($('#dest_loc'));
+
+
+
 
     ///////////////////////////////////////////////////////////////////////////
     /////   EXCHANGE OPTIONS CODE
@@ -288,6 +291,9 @@ $(document).ready(function() {
         }
     });
 
+
+
+
     ///////////////////////////////////////////////////////////////////////////
     /////   SUBMIT BUTTON ACTIONS
     ///////////////////////////////////////////////////////////////////////////
@@ -295,13 +301,40 @@ $(document).ready(function() {
     // Actions when submit button is clicked:
     //   - Hide current results being displayed
     //   - Hide 'Connecting options'
-    //   - Show processing modal
+    //   - Show processing modal (if form was filled!)
+    //   - Replace ',' by '.' in origin amount
+    //   - If Origin location and Destination location are emtpy, fill them
     $('#submit-btn').on('click', function() {
+        // Hide current results being displayed
         $('#results').fadeOut(200);
         $('#intro').fadeOut(200);
+        // Hide 'Connecting options'
         $('#options-collapse').collapse('hide');
-        $('#processing-modal').modal('show')
+        // Show processing modal (if form was filled!)
+        if ($('#dest_coin').val().length > 0 &&
+            $('#orig_amt').val().length > 0 &&
+            $('#orig_coin').val().length > 0) {
+            $('#processing-modal').modal('show')
+        }
+        // Replace ',' by '.' in origin amount
+        var $origAmt = $('#orig_amt')
+        $origAmt.val($origAmt.val().replace(',', '.'))
+        // If Origin location is empty, fill it
+        var $origLoc = $('#orig_loc')
+        var value = $origLoc.val();
+        if (value.length == 0) {
+            $origLoc.val('(Default)');
+        }
+        // If Destination location is empty, fill it
+        var $destLoc = $('#dest_loc')
+        var value = $destLoc.val();
+        if (value.length == 0) {
+            $destLoc.val('(Default)');
+        }
     });
+
+
+
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -311,6 +344,7 @@ $(document).ready(function() {
     // Actions if a currency is selected:
     //   - Replace selected currency
     //   - Hide results
+    //   - If inputs are filled, send form automatically
     $('#currency-btn .dropdown-item').on('click', function() {
         currentCurrency = $('#currency-btn button').attr('data-currency');
         selectedCurrency = $(this).attr('data-currency');
@@ -318,19 +352,22 @@ $(document).ready(function() {
             // Replace selected currency
             $('#currency-btn button').attr('data-currency', selectedCurrency);
             $('#currency-btn button').html('<b>' + $(this).html() + '</b>');
-            // Hide results
-            $('#results').fadeOut(200);
             // Change selected option in input form
             var $option = $('#currency option[value=' + selectedCurrency + ']');
             $option.prop('selected', true);
-            // Change currency in navbar links & other site navigation links
-            // $('.curr-change').each(function() {
-            //     oldLink = $(this).attr('href');
-            //     newLink = oldLink.replace('currency%3D' + currentCurrency, 'currency%3D' + selectedCurrency)
-            //     $(this).attr('href', newLink);
-            // });
+            // Hide results
+            $('#results').fadeOut(200);
+            // If inputs are filled, send form automatically
+            if ($('#dest_coin').val().length > 0 &&
+                $('#orig_amt').val().length > 0 &&
+                $('#orig_coin').val().length > 0) {
+                $('#submit-btn').trigger("click");
+            }
         }
     });
+
+
+
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -357,6 +394,7 @@ $(document).ready(function() {
     });
 
 
+
     ///////////////////////////////////////////////////////////////////////////
     /////   AUTO-SEARCH
     ///////////////////////////////////////////////////////////////////////////
@@ -366,6 +404,24 @@ $(document).ready(function() {
     if (cond == "True") {
         $('#submit-btn').trigger("click");
     }
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    /////   OPEN COLLAPSES AUTOMATICALLY
+    ///////////////////////////////////////////////////////////////////////////
+
+    // Open 'Advanced Search' collapse in case of error in location inputs
+    var errors = $("section#search-canvas .location-error")
+    if (errors.length > 0) {
+        $('#options-collapse').collapse('show');
+    }
+
+    // Open the first collapse item to show details
+    $("#results .collapse").first().collapse('show')
+    $("#results .collapse-animation").first().find("i:first").toggleClass("rotateimg180");
+
+
 
     ///////////////////////////////////////////////////////////////////////////
     /////   COLLAPSE-ANIMATIONS (CHEVRON ROTATION)
@@ -378,6 +434,34 @@ $(document).ready(function() {
         if (!$collapseElement.hasClass("collapsing")) {
             $(this).find("i:first").toggleClass("rotateimg180");
         }
+    });
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    /////   BACK TO TOP BUTTON
+    ///////////////////////////////////////////////////////////////////////////
+
+    console.log("entro 5")
+
+    // When the user scrolls down 400px from the top of the document, show the button
+    window.onscroll = function() {
+        scrollFunction()
+    };
+
+    var scrollToAppear = 400;
+
+    function scrollFunction() {
+        if (document.body.scrollTop > scrollToAppear || document.documentElement.scrollTop > scrollToAppear) {
+            document.getElementById("myBtn").style.display = "block";
+        } else {
+            document.getElementById("myBtn").style.display = "none";
+        }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    $("#myBtn").click(function() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     });
 
 
