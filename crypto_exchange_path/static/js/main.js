@@ -25,7 +25,7 @@ $(document).ready(function() {
             items: 50,
             item: '<li class="dropdown-item"><a class="dropdown-item" href="#" role="option"></a></li>',
             displayText: function(item) {
-                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/coins/16/' + item.img + '" alt="" width="16" height="16"> ' +
+                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/coins/16/' + item.img + '" alt="" width="16" height="16">' +
                     item.long_name + ' (' + item.name + ')</div>'
             },
             highlighter: Object,
@@ -53,7 +53,7 @@ $(document).ready(function() {
             items: 50,
             item: '<li class="dropdown-item"><a class="dropdown-item" href="#" role="option"></a></li>',
             displayText: function(item) {
-                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/coins/16/' + item.img + '" alt="" width="16" height="16"> ' +
+                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/coins/16/' + item.img + '" alt="" width="16" height="16">' +
                     item.long_name + ' (' + item.name + ')</div>'
             },
             highlighter: Object,
@@ -118,10 +118,10 @@ $(document).ready(function() {
         item: '<li class="dropdown-item"><a class="dropdown-item" href="#" role="option"></a></li>',
         displayText: function(item) {
             if ((item.name == 'Bank') || (item.name == 'Wallet')) {
-                return '<div class="font-weight-bold d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16"> ' +
+                return '<div class="font-weight-bold d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16">' +
                     item.name + '<span class="badge badge-warning ml-2">Default</span></div>'
             } else {
-                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16"> ' +
+                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16">' +
                     item.name + '</div>'
             }
         },
@@ -132,6 +132,10 @@ $(document).ready(function() {
         },
         sorter: function(items) {
             return items.sort(Comparator);
+        },
+        // Match all options even if user has typed anything
+        matcher: function(item) {
+            return true;
         }
     });
 
@@ -180,10 +184,10 @@ $(document).ready(function() {
         item: '<li class="dropdown-item"><a class="dropdown-item" href="#" role="option"></a></li>',
         displayText: function(item) {
             if ((item.name == 'Bank') || (item.name == 'Wallet')) {
-                return '<div class="font-weight-bold d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16"> ' +
+                return '<div class="font-weight-bold d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16">' +
                     item.name + '<span class="badge badge-warning ml-2">Default</span></div>'
             } else {
-                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16"> ' +
+                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16">' +
                     item.name + '</div>'
             }
         },
@@ -194,6 +198,10 @@ $(document).ready(function() {
         },
         sorter: function(items) {
             return items.sort(Comparator);
+        },
+        // Match all options even if user has typed anything
+        matcher: function(item) {
+            return true;
         }
     });
 
@@ -215,81 +223,94 @@ $(document).ready(function() {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    /////   SEARCH INPUT ACTIONS
+    /////   SEARCH INPUT ACTIONS AND CHECKS
     ///////////////////////////////////////////////////////////////////////////
 
     // Checks whether there is input in the forms to make it bold
-    function CheckSearchInput($input) {
-        var changeFont = false;
+    function CheckInputFormat($input, style, color) {
         var value = $input.val();
         if (value.length > 0) {
             $input.css({
-                'color': 'white'
+                'font-style': style,
+                'color': color
+            });
+        }
+    }
+
+    var originLocError = false;
+    var destLocError = false;
+    // Checks whether there is input in the forms to make it bold
+    function CheckLocationInput($input, exchList) {
+        var value = $input.val();
+        // Change Coinbase to look by ID
+        if (value == 'Coinbase PRO') {
+            value = 'Coinbase';
+        }
+        // Check if there is any input
+        if (value.length > 0) {
+            if (exchList.indexOf(value) >= 0) {
+                $input.css({
+                    'font-style': 'italic',
+                    'color': '#212529',
+                    'font-weight': '500'
+                });
+                originLocError = false;
+            } else {
+                $input.css({
+                    'font-style': 'italic',
+                    'color': '#f44e4e',
+                    'font-weight': '700'
+                });
+                originLocError = true;
+            }
+        } else {
+            // Format if field is empty
+            $input.css({
+                'font-style': 'normal',
+                'color': '#495057',
+                'font-weight': '400'
             });
         }
     }
 
     // Actions if Form inputs change
     $('.track-filled').on('change', function() {
-        CheckSearchInput($(this));
-        // Check if coin changed to search for exchanges in Typeahead
         var id = $(this).attr('id');
-        if (id == 'orig_coin') {
+        if (id == 'orig_amt') {
+            CheckInputFormat($(this), 'italic', 'white');
+            // Check if coin changed to search for exchanges in Typeahead
+        } else if (id == 'orig_coin') {
+            CheckInputFormat($(this), 'italic', 'white');
             inputOrigCoinChanged = true;
             inputOrigExchanges = [];
+            // Check if coin changed to search for exchanges in Typeahead
         } else if (id == 'dest_coin') {
+            CheckInputFormat($(this), 'italic', 'white');
             inputDestCoinChanged = true;
             inputDestExchanges = [];
+        } else if (id == 'orig_loc') {
+            // Checks for Origin Location
+            CheckLocationInput($(this), inputOrigExchanges);
+            // Force change in form inputs
+            $('#' + id).val($(this).val())
+        } else if (id == 'dest_loc') {
+            // Checks for Destination Location
+            CheckLocationInput($(this), inputDestExchanges);
+            // Force change in form inputs
+            $('#' + id).val($(this).val())
         }
     });
+
 
     // Check when page loads (in case form was prefilled!)
-    // CheckSearchInput($('#orig_amt'));
-    // CheckSearchInput($('#orig_coin'));
-    // CheckSearchInput($('#orig_loc'));
-    // CheckSearchInput($('#dest_coin'));
-    // CheckSearchInput($('#dest_loc'));
+    CheckLocationInput($('#orig_loc'), inputOrigExchanges);
+    CheckLocationInput($('#dest_loc'), inputDestExchanges);
+    // CheckInputFormat($('#orig_amt'));
+    // CheckInputFormat($('#orig_coin'));
+    // CheckInputFormat($('#orig_loc'));
+    // CheckInputFormat($('#dest_coin'));
+    // CheckInputFormat($('#dest_loc'));
 
-
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    /////   EXCHANGE OPTIONS CODE
-    ///////////////////////////////////////////////////////////////////////////
-
-    var $checkboxes = $('#exchange-options input');
-    var $multiOptions = $('#exchanges option');
-
-    // Actions if 'Select All' button is clicked
-    $('#select-all-btn').on('click', function() {
-        $checkboxes.each(function() {
-            $(this).prop('checked', true);
-        });
-        $multiOptions.each(function() {
-            $(this).prop('selected', true);
-        });
-    });
-
-    // Actions if 'Select All' button is clicked
-    $('#deselect-all-btn').on('click', function() {
-        $checkboxes.each(function() {
-            $(this).prop('checked', false);
-        });
-        $multiOptions.each(function() {
-            $(this).prop('selected', false);
-        });
-    });
-
-    // Actions if a checkbox is clicked
-    $checkboxes.on('change', function() {
-        var exch = $(this).attr('id').replace('exch-', '');
-        var $option = $('#exchanges option[value=' + exch + ']');
-        if ($(this).is(":checked")) {
-            $option.prop('selected', true);
-        } else {
-            $option.prop('selected', false);
-        }
-    });
 
 
 
@@ -370,6 +391,207 @@ $(document).ready(function() {
 
 
 
+
+    ///////////////////////////////////////////////////////////////////////////
+    /////   RESULTS FILTERS - EXCHANGE OPTIONS
+    ///////////////////////////////////////////////////////////////////////////
+
+    // Actions if an EXCHANGE is clicked:
+    //   - Select option (and clear previous option)
+    //   - Filter results
+
+    // Checkboxes that user clicks
+    var $checkboxes = $('#exchange-selector input');
+    // Multioption input form that is hidden to user
+    var $multiOptions = $('#exchanges option');
+
+    // Actions if 'Select All' button is clicked
+    $('#select-all-btn').on('click', function() {
+        // Select all checkboxes
+        $checkboxes.each(function() {
+            $(this).prop('checked', true);
+        });
+        // Select all multioptions
+        $multiOptions.each(function() {
+            $(this).prop('selected', true);
+        });
+        // Display all results
+        $('section#results .result-card').each(function() {
+            $(this).removeClass("exchange-hide")
+        });
+    });
+
+    // Actions if 'Select All' button is clicked
+    $('#deselect-all-btn').on('click', function() {
+        // Clear all checkboxes
+        $checkboxes.each(function() {
+            $(this).prop('checked', false);
+        });
+        // Clear all multioptions
+        $multiOptions.each(function() {
+            $(this).prop('selected', false);
+        });
+        // Clear all results
+        $('section#results .result-card').each(function() {
+            $(this).addClass("exchange-hide")
+        });
+    });
+
+    // Actions if a checkbox is clicked
+    $checkboxes.on('change', function() {
+        var exch = $(this).attr('id').replace('exch-', '');
+        var $option = $('#exchanges option[value=' + exch + ']');
+        if ($(this).is(":checked")) {
+            $option.prop('selected', true);
+        } else {
+            $option.prop('selected', false);
+        }
+        FilterResultsByExchange();
+    });
+
+    // Checks the results and filters/displays results whose two exchanges
+    // are not checked
+    function FilterResultsByExchange() {
+        $('section#results .result-card').each(function() {
+            var exch1 = $(this).attr('data-exch-1');
+            var exch2 = $(this).attr('data-exch-2');
+            var option1 = $('#exchanges option[value=' + exch1 + ']').prop('selected');
+            // If there is no Exchange2, set it to TRUE
+            option2 = true;
+            if (exch2.length > 0) {
+                var option2 = $('#exchanges option[value=' + exch2 + ']').prop('selected');
+            }
+            if (option1 && option2) {
+                $(this).removeClass("exchange-hide");
+            } else {
+                $(this).addClass("exchange-hide");
+            }
+        });
+    }
+
+    // When website loads, filter results by exchange
+    FilterResultsByExchange();
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    /////   RESULTS FILTERS - CONNECTION TYPE
+    ///////////////////////////////////////////////////////////////////////////
+
+    // Actions if a CONNECTION TYPE is selected:
+    //   - Select option (and clear previous option)
+    //   - Filter results
+    //   - Select input form option
+    $('section#results .connection-filter').on('click', function() {
+        var clickedConnectionType = $(this).attr('data-connection-type')
+        // If current selected options is clicked, do NOTHING
+        if ($(this).find('th').html().length > 0) {
+            return;
+            // If another option is clicked, change filters
+        } else {
+            // Select clicked option
+            $(this).find('th').html('<i class="fa fa-check fa-lg orange-color" aria-hidden="true"></i>');
+            // Clear previous option
+            $(this).siblings().each(function() {
+                $(this).find('th').html('')
+            });
+            // Filter results
+            $('section#results .result-card').each(function() {
+                // If connection Type <= Clicked Type --> Show result
+                if ($(this).attr('data-connection-type') <= clickedConnectionType) {
+                    $(this).removeClass("connection-hide")
+                }
+                // If connection Type > Clicked Type --> Hide result
+                else {
+                    $(this).addClass("connection-hide")
+                }
+            });
+            // Select input form option
+            $('#connection_type option').each(function() {
+                if ($(this).attr('value') == clickedConnectionType) {
+                    $(this).prop('selected', true);
+                }
+            });
+        }
+    });
+
+    // When website loads, select option from input form and filter results
+    var formConnectionType = $('#connection_type').val();
+    $('section#results .connection-filter').each(function() {
+        // If connection Type == Type in input form --> Select
+        if ($(this).attr('data-connection-type') == formConnectionType) {
+            $(this).find('th').html('<i class="fa fa-check fa-lg orange-color" aria-hidden="true"></i>');
+            // Filter results
+            $('section#results .result-card').each(function() {
+                // If connection Type <= Clicked Type --> Show result
+                if ($(this).attr('data-connection-type') <= formConnectionType) {
+                    $(this).removeClass("connection-hide")
+                }
+                // If connection Type > Clicked Type --> Hide result
+                else {
+                    $(this).addClass("connection-hide")
+                }
+            });
+        }
+    });
+    console.log(1);
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    /////   RESULTS OPTIONS - LOCATION
+    ///////////////////////////////////////////////////////////////////////////
+
+    // Actions if a LOCATION is selected:
+    //   - When Location dropdown closes, recalculate operation
+    $('#location-selector button').on('click', function() {
+        $('#submit-btn').trigger("click");
+    })
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    /////   RESULTS OPTIONS - MARKET FEE
+    ///////////////////////////////////////////////////////////////////////////
+
+    // Actions if a MARKET FEE is selected:
+    //   - Select option in dropdown(and clear previous option)
+    //   - Fill form input
+    //   - Trigger search
+    $('#market-fee-selector tr').on('click', function() {
+        var clickedMarketFee = $(this).attr('data-fee-type')
+        // If current selected options is clicked, do NOTHING
+        if ($(this).find('th').html().length > 0) {
+            return;
+            // If another option is clicked, change filters
+        } else {
+            // Select clicked option
+            $(this).find('th').html('<i class="fa fa-check fa-lg orange-color" aria-hidden="true"></i>');
+            // Clear previous option
+            $(this).siblings().each(function() {
+                $(this).find('th').html('')
+            });
+            // Fill input form option
+            $('#default_fee option').each(function() {
+                if ($(this).attr('value') == clickedMarketFee) {
+                    $(this).prop('selected', true);
+                }
+            });
+            // Trigger search
+            $('#submit-btn').trigger("click");
+        }
+    })
+
+    // When website loads, select option from input form
+    var formMarketFee = $('#default_fee').val();
+    $('#market-fee-selector tr').each(function() {
+        // If fee Type == Type in input form --> Select
+        if ($(this).attr('data-fee-type') == formMarketFee) {
+            $(this).find('th').html('<i class="fa fa-check fa-lg orange-color" aria-hidden="true"></i>');
+        }
+    });
+
+
+
+
     ///////////////////////////////////////////////////////////////////////////
     /////   BLOCK LINKS (IN RESULTS)
     ///////////////////////////////////////////////////////////////////////////
@@ -441,20 +663,21 @@ $(document).ready(function() {
     /////   BACK TO TOP BUTTON
     ///////////////////////////////////////////////////////////////////////////
 
-    console.log("entro 5")
-
     // When the user scrolls down 400px from the top of the document, show the button
     window.onscroll = function() {
         scrollFunction()
     };
 
     var scrollToAppear = 400;
+    var $myBtn = $("#myBtn");
 
     function scrollFunction() {
-        if (document.body.scrollTop > scrollToAppear || document.documentElement.scrollTop > scrollToAppear) {
-            document.getElementById("myBtn").style.display = "block";
-        } else {
-            document.getElementById("myBtn").style.display = "none";
+        if ($myBtn.length) {
+            if (document.body.scrollTop > scrollToAppear || document.documentElement.scrollTop > scrollToAppear) {
+                $myBtn.css("display", "block");
+            } else {
+                $myBtn.css("display", "none");
+            }
         }
     }
 

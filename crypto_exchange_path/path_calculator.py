@@ -6,8 +6,7 @@ from crypto_exchange_path.objects import Location, Hop, Path
 
 
 def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
-               connection_type, user_exchanges, currency, fee_settings,
-               logger):
+               currency, fee_settings, logger):
 
     # Paths container
     path_list = []
@@ -20,11 +19,9 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
 
     logger.info("\n\nSTARTING CALCULATION FOR: \norig_amt = {}\n"
                 "orig_coin = {}\norig_loc = {}\ndest_coin = {}\ndest_loc = {}"
-                "\nconnection_type = {}\nuser_exchanges = {}"
                 "\ncurrency = {}\nfee_settings = {}"
                 .format(orig_amt, orig_coin, orig_loc, dest_coin, dest_loc,
-                        connection_type, user_exchanges, currency,
-                        fee_settings))
+                        currency, fee_settings))
 
     logger.info("Main: CALCULATING '1. DIRECT EXCHANGE(NO HOPS)'")
     # Get exchanges with direct pair exchange
@@ -33,17 +30,8 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                                         logger)
     # Get exchanges that allow deposits of 'orig_coin'
     exchs_allow_deposits = get_exch_by_coin(orig_coin.id)
-    # Filter exchanges with user preferences
-    if user_exchanges:
-        filtered_exch = set()
-        for exch in direct_pair_exch:
-            if exch in user_exchanges:
-                filtered_exch.add(exch)
-        direct_pair_exch = filtered_exch
-        logger.debug("Exchanges filtered by user pref.: {}"
-                     .format(direct_pair_exch))
     # Common parts of 'Path'
-    path_type = '[1] Direct (1 Exch)'
+    path_type = 0
     origin = Location("Origin", orig_loc, orig_amt, orig_coin, logger)
     # Loop for each exchange to calculate Path fees
     for exch in direct_pair_exch:
@@ -104,12 +92,6 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                                                        trade_1.buy_coin.id,
                                                        exch))
     logger.info("End of '1. DIRECT EXCHANGE(NO HOPS)'")
-    # If user selected 'Direct Exchanges', generate results and return
-    if (connection_type == '0'):
-        # generate_paths_file(path_list, currency, logger)
-        logger.info("Path calculation finished. '{}' results"
-                    .format(len(path_list)))
-        return path_list
 
     """ ***********************************************************************
     ***************************************************************************
@@ -120,49 +102,29 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
     # Get exchanges with indirect pair exchange
     orig_coin_exchanges = get_exch_by_coin(orig_coin.id)
     dest_coin_exchanges = get_exch_by_coin(dest_coin.id)
-    # Filter exchanges with user preferences and already used
-    if user_exchanges:
-        # Filter 'orig_coin_exchanges'
-        filtered_exch = set()
-        for exch in orig_coin_exchanges:
-            if (exch in user_exchanges) and (exch not in direct_pair_exch):
-                filtered_exch.add(exch)
-        orig_coin_exchanges = filtered_exch
-        logger.debug("Main: 'orig_coin_exchanges' filtered: {}"
-                     .format(orig_coin_exchanges))
-        # Filter 'dest_coin_exchanges'
-        filtered_exch = set()
-        for exch in dest_coin_exchanges:
-            if (exch in user_exchanges) and (exch not in direct_pair_exch):
-                filtered_exch.add(exch)
-        dest_coin_exchanges = filtered_exch
-        logger.debug("Main: 'dest_coin_exchanges' filtered: {}"
-                     .format(dest_coin_exchanges))
-    # Filter exchanges already used
-    else:
-        # Filter 'orig_coin_exchanges'
-        filtered_exch = set()
-        for exch in orig_coin_exchanges:
-            if exch not in direct_pair_exch:
-                filtered_exch.add(exch)
-        orig_coin_exchanges = filtered_exch
-        logger.debug("Main: 'orig_coin_exchanges' filtered: {}"
-                     .format(orig_coin_exchanges))
-        # Filter 'dest_coin_exchanges'
-        filtered_exch = set()
-        for exch in dest_coin_exchanges:
-            if exch not in direct_pair_exch:
-                filtered_exch.add(exch)
-        dest_coin_exchanges = filtered_exch
-        logger.debug("Main: 'dest_coin_exchanges' filtered: {}"
-                     .format(dest_coin_exchanges))
+    # Filter exchanges already used - Filter 'orig_coin_exchanges'
+    filtered_exch = set()
+    for exch in orig_coin_exchanges:
+        if exch not in direct_pair_exch:
+            filtered_exch.add(exch)
+    orig_coin_exchanges = filtered_exch
+    logger.debug("Main: 'orig_coin_exchanges' filtered: {}"
+                 .format(orig_coin_exchanges))
+    # Filter exchanges already used - Filter 'dest_coin_exchanges'
+    filtered_exch = set()
+    for exch in dest_coin_exchanges:
+        if exch not in direct_pair_exch:
+            filtered_exch.add(exch)
+    dest_coin_exchanges = filtered_exch
+    logger.debug("Main: 'dest_coin_exchanges' filtered: {}"
+                 .format(dest_coin_exchanges))
     # Select exchanges that trade both coins, but not with a direct trade
     indirect_pair_exch = [exch for exch in orig_coin_exchanges
                           if exch in dest_coin_exchanges]
     logger.debug("Exchanges with both pairs (but not direct trade) [{}]: {}"
                  "".format(len(indirect_pair_exch), indirect_pair_exch))
     # Common parts of 'Path'
-    path_type = '[2] Indirect (1 Exch)'
+    path_type = 1
     origin = Location("Origin", orig_loc, orig_amt, orig_coin, logger)
     # Loop for each exchange with both pairs
     for exch in indirect_pair_exch:
@@ -251,12 +213,6 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                                               trade_2.buy_coin.id,
                                               exch))
     logger.info("End of '2. INDIRECT EXCHANGE(ONE HOP)'")
-    # If user selected 'One connection', generate results and return
-    if (connection_type == '1'):
-        # generate_paths_file(path_list, currency, logger)
-        logger.info("Path calculation finished. '{}' results"
-                    .format(len(path_list)))
-        return path_list
 
     """ ***********************************************************************
     ***************************************************************************
@@ -285,7 +241,7 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                                                       orig_coin.id,
                                                       exchange.coinZs))
     # Common parts of 'Path'
-    path_type = '[3] Indirect (2 Exchanges)'
+    path_type = 2
     origin = Location("Origin", orig_loc, orig_amt, orig_coin, logger)
     # Loop through all the exchanges and coins
     for exch_A in orig_coin_exchanges_coinZs:

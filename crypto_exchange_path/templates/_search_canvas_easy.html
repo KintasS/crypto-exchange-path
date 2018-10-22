@@ -6,7 +6,7 @@
 
                 <h2 class="mt-0 mt-xl-4 mb-2 font-weight-bold text-center">Cryptoasset exchange engine</h2>
 
-                <h6 class="text-center font-italic mt-2 mb-5">Find the cheapest way to buy or exchange cryptoassets</h6>
+                <h6 class="text-center font-italic mt-2">Find the cheapest way to buy or exchange cryptoassets</h6>
 
                 <div class="row no-gutters d-flex justify-content-center">
                     <div class="col-12 col-md-10 col-lg-11 col-xl-8">
@@ -15,13 +15,13 @@
                             {{ form.hidden_tag() }}
 
 
-                            <div class="search-box">
+                            <div class="search-box mt-4 mb-5">
 
                                 <h5 class="text-center font-italic my-3">CryptoFeeSaver, help me find the cheapest path to exchange...</h5>
 
                                 <!-- VISIBLE FORM ELEMENTS -->
                                 <div class="d-flex flex-row justify-content-center align-items-center my-4">
-                                    <div class="large-font group mr-2">
+                                    <div class="large-font group md-input-form mr-2">
                                         {% if form.orig_amt.errors %}
                                             {{ form.orig_amt(class="align-right typeahead track-filled invalid",  style="width: 90px", autocomplete="off", spellcheck="false", required="true") }}
                                             <div class="form-errors">
@@ -36,7 +36,7 @@
                                             <span class="bar" style="width: 90px"></span>
                                             <label class="align-right">Amount</label>
                                     </div>
-                                    <div id="input-orig-coin" class="large-font group mr-4">
+                                    <div id="input-orig-coin" class="large-font md-input-form mr-4">
                                         {% if form.orig_coin.errors %}
                                             {{ form.orig_coin(class="typeahead track-filled invalid",  style="width: 150px", type="text", autocomplete="off", spellcheck="false", required="true") }}
                                             <div class="form-errors">
@@ -52,7 +52,7 @@
                                             <label>Origin Coin</label>
                                     </div>
                                     <div class="large-font font-italic font-weight-bold">to</div>
-                                    <div id="input-dest-coin" class="large-font group ml-4 mr-2">
+                                    <div id="input-dest-coin" class="large-font md-input-form ml-4 mr-2">
                                         {% if form.dest_coin.errors %}
                                             {{ form.dest_coin(class="typeahead track-filled invalid",  style="width: 150px", type="text", autocomplete="off", spellcheck="false", required="true") }}
                                             <div class="form-errors">
@@ -89,7 +89,7 @@
 
 
                             <!-- ADVANCED SEARCH -->
-                            <div class="row no-gutters mt-1 mt-lg-4 mb-3">
+                            <div class="row no-gutters mt-1 mt-lg-4 mb-3 d-none">
                                 <div class="col d-flex justify-content-start">
                                     <a class="text-white collapse-animation" data-toggle="collapse" href="#options-collapse" role="button" aria-expanded="false" aria-controls="options-collapse">
                                         <div class="d-block d-flex align-items-center">
@@ -107,7 +107,7 @@
                                         <p class="fixed-min-width mb-0">Location</p>
                                     </div>
                                     <div class="d-flex flex-row col pl-0">
-                                        <div id="input-orig-loc" class="group">
+                                        <div id="input-orig-loc" class="md-input-form">
                                             {% if form.orig_loc.errors %}
                                                 {{ form.orig_loc(class="typeahead track-filled invalid",  style="width: 200px", type="text", autocomplete="off", spellcheck="false", required="true") }}
                                                 <div class="form-errors">
@@ -123,7 +123,7 @@
                                                 <label>Origin location</label>
                                         </div>
 
-                                        <div id="input-dest-loc" class="group ml-5">
+                                        <div id="input-dest-loc" class="md-input-form ml-5">
                                             {% if form.dest_loc.errors %}
                                                 {{ form.dest_loc(class="typeahead track-filled invalid",  style="width: 200px", type="text", autocomplete="off", spellcheck="false", required="true") }}
                                                 <div class="form-errors">
@@ -147,31 +147,8 @@
                                         <p class="fixed-min-width">Exchanges</p>
                                     </div>
                                     <!-- Real form field. Not displayed, filled with JS -->
-                                    <div class="form-group d-none">
-                                        {{ form.exchanges(size=40) }}
-                                    </div>
-                                    <!-- Exchanges checkboxes. Used to populate form -->
-                                    <div class="col pl-0">
-                                        <div class="row no-gutters">
-                                            <div class="col mb-1">
-                                                <button id="select-all-btn" type="button" class="btn btn-deep-orange ml-0 px-2 py-1">Select All</button>
-                                                <button id="deselect-all-btn" type="button" class="btn btn-deep-orange px-2 py-1">Clear All</button>
-                                            </div>
-                                        </div>
-                                        <div class="row no-gutters">
-                                            {% for exch in exchanges %}
-                                                <div class="col-4 col-lg-3">
-                                                    <div class="custom-control custom-checkbox">
-                                                        {% if exch.id in user_exchanges %}
-                                                            <input type="checkbox" class="custom-control-input" id="exch-{{ exch.id }}" checked>
-                                                        {% else %}
-                                                            <input type="checkbox" class="custom-control-input" id="exch-{{ exch.id }}">
-                                                        {% endif %}
-                                                        <label class="custom-control-label" for="exch-{{ exch.id }}">{{ exch.name }}</label>
-                                                    </div>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
+                                    <div class="form-group">
+                                        {{ form.exchanges(size=25) }}
                                     </div>
                                 </div>
                                 <!-- Connections radio button -->
@@ -181,12 +158,7 @@
                                     </div>
                                     <div class="col pl-0 d-flex justify-content-start">
                                         <div class="form-group mb-0">
-                                            {% for subfield in form.connection_type %}
-                                                <div class="custom-control custom-radio custom-control-inline">
-                                                    <td>{{ subfield(class="custom-control-input") }}</td>
-                                                    <td>{{ subfield.label(class="custom-control-label") }}</td>
-                                                </div>
-                                            {% endfor %}
+                                            {{ form.connection_type(class="form-control", type="text", placeholder="Connections", autocomplete="off") }}
                                         </div>
                                     </div>
                                 </div>
@@ -202,17 +174,8 @@
                                         <p class="fixed-min-width">Default fee</p>
                                     </div>
                                     <div class="col pl-0 d-flex justify-content-start">
-                                        <div class="form-group">
-                                            <div class="row no-gutters">
-                                                {% for subfield in form.default_fee %}
-                                                    <div class="col-12 col-sm-auto">
-                                                        <div class="custom-control custom-radio custom-control-inline">
-                                                            <td>{{ subfield(class="custom-control-input") }}</td>
-                                                            <td>{{ subfield.label(class="custom-control-label") }}</td>
-                                                        </div>
-                                                    </div>
-                                                {% endfor %}
-                                            </div>
+                                        <div class="form-group mb-0">
+                                            {{ form.default_fee(class="form-control", type="text", placeholder="Default Fee", autocomplete="off") }}
                                         </div>
                                     </div>
                                 </div>

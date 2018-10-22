@@ -174,8 +174,8 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
             start_time = datetime.datetime.now()
             try:
                 paths = calc_paths(orig_loc, orig_coin, orig_amt,
-                                   dest_loc, dest_coin, connection_type,
-                                   user_exchanges, curr, fee_settings, logger)
+                                   dest_loc, dest_coin,
+                                   curr, fee_settings, logger)
                 path_results = len(paths)
             # Catch generic exception just in case anything went wront in logic
             except Exception as e:

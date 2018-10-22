@@ -36,6 +36,188 @@
                 <div class="col-12 col-md-10 col-lg-9 col-xl-8 px-1 px-md-0">
 
                     {% if paths %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        <!-- SEARCH FILTER DROPDOWNS -->
+                        <div class="d-inline-block d-flex justify-content-end">
+
+                            <!-- Location dropdown -->
+                            <div id="location-selector" class="search-filter dropdown">
+                                <a id="LocationDropdown" class="btn dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Location
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="LocationDropdown">
+                                    <form class="px-3 py-2">
+                                        <div id="input-orig-loc" class="form-group">
+                                            <label class="font-weight-bold mb-1" for="orig_loc">Origin location</label>
+                                            {% if form.orig_loc.errors %}
+                                                {{ form.orig_loc(class="form-control track-filled typeahead is-invalid", type="text", autocomplete="off", spellcheck="false") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.orig_loc.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.orig_loc(class="form-control track-filled typeahead", type="text", placeholder="Location", autocomplete="off", spellcheck="false") }}
+                                            {% endif %}
+                                        </div>
+                                        <div id="input-dest-loc" class="form-group mb-0">
+                                            <label class="font-weight-bold mb-1" for="dest_loc" style="min-width: 10rem;">Destination location</label>
+                                            {% if form.dest_loc.errors %}
+                                                {{ form.dest_loc(class="form-control track-filled typeahead is-invalid", type="text", autocomplete="off", spellcheck="false") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.dest_loc.errors %}
+                                                        <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ form.dest_loc(class="form-control track-filled typeahead", type="text", placeholder="Location", autocomplete="off", spellcheck="false") }}
+                                            {% endif %}
+                                        </div>
+                                        <button id="btn-apply" type="button" class="btn btn-deep-orange btn-sm mx-0 mt-3 mb-0">Apply</button>
+                                  </form>
+                                  <div class="dropdown-divider"></div>
+                                  <a class="whats-this d-flex justify-content-center align-items-center" href="#">
+                                      <span>What's this?<span>
+                                      <i class="fa fa-external-link ml-2" aria-hidden="true"></i>
+                                  </a>
+                              </div>
+                            </div>
+
+                            <!-- Market fee Dropdown -->
+                            <div id="market-fee-selector" class="search-filter dropdown">
+                                <a class="btn dropdown-toggle" href="#" role="button" id="MarketFeeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Market fee
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="MarketFeeDropdown">
+                                    <table class="table table-borderless table-hover">
+                                        <tbody>
+                                            <tr data-fee-type="(Taker)">
+                                                <th></th>
+                                                <td scope="row">Market Taker</td>
+                                            </tr>
+                                            <tr data-fee-type="(Maker)">
+                                                <th></th>
+                                                <td scope="row">Market Maker</td>
+                                            </tr>
+                                            <tr data-fee-type="(Avg)">
+                                                <th></th>
+                                                <td scope="row">Taker&Maker Average</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="whats-this d-flex justify-content-center align-items-center" href="#">
+                                        <span>What's this?<span>
+                                        <i class="fa fa-external-link ml-2" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Exchanges Dropdown -->
+                            <div id="exchange-selector" class="search-filter dropdown">
+                                <a class="btn dropdown-toggle" href="#" role="button" id="ExchangesDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Exchanges
+                                </a>
+                                <div class="dropdown-menu pb-3" aria-labelledby="ExchangesDropdown">
+                                    <form>
+                                        <div class="font-weight-bold pl-3 mb-1 mt-1" for="orig_loc">Preferred exchanges</div>
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col mb-1">
+                                                    <button id="select-all-btn" type="button" class="btn btn-deep-orange ml-0 px-2 py-1">Select All</button>
+                                                    <button id="deselect-all-btn" type="button" class="btn btn-deep-orange px-2 py-1">Clear All</button>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="min-width: 20rem;">
+                                                {% for exch in exchanges %}
+                                                    <div class="col-6">
+                                                        <div class="form-check">
+                                                            {% if exch.id in user_exchanges %}
+                                                                <input type="checkbox" class="form-check-input" id="exch-{{ exch.id }}" checked>
+                                                            {% else %}
+                                                                <input type="checkbox" class="form-check-input" id="exch-{{ exch.id }}">
+                                                            {% endif %}
+                                                            <label class="form-check-label" for="exch-{{ exch.id }}">{{ exch.name }}</label>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Connections Dropdown -->
+                            <div class="search-filter dropdown">
+                                <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="ConnectionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Connections
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="ConnectionsDropdown">
+                                    <table class="table table-borderless table-hover">
+                                        <tbody>
+                                            <tr class="connection-filter" data-connection-type="0">
+                                                <th></th>
+                                                <td scope="row">Direct exchange</td>
+                                            </tr>
+                                            <tr class="connection-filter" data-connection-type="1">
+                                                <th></th>
+                                                <td scope="row">One connection</td>
+                                            </tr>
+                                            <tr class="connection-filter" data-connection-type="2">
+                                                <th></th>
+                                                <td scope="row">Two connections</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="whats-this d-flex justify-content-center align-items-center" href="#">
+                                        <span>What's this?<span>
+                                        <i class="fa fa-external-link ml-2" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         <div class="d-inline-block d-flex justify-content-between">
                             {% if path_results == 1 %}
                                 <h5 class="mt-4 mb-3 font-weight-bold">Crypto Exchange Paths <small class="ml-1">({{ path_results }} result)</small></h5>
@@ -58,9 +240,18 @@
                         <p class="text-center lead font-weight-bold font-italic" style="color: #676767">(most low ranked coins usually need two connections to get results).</p>
                     {% endif %}
 
+
+
+
+
+
                     {% for path in paths %}
-                        <div class="card mb-4">
-                            <div class="card-header px-0 pt-3 pb-0" id="headingOne">
+                        {% if path.hop_2 %}
+                            <div class="result-card card mb-4" data-connection-type="{{ path.type }}" data-exch-1="{{ path.hop_1.exchange.id }}" data-exch-2="{{ path.hop_2.exchange.id }}">
+                        {% else %}
+                            <div class="result-card card mb-4" data-connection-type="{{ path.type }}" data-exch-1="{{ path.hop_1.exchange.id }}" data-exch-2="">
+                        {% endif %}
+                            <div class="card-header px-0 pt-3 pb-0">
                                 <div class="d-block">
                                     <!-- Origin -->
                                     <div class="d-inline-block pl-2 pl-sm-3 pl-lg-4" style="width: 17%">

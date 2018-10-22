@@ -26,9 +26,10 @@ class SearchForm(FlaskForm):
     orig_loc = StringField('Origin location')
     dest_coin = StringField('Destination coin')
     dest_loc = StringField('Destination location')
-    connection_type = RadioField('Connections',
-                                 choices=Params.CONNECTIONS_CHOICES,
-                                 default='2')
+    connection_type = SelectField('Connections',
+                                  choices=Params.CONNECTIONS_CHOICES,
+                                  validators=[DataRequired()],
+                                  default='2')
     exchanges = SelectMultipleField('Exchanges',
                                     choices=get_exchange_choices(['Exchange']),
                                     default=[exch[0] for exch in
@@ -37,9 +38,13 @@ class SearchForm(FlaskForm):
     cep_promos = RadioField('CEP promos',
                             choices=Params.CEP_CHOICES,
                             default='(CEP)')
-    default_fee = RadioField('Default fee',
-                             choices=Params.TRADE_FEE_CHOICES,
-                             default='(Avg)')
+    # default_fee = RadioField('Default fee',
+    #                          choices=Params.TRADE_FEE_CHOICES,
+    #                          default='(Avg)')
+    default_fee = SelectField('Default fee',
+                              choices=Params.TRADE_FEE_CHOICES,
+                              validators=[DataRequired()],
+                              default='(Avg)')
     binance_fee = RadioField('Binance fees',
                              choices=[('(BNB)', 'Pay fees in BNB (0.075%)'),
                                       ('(No-BNB)', 'Regular fees (0.1%)')],
@@ -75,12 +80,27 @@ class SearchForm(FlaskForm):
                 if not orig_loc.data or orig_loc.data in ['(Default)',
                                                           'Wallet',
                                                           'Bank']:
-                    orig_loc.data = set_default_exch(coin.id)
+                    self.orig_loc.data = set_default_exch(coin.id)
                     return
                 valid_exchs = get_exch_by_coin(coin.id)
-                if orig_loc.data not in valid_exchs:
-                    raise ValidationError("'{}' not available in '{}'"
-                                          .format(coin.id, orig_loc.data))
+                exch_id = get_exch_by_name(orig_loc.data)
+                if exch_id:
+                    exch_id = exch_id.id
+                else:
+                    # Check if extra characters where added
+                    for valid_exch in valid_exchs:
+                        exch_desc = get_exchange(valid_exch).name
+                        if orig_loc.data.find(exch_desc) >= 0:
+                            self.orig_loc.data = exch_desc
+                            return
+                    # raise ValidationError("'{}' is not a valid exchange name"
+                    #                       .format(orig_loc.data))
+                # Check that exchange is valid
+                if exch_id not in valid_exchs:
+                    # If not valid, use default exchange
+                    self.orig_loc.data = set_default_exch(coin.id)
+                    # raise ValidationError("'{}' not available in '{}'"
+                    #                       .format(coin.id, orig_loc.data))
 
     def validate_dest_coin(self, dest_coin):
         if not dest_coin.data:
@@ -105,7 +125,7 @@ class SearchForm(FlaskForm):
                 if not dest_loc.data or dest_loc.data in ['(Default)',
                                                           'Wallet',
                                                           'Bank']:
-                    dest_loc.data = set_default_exch(coin.id)
+                    self.dest_loc.data = set_default_exch(coin.id)
                     return
                 valid_exchs = get_exch_by_coin(coin.id)
                 exch_id = get_exch_by_name(dest_loc.data)
@@ -118,12 +138,14 @@ class SearchForm(FlaskForm):
                         if dest_loc.data.find(exch_desc) >= 0:
                             self.dest_loc.data = exch_desc
                             return
-                    raise ValidationError("'{}' is not a valid exchange name"
-                                          .format(dest_loc.data))
+                    # raise ValidationError("'{}' is not a valid exchange name"
+                    #                       .format(dest_loc.data))
                 # Check that exchange is valid
                 if exch_id not in valid_exchs:
-                    raise ValidationError("'{}' not available in '{}'"
-                                          .format(coin.id, dest_loc.data))
+                    # If not valid, use default exchange
+                    self.dest_loc.data = set_default_exch(coin.id)
+                    # raise ValidationError("'{}' not available in '{}'"
+                    #                       .format(coin.id, dest_loc.data))
 
 
 class FeedbackForm(FlaskForm):

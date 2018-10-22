@@ -224,54 +224,54 @@ section#search-canvas .search-box {
     text-transform: none;
 }
 
+#search-form .invalid-feedback {
+    color: white;
+    font-style: italic;
+    font-size: 90%;
+}
+
 /* Typeahead results */
 
-#search-form li.dropdown-item {
+#search-form .typeahead li.dropdown-item {
     padding-top: 0.25rem;
     padding-bottom: 0.125rem;
     padding-right: 0.5rem;
     padding-left: 1rem;
 }
 
-#search-form a.dropdown-item {
+#search-form .typeahead a.dropdown-item {
     padding: 0rem;
 }
 
-#search-form .dropdown-item:hover {
+#search-form .typeahead .dropdown-item:hover {
     color: white;
     background-color: #3f51b5;
 }
 
-#search-form .active.dropdown-item {
+#search-form .typeahead .active.dropdown-item {
     background-color: #3f51b5;
 }
 
-#search-form .active.dropdown-item .dropdown-item {
+#search-form .typeahead .active.dropdown-item .dropdown-item {
     color: white;
 }
 
 @media (max-width: 575px) {
-    #search-form .dropdown-item {
+    #search-form .typeahead .dropdown-item {
         font-size: 1rem;
     }
 }
 
 @media (min-width: 576px) and (max-width: 767) {
-    #search-form .dropdown-item {
+    #search-form .typeahead .dropdown-item {
         font-size: 0.9rem;
     }
 }
 
 @media (min-width: 768px) {
-    #search-form .dropdown-item {
+    #search-form .typeahead .dropdown-item {
         font-size: 0.85rem;
     }
-}
-
-#search-form .invalid-feedback {
-    color: white;
-    font-style: italic;
-    font-size: 90%;
 }
 
 /* Options section */
@@ -294,11 +294,11 @@ section#search-canvas .search-box {
 
 /* form starting stylings ------------------------------- */
 
-section#search-canvas .group {
+.md-input-form {
     position: relative;
 }
 
-section#search-canvas .group input {
+.md-input-form input {
     /* font-size: 18px;*/
     font-weight: 700;
     font-style: italic;
@@ -315,13 +315,11 @@ section#search-canvas .group input {
     text-align: right;
 }
 
-section#search-canvas .group input:focus {
+.md-input-form input:focus {
     outline: none;
 }
 
-/* LABEL ======================================= */
-
-section#search-canvas .group label {
+.md-input-form label {
     color: #b9b6b6;
     font-style: italic;
     font-size: 1rem;
@@ -336,14 +334,14 @@ section#search-canvas .group label {
     -webkit-transition: 0.2s ease all;
 }
 
-section#search-canvas .group label.align-right {
+.md-input-form label.align-right {
     left: 0px;
     right: 10px;
 }
 
 /* active state */
 
-section#search-canvas .group input:focus~label, section#search-canvas .group input:valid~label {
+.md-input-form input:focus~label, .md-input-form input:valid~label {
     top: -15px;
     font-size: 0.87rem;
     color: #989898;
@@ -351,7 +349,7 @@ section#search-canvas .group input:focus~label, section#search-canvas .group inp
 
 /* FORM ERRORS ======================================= */
 
-section#search-canvas .group .form-errors {
+.md-input-form .form-errors {
     position: absolute;
     left: 5px;
     top: 45px;
@@ -359,20 +357,20 @@ section#search-canvas .group .form-errors {
     font-size: 0.85rem
 }
 
-section#search-canvas .group input.invalid {
+.md-input-form input.invalid {
     color: #f44e4e;
     font-style: italic;
 }
 
 /* BOTTOM BARS ================================= */
 
-section#search-canvas .group .bar {
+.md-input-form .bar {
     position: relative;
     display: block;
     /* width: 100px; */
 }
 
-section#search-canvas .group .bar:before, section#search-canvas .group .bar:after {
+.md-input-form .bar:before, .md-input-form .bar:after {
     content: '';
     height: 2px;
     width: 0;
@@ -384,17 +382,17 @@ section#search-canvas .group .bar:before, section#search-canvas .group .bar:afte
     -webkit-transition: 0.2s ease all;
 }
 
-section#search-canvas .group .bar:before {
+.md-input-form .bar:before {
     left: 50%;
 }
 
-section#search-canvas .group .bar:after {
+.md-input-form .bar:after {
     right: 50%;
 }
 
 /* active state */
 
-section#search-canvas .group input:focus~.bar:before, section#search-canvas .group input:focus~.bar:after {
+.md-input-form input:focus~.bar:before, .md-input-form input:focus~.bar:after {
     width: 50%;
 }
 
@@ -412,7 +410,7 @@ section#search-canvas .group input:focus~.bar:before, section#search-canvas .gro
 
 /* active state */
 
-section#search-canvas .group input:focus~.highlight {
+.md-input-form input:focus~.highlight {
     -webkit-animation: inputHighlighter 0.3s ease;
     -moz-animation: inputHighlighter 0.3s ease;
     animation: inputHighlighter 0.3s ease;
@@ -520,7 +518,6 @@ section#results a.no-link-tooltip {
 }
 
 section#results .promo {
-    /* background-color: rgba(0, 0, 0, 0.3); */
     border-radius: .5rem;
     border: 1px solid #ff3547;
     margin-top: 1rem;
@@ -576,6 +573,120 @@ section#results .border-left {
         font-weight: bold;
         padding: .4rem 0.8rem;
         margin: .2rem 0rem;
+    }
+}
+
+/* /////////////////////////////////////////////////////////
+////////////  RESULTS - SEARCH FILTER DROPDOWNS ////////////
+///////////////////////////////////////////////////////// */
+
+section#results .connection-hide {
+    display: none;
+}
+
+section#results .exchange-hide {
+    display: none;
+}
+
+section#results .search-filter.dropdown .dropdown-toggle {
+    background-color: #3f51b5 !important;
+    color: #fff !important;
+    font-size: 1rem;
+    text-transform: none;
+    padding: 0.6rem 1.4rem;
+}
+
+section#results .search-filter.dropdown .dropdown-menu {
+    padding: 0.3rem 0rem;
+    /* margin: 0rem; */
+}
+
+section#results .search-filter.dropdown .dropdown-menu a {
+    color: #212529;
+}
+
+section#results .search-filter.dropdown .dropdown-menu table {
+    display: block;
+    width: 100%;
+    padding: 0rem;
+    margin: 0rem;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+}
+
+section#results .search-filter.dropdown .dropdown-menu table th {
+    padding: 0.4rem 0.3rem 0.4rem 1rem;
+    font-weight: 400;
+    font-size: 1rem;
+}
+
+section#results .search-filter.dropdown .dropdown-menu table td {
+    padding: 0.4rem 1rem 0.4rem 0.3rem;
+    font-weight: 400;
+    font-size: 1rem;
+}
+
+section#results .search-filter.dropdown .dropdown-menu table th:hover, section#results .search-filter.dropdown .dropdown-menu table td:hover, {
+    cursor: pointer;
+}
+
+section#results .search-filter.dropdown .dropdown-menu table tr:hover {
+    cursor: pointer;
+    background-color: #e3e1e1;
+    /* color: #fff; */
+}
+
+section#results .search-filter.dropdown .dropdown-menu .whats-this {
+    font-style: italic;
+    font-size: 0.85rem;
+}
+
+/* Typeahead results */
+
+section#results .typeahead li.dropdown-item {
+    padding-top: 0.25rem;
+    padding-bottom: 0.125rem;
+    padding-right: 0.5rem;
+    padding-left: 1rem;
+}
+
+section#results .typeahead a.dropdown-item {
+    padding: 0rem;
+}
+
+section#results .typeahead .dropdown-item:hover {
+    color: white;
+    background-color: #3f51b5;
+}
+
+section#results .typeahead .active.dropdown-item {
+    background-color: #3f51b5;
+}
+
+section#results .typeahead .active.dropdown-item .dropdown-item {
+    color: white;
+}
+
+@media (max-width: 575px) {
+    section#results .typeahead .dropdown-item {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767) {
+    section#results .typeahead .dropdown-item {
+        font-size: 0.9rem;
+    }
+}
+
+@media (min-width: 768px) {
+    section#results .typeahead .dropdown-item {
+        font-size: 0.85rem;
     }
 }
 
