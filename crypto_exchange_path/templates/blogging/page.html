@@ -92,7 +92,7 @@
                                     <div class="posts-nav d-flex justify-content-between align-items-stretch flex-column flex-md-row">
                                         {% if meta.prev_post %}
                                         <a href="{{ url_for('blogging.page_by_id', post_id=meta.prev_post['post_id']|int, slug=meta.prev_post['Slug']|string) }}" class="prev-post text-left d-flex align-items-center">
-                                            <div class="icon prev"><i class="fa fa-angle-left"></i></div>
+                                            <div class="icon prev"><i class="fas fa-angle-left"></i></div>
                                             <div class="text"><strong class="text-primary">Previous Post </strong>
                                                 <h6>{{ meta.prev_post['title']|string }}</h6>
                                             </div>
@@ -103,7 +103,7 @@
                                             <div class="text"><strong class="text-primary">Next Post </strong>
                                                 <h6>{{ meta.next_post['title']|string }}</h6>
                                             </div>
-                                            <div class="icon next"><i class="fa fa-angle-right">   </i></div>
+                                            <div class="icon next"><i class="fas fa-angle-right">   </i></div>
                                         </a>
                                         {% endif %}
                                     </div>

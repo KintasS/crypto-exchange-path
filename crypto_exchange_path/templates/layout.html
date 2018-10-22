@@ -20,7 +20,7 @@
          gtag('config', 'UA-126269808-1');
     </script>
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Material Design Bootstrap -->
@@ -89,23 +89,23 @@
                             </ul>
                             <div id="currency-btn" class="btn-group">
                                 {% if curr == 'KRW' %}
-                                    <button class="btn btn-dark-grey dropdown-toggle" data-currency="WON" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-won mx-2" aria-hidden="true"></i>KRW</b></button>
+                                    <button class="btn btn-dark-grey dropdown-toggle" data-currency="WON" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-won-sign mx-2"></i>KRW</b></button>
                                 {% elif curr == 'GBP' %}
-                                    <button class="btn btn-dark-grey dropdown-toggle" data-currency="GBP" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-gbp mx-2" aria-hidden="true"></i>GBP</b></button>
+                                    <button class="btn btn-dark-grey dropdown-toggle" data-currency="GBP" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-pound-sign mx-2"></i>GBP</b></button>
                                 {% elif curr == 'JPY' %}
-                                    <button class="btn btn-dark-grey dropdown-toggle" data-currency="JPY" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-jpy mx-2" aria-hidden="true"></i>JPY</b></button>
+                                    <button class="btn btn-dark-grey dropdown-toggle" data-currency="JPY" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-yen-sign mx-2"></i>JPY</b></button>
                                 {% elif curr == 'EUR' %}
-                                    <button class="btn btn-dark-grey dropdown-toggle" data-currency="EUR" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-eur mx-2" aria-hidden="true"></i>EUR</b></button>
+                                    <button class="btn btn-dark-grey dropdown-toggle" data-currency="EUR" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-euro-sign mx-2"></i>EUR</b></button>
                                 {% else %}
-                                    <button class="btn btn-dark-grey dropdown-toggle" data-currency="USD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fa fa-dollar mx-2" aria-hidden="true"></i>USD</b></button>
+                                    <button class="btn btn-dark-grey dropdown-toggle" data-currency="USD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-dollar-sign mx-2"></i>USD</b></button>
                                 {% endif %}
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" data-currency="USD" href="#"><i class="fa fa-dollar mx-2" aria-hidden="true"></i>USD</a>
-                                    <a class="dropdown-item" data-currency="GBP" href="#"><i class="fa fa-gbp mx-2" aria-hidden="true"></i>GBP</a>
-                                    <a class="dropdown-item" data-currency="JPY" href="#"><i class="fa fa-jpy mx-2" aria-hidden="true"></i>JPY</a>
-                                    <a class="dropdown-item" data-currency="EUR" href="#"><i class="fa fa-euro mx-2" aria-hidden="true"></i>EUR</a>
-                                    <a class="dropdown-item" data-currency="KRW" href="#"><i class="fa fa-won ml-2 mr-1" aria-hidden="true"></i>KRW</a>
+                                    <a class="dropdown-item" data-currency="USD" href="#"><i class="fas fa-dollar-sign mx-2"></i>USD</a>
+                                    <a class="dropdown-item" data-currency="GBP" href="#"><i class="fas fa-pound-sign mx-2"></i>GBP</a>
+                                    <a class="dropdown-item" data-currency="JPY" href="#"><i class="fas fa-yen-sign mx-2"></i>JPY</a>
+                                    <a class="dropdown-item" data-currency="EUR" href="#"><i class="fas fa-euro-sign mx-2"></i>EUR</a>
+                                    <a class="dropdown-item" data-currency="KRW" href="#"><i class="fas fa-won-sign ml-2 mr-1"></i>KRW</a>
                                 </div>
                             </div>
                         </div>
@@ -133,11 +133,11 @@
                         <div class="py-3 flex-center">
                             <!-- Twitter -->
                             <a class="tw-ic" href="https://twitter.com/SaverFee" target="_blank">
-                              <i class="fa fa-twitter white-text mr-5 fa-2x"> </i>
+                              <i class="fab fa-twitter white-text mr-5 fa-2x"> </i>
                             </a>
                             <!--Instagram-->
                             <a class="ins-ic" href="https://www.instagram.com/cryptofeesaver" target="_blank">
-                              <i class="fa fa-instagram white-text fa-2x"> </i>
+                              <i class="fab fa-instagram white-text fa-2x"> </i>
                             </a>
                         </div>
                     </div>
@@ -178,8 +178,6 @@
                                 fix the bugs you might encounter.</p>
                             <p class="grey-text text-center mx-5">Keep in touch!</p>
                             <div class="form-group mb-3">
-                                <!-- <i class="fa fa-user fa-lg prefix grey-text d-inline"></i> -->
-                                <!-- {{ feedback_form.topic.label(class="form-control-label text-bigger") }} -->
                                 {% if feedback_form.topic.errors %}
                                     {{ feedback_form.topic(id="feedback-topic", class="form-control d-inline is-invalid", type="text", autocomplete="off") }}
                                     <div class="invalid-feedback">
@@ -192,7 +190,7 @@
                                 {% endif %}
                             </div>
                             <div class="md-form mb-5">
-                                <i class="fa fa-tag prefix grey-text"></i>
+                                <i class="fas fa-tag prefix grey-text"></i>
                                 {% if feedback_form.subject.errors %}
                                     {{ feedback_form.subject(id="feedback-subject", class="form-control is-invalid", type="text", autocomplete="off") }}
                                     <div class="invalid-feedback">
@@ -206,7 +204,7 @@
                                 <label data-error="wrong" data-success="right" for="feedback-subject">Subject</label>
                             </div>
                             <div class="md-form">
-                                <i class="fa fa-pencil prefix grey-text"></i>
+                                <i class="fas fa-pen prefix grey-text"></i>
                                 {% if feedback_form.detail.errors %}
                                     {{ feedback_form.detail(class="form-control is-invalid") }}
                                     <div class="invalid-feedback">

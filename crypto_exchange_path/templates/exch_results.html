@@ -95,7 +95,7 @@
                                   <div class="dropdown-divider"></div>
                                   <a class="whats-this d-flex justify-content-center align-items-center" href="#">
                                       <span>What's this?<span>
-                                      <i class="fa fa-external-link ml-2" aria-hidden="true"></i>
+                                      <i class="fas fa-external-link-alt ml-2"></i>
                                   </a>
                               </div>
                             </div>
@@ -125,7 +125,7 @@
                                     <div class="dropdown-divider"></div>
                                     <a class="whats-this d-flex justify-content-center align-items-center" href="#">
                                         <span>What's this?<span>
-                                        <i class="fa fa-external-link ml-2" aria-hidden="true"></i>
+                                        <i class="fas fa-external-link-alt ml-2"></i>
                                     </a>
                                 </div>
                             </div>
@@ -189,7 +189,7 @@
                                     <div class="dropdown-divider"></div>
                                     <a class="whats-this d-flex justify-content-center align-items-center" href="#">
                                         <span>What's this?<span>
-                                        <i class="fa fa-external-link ml-2" aria-hidden="true"></i>
+                                        <i class="fas fa-external-link-alt ml-2"></i>
                                     </a>
                                 </div>
                             </div>
@@ -262,7 +262,7 @@
                                             </div>
                                             <div class="d-block d-flex align-items-center path-format mt-3">
                                                 <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.origin.coin.local_fn }}" alt="{{ path.origin.coin.long_name }} logo">
-                                                <small class="font-weight-bold">{{ path.origin.coin.symbol }}<i class="fa fa-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i></small>
+                                                <small class="font-weight-bold">{{ path.origin.coin.symbol }}<i class="fas fa-arrow-right pl-1 pl-sm-2"></i></small>
                                             </div>
                                         {% endif %}
                                     </div>
@@ -276,23 +276,23 @@
                                             <small class="d-flex align-items-center path-format">
                                                 <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_1.trade.sell_coin.local_fn }}" alt="{{ path.hop_1.trade.sell_coin.long_name }} logo">
                                                 <span>{{ path.hop_1.trade.sell_coin.symbol }}</span>
-                                                <i class="fa fa-refresh mx-1 mx-sm-2" aria-hidden="true"></i>
+                                                <i class="fas fa-sync mx-1 mx-sm-2"></i>
                                                 <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_1.trade.buy_coin.local_fn }}" alt="{{ path.hop_1.trade.buy_coin.long_name }} logo">
                                                 <span>{{ path.hop_1.trade.buy_coin.symbol }}</span>
                                                 {% if path.hop_2 %}
                                                     {% if path.hop_1.exchange.id == path.hop_2.exchange.id %}
-                                                        <i class="fa fa-refresh mx-1 mx-sm-2" aria-hidden="true"></i>
+                                                        <i class="fas fa-sync mx-1 mx-sm-2"></i>
                                                         <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_2.trade.buy_coin.local_fn }}" alt="{{ path.hop_2.trade.buy_coin.long_name }} logo">
                                                         <span>{{ path.hop_2.trade.buy_coin.symbol }}</span>
                                                         {% if path.hop_1.exchange.id != path.destination.exchange.id %}
-                                                            <i class="fa fa-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i>
+                                                            <i class="fas fa-arrow-right pl-1 pl-sm-2"></i>
                                                         {% endif %}
                                                     {% else %}
-                                                        <i class="fa fa-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i>
+                                                        <i class="fas fa-arrow-right pl-1 pl-sm-2"></i>
                                                     {% endif %}
                                                 {% else %}
                                                     {% if path.hop_1.exchange.id != path.destination.exchange.id %}
-                                                        <i class="fa fa-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i>
+                                                        <i class="fas fa-arrow-right pl-1 pl-sm-2"></i>
                                                     {% endif %}
                                                 {% endif %}
                                             </small>
@@ -309,11 +309,11 @@
                                                 <small class="d-flex align-items-center path-format">
                                                     <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_2.trade.sell_coin.local_fn }}" alt="{{ path.hop_2.trade.sell_coin.long_name }} logo">
                                                     <span>{{ path.hop_2.trade.sell_coin.symbol }}</span>
-                                                    <i class="fa fa-refresh mx-1 mx-sm-2" aria-hidden="true"></i>
+                                                    <i class="fas fa-sync mx-1 mx-sm-2"></i>
                                                     <img class="mr-1 img-coin" src="/static/img/coins/16/{{ path.hop_2.trade.buy_coin.local_fn }}" alt="{{ path.hop_2.trade.buy_coin.long_name }} logo">
                                                     <span>{{ path.hop_2.trade.buy_coin.symbol }}</span>
                                                     {% if path.hop_2.exchange.id != path.destination.exchange.id %}
-                                                        <i class="fa fa-arrow-right pl-1 pl-sm-2" aria-hidden="true"></i>
+                                                        <i class="fas fa-arrow-right pl-1 pl-sm-2"></i>
                                                     {% endif %}
                                                 </small>
                                             </div>
@@ -391,7 +391,7 @@
                                         {% endif %}
                                             <div class="d-block d-flex align-items-center">
                                                 <span>Details</span>
-                                                <i class="fa fa-chevron-down px-1" aria-hidden="true"></i>
+                                                <i class="fas fa-chevron-down px-1"></i>
                                             </div>
                                         </a>
                                     </div>
@@ -419,7 +419,7 @@
                                     {% if path.origin.exchange.id != path.hop_1.exchange.id %}
                                         <div class="row no-gutters pl-3 mt-2 mb-3 smaller-font">
                                             <div class="col-auto px-1">
-                                                <i class="fa fa-chevron-circle-right fa-lg orange-color" aria-hidden="true"></i>
+                                                <i class="fas fa-chevron-circle-right fa-lg orange-color"></i>
                                             </div>
                                             <div class="col-3 pl-2">
                                                 {% if path.origin.exchange.id == 'Wallet' %}
@@ -432,16 +432,16 @@
                                                 {% if (path.origin.exchange.id == 'Wallet') or (path.origin.exchange.id == 'Bank') %}
                                                     {% if path.hop_1.deposit_details == '' %}
                                                         <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="Withdrawal fees may apply depending on the wallet or bank you use. Please, take them into account as well.</em>">
-                                                            <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
+                                                            <i class="fas fa-info-circle grey-text"></i>
                                                         </a>
                                                     {% else %}
                                                         <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_1.deposit_details }}<br>- - -</br><em>Withdrawal fees may apply depending on the wallet or bank you use. Please, take them into account as well.</em>">
-                                                            <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
+                                                            <i class="fas fa-info-circle grey-text"></i>
                                                         </a>
                                                     {% endif %}
                                                 {% else %}
                                                     <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.origin.withdraw_details }}<br>{{ path.hop_1.deposit_details }}">
-                                                        <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
+                                                        <i class="fas fa-info-circle grey-text"></i>
                                                     </a>
                                                 {% endif %}
                                             </div>
@@ -463,7 +463,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-2 d-flex align-items-center justify-content-center">
-                                                                <i class="fa fa-arrow-right pl-2 pl-md-4" aria-hidden="true"></i>
+                                                                <i class="fas fa-arrow-right pl-2 pl-md-4"></i>
                                                             </div>
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column justify-content-end">
@@ -497,12 +497,12 @@
                                     <!-- # 2nd Step: Trade Exch 1 -->
                                     <div class="row no-gutters pl-3 mt-4 mb-3 smaller-font">
                                         <div class="col-auto px-1">
-                                            <i class="fa fa-chevron-circle-right fa-lg orange-color" aria-hidden="true"></i>
+                                            <i class="fas fa-chevron-circle-right fa-lg orange-color"></i>
                                         </div>
                                         <div class="col-3 pl-2">
                                             <span>In <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a>, trade your <b>{{ path.hop_1.trade.sell_coin.symbol }}</b> for <b>{{ path.hop_1.trade.buy_coin.symbol }}</b></span>
                                             <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_1.trade_details }}">
-                                                <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
+                                                <i class="fas fa-info-circle grey-text"></i>
                                             </a>
                                         </div>
                                         <div class="col">
@@ -519,7 +519,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-2 d-flex align-items-center justify-content-center">
-                                                            <i class="fa fa-refresh fa-lg pl-2 pl-md-4" aria-hidden="true"></i>
+                                                            <i class="fas fa-sync fa-lg pl-2 pl-md-4"></i>
                                                         </div>
                                                         <div class="col-5">
                                                             <div class="d-flex flex-column justify-content-end">
@@ -560,7 +560,7 @@
                                         {% endif %}
                                         <div class="row no-gutters pl-3 mt-4 mb-3 smaller-font">
                                             <div class="col-auto px-1">
-                                                <i class="fa fa-chevron-circle-right fa-lg orange-color" aria-hidden="true"></i>
+                                                <i class="fas fa-chevron-circle-right fa-lg orange-color"></i>
                                             </div>
                                             <div class="col-3 pl-2">
                                                 {% if step2b_dest.id == 'Wallet' %}
@@ -571,7 +571,7 @@
                                                     <span>Transfer your <b>{{ path.hop_1.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a> to <a class="referral-detail-link-1 font-weight-bold" href="{{ step2b_dest.site_url }}" target="_blank" role="button">{{ step2b_dest.name }}</a></span>
                                                 {% endif %}
                                                 <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="<p class='mb-1'>{{ path.hop_1.withdraw_details }}</p><p class='mb-1'>{{ path.hop_2.deposit_details }}</p>">
-                                                    <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
+                                                    <i class="fas fa-info-circle grey-text"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
@@ -588,7 +588,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-2 d-flex align-items-center justify-content-center">
-                                                                <i class="fa fa-arrow-right pl-2 pl-md-4" aria-hidden="true"></i>
+                                                                <i class="fas fa-arrow-right pl-2 pl-md-4"></i>
                                                             </div>
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column justify-content-end">
@@ -627,12 +627,12 @@
                                     {% if path.hop_2 %}
                                         <div class="row no-gutters pl-3 mt-4 mb-3 smaller-font">
                                             <div class="col-auto px-1">
-                                                <i class="fa fa-chevron-circle-right fa-lg orange-color" aria-hidden="true"></i>
+                                                <i class="fas fa-chevron-circle-right fa-lg orange-color"></i>
                                             </div>
                                             <div class="col-3 pl-2">
                                                 <span>In <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a>, trade your <b>{{ path.hop_2.trade.sell_coin.symbol }}</b> for <b>{{ path.hop_2.trade.buy_coin.symbol }}</b></span>
                                                 <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_2.trade_details }}">
-                                                    <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
+                                                    <i class="fas fa-info-circle grey-text"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
@@ -649,7 +649,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-2 d-flex align-items-center justify-content-center">
-                                                                <i class="fa fa-refresh fa-lg pl-2 pl-md-4" aria-hidden="true"></i>
+                                                                <i class="fas fa-sync fa-lg pl-2 pl-md-4"></i>
                                                             </div>
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column justify-content-end">
@@ -683,7 +683,7 @@
                                     {% if path.hop_2 and path.hop_2.exchange.id != path.destination.exchange.id %}
                                         <div class="row no-gutters pl-3 mt-4 mb-3 smaller-font">
                                             <div class="col-auto px-1">
-                                                <i class="fa fa-chevron-circle-right fa-lg orange-color" aria-hidden="true"></i>
+                                                <i class="fas fa-chevron-circle-right fa-lg orange-color"></i>
                                             </div>
                                             <div class="col-3 pl-2">
                                                 {% if path.destination.exchange.id == 'Wallet' %}
@@ -694,7 +694,7 @@
                                                     <span>Transfer your <b>{{ path.hop_2.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a> to <a class="referral-detail-link-1 font-weight-bold" href="{{ path.destination.exchange.site_url }}" target="_blank" role="button">{{ path.destination.exchange.name }}</a></span>
                                                 {% endif %}
                                                 <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_2.withdraw_details }}<br>{{ path.destination.deposit_details }}">
-                                                    <i class="fa fa-info-circle grey-text" aria-hidden="true"></i>
+                                                    <i class="fas fa-info-circle grey-text"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
@@ -711,7 +711,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-2 d-flex align-items-center justify-content-center">
-                                                                <i class="fa fa-arrow-right pl-2 pl-md-4" aria-hidden="true"></i>
+                                                                <i class="fas fa-arrow-right pl-2 pl-md-4"></i>
                                                             </div>
                                                             <div class="col-5">
                                                                 <div class="d-flex flex-column justify-content-end">
@@ -761,7 +761,7 @@
 
     <section id="back-to-top-btn">
         <a id="myBtn" class="" href="#">
-            <i class="fa fa-chevron-circle-up fa-4x" aria-hidden="true"></i>
+            <i class="fas fa-chevron-circle-up fa-4x"></i>
         </a>
     </section>
 
