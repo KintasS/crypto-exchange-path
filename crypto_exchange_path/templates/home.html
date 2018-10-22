@@ -23,7 +23,7 @@
 
 {% block main %}
 
-    {% include '_search_canvas.html' %}
+    {% include '_search_canvas_easy.html' %}
 
 
     <!--Section: Why CryptoFeeSaver-->
@@ -32,7 +32,7 @@
         <!-- Heading -->
         <h2 class="mt-4 mt-md-5 mb-3 mb-md-4 font-weight-bold mx-3">What is CryptoFeeSaver?</h2>
 
-        <h4 class="font-weight-bold indigo-text pb-3 mx-3" style="line-height: 1.5"><em>CryptoFeeSaver is a search engine that computes <u>deposit</u>, <u>trading</u> and <u>withdrawal</u> fees of the top exchanges to find the cheapest path for each operation</em></h4>
+        <h4 class="font-weight-bold indigo-color pb-3 mx-3" style="line-height: 1.5"><em>CryptoFeeSaver is a search engine that computes <u>deposit</u>, <u>trading</u> and <u>withdrawal</u> fees of the top exchanges to find the cheapest path for each operation</em></h4>
 
         <div class="container">
             <div class="row d-flex justify-content-center mb-4">
@@ -104,16 +104,16 @@
             <!-- Links -->
             <div class="row no-gutters pb-0 pb-md-5">
                 <div class="col-3 px-2 px-lg-3">
-                    <a class="trending-searches-btn select-btn btn btn-indigo mt-3" href="{{ url_for('exch_results', url_orig_coin='USD', url_dest_coin='BTC') }}" role="button" data-click="USD+BTC">Search</a>
+                    <a class="trending-searches-btn select-btn btn btn-indigo-dark mt-3" href="{{ url_for('exch_results', url_orig_coin='USD', url_dest_coin='BTC') }}" role="button" data-click="USD+BTC">Search</a>
                 </div>
                 <div class="col-3 px-2 px-lg-3">
-                    <a class="trending-searches-btn select-btn btn btn-indigo mt-3" href="{{ url_for('exch_results', url_orig_coin='USD', url_dest_coin='XRP') }}" role="button" data-click="USD+XRP">Search</a>
+                    <a class="trending-searches-btn select-btn btn btn-indigo-dark mt-3" href="{{ url_for('exch_results', url_orig_coin='USD', url_dest_coin='XRP') }}" role="button" data-click="USD+XRP">Search</a>
                 </div>
                 <div class="col-3 px-2 px-lg-3">
-                    <a class="trending-searches-btn select-btn btn btn-indigo mt-3" href="{{ url_for('exch_results', url_orig_coin='ETH', url_dest_coin='XMR') }}" role="button" data-click="ETH+XMR">Search</a>
+                    <a class="trending-searches-btn select-btn btn btn-indigo-dark mt-3" href="{{ url_for('exch_results', url_orig_coin='ETH', url_dest_coin='XMR') }}" role="button" data-click="ETH+XMR">Search</a>
                 </div>
                 <div class="col-3 px-2 px-lg-3">
-                    <a class="trending-searches-btn select-btn btn btn-indigo mt-3" href="{{ url_for('exch_results', url_orig_coin='BTC', url_dest_coin='EUR') }}" role="button" data-click="BTC+EUR">Search</a>
+                    <a class="trending-searches-btn select-btn btn btn-indigo-dark mt-3" href="{{ url_for('exch_results', url_orig_coin='BTC', url_dest_coin='EUR') }}" role="button" data-click="BTC+EUR">Search</a>
                 </div>
             </div>
 
@@ -160,13 +160,13 @@
             <!-- Links -->
             <div class="row">
                 <div class="col-4 mb-3 mb-sm-5">
-                    <a class="referral-popular-wallet btn btn-indigo select-btn" href="https://www.ledger.com/products/ledger-nano-s?r=e9435a2e294a&tracker=MY_TRACKER" target="_blank" role="button" data-wallet="Ledger">Check webiste</a>
+                    <a class="referral-popular-wallet btn btn-indigo-dark select-btn" href="https://www.ledger.com/products/ledger-nano-s?r=e9435a2e294a&tracker=MY_TRACKER" target="_blank" role="button" data-wallet="Ledger">Check webiste</a>
                 </div>
                 <div class="col-4 mb-3 mb-sm-5">
-                    <a class="referral-popular-wallet btn btn-indigo select-btn" href="http://keepkey.go2cloud.org/SHEt" target="_blank" role="button" data-wallet="KeepKey">Check webiste</a>
+                    <a class="referral-popular-wallet btn btn-indigo-dark select-btn" href="http://keepkey.go2cloud.org/SHEt" target="_blank" role="button" data-wallet="KeepKey">Check webiste</a>
                 </div>
                 <div class="col-4 mb-3 mb-sm-5">
-                    <a class="referral-popular-wallet btn btn-indigo select-btn" href="https://shop.trezor.io?a=cbxmujtk" target="_blank" role="button" data-wallet="Trezor">Check webiste</a>
+                    <a class="referral-popular-wallet btn btn-indigo-dark select-btn" href="https://shop.trezor.io?a=cbxmujtk" target="_blank" role="button" data-wallet="Trezor">Check webiste</a>
                 </div>
             </div>
         </div>

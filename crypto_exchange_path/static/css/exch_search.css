@@ -207,6 +207,10 @@
     color: white;
 }
 
+.mask-rgba-black-strong {
+    background-color: rgba(0, 0, 0, .7);
+}
+
 section#search-canvas .search-box {
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: .5rem;
@@ -287,10 +291,10 @@ section#search-canvas .search-box {
     text-decoration-color: #6c6a6a;
 }
 
-#exchange-options button {
+/* #exchange-options button {
     text-transform: none;
     font-size: .7rem;
-}
+} */
 
 /* form starting stylings ------------------------------- */
 
@@ -548,7 +552,7 @@ section#results .border-left {
     font-size: 90%;
 }
 
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
     .select-btn {
         font-size: 0.8rem;
         font-weight: bold;
@@ -574,7 +578,7 @@ section#results .border-left {
         padding: .4rem 0.8rem;
         margin: .2rem 0rem;
     }
-}
+} */
 
 /* /////////////////////////////////////////////////////////
 ////////////  RESULTS - SEARCH FILTER DROPDOWNS ////////////
@@ -588,17 +592,20 @@ section#results .exchange-hide {
     display: none;
 }
 
-section#results .search-filter.dropdown .dropdown-toggle {
+/* section#results .search-filter.dropdown .dropdown-toggle {
     background-color: #3f51b5 !important;
     color: #fff !important;
     font-size: 1rem;
     text-transform: none;
     padding: 0.6rem 1.4rem;
-}
+} */
 
-section#results .search-filter.dropdown .dropdown-menu {
+/* section#results .search-filter.dropdown .dropdown-menu {
     padding: 0.3rem 0rem;
-    /* margin: 0rem; */
+} */
+
+section#results a {
+    text-decoration: none;
 }
 
 section#results .search-filter.dropdown .dropdown-menu a {
@@ -626,7 +633,7 @@ section#results .search-filter.dropdown .dropdown-menu table th {
 }
 
 section#results .search-filter.dropdown .dropdown-menu table td {
-    padding: 0.4rem 1rem 0.4rem 0.3rem;
+    padding: 0.3rem 1rem 0.3rem 0.3rem;
     font-weight: 400;
     font-size: 1rem;
 }
@@ -643,7 +650,7 @@ section#results .search-filter.dropdown .dropdown-menu table tr:hover {
 
 section#results .search-filter.dropdown .dropdown-menu .whats-this {
     font-style: italic;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
 }
 
 /* Typeahead results */
@@ -705,7 +712,7 @@ section#results .typeahead .active.dropdown-item .dropdown-item {
     /* Place the button 30px from the right */
     z-index: 99;
     /* Make sure it does not overlap */
-    color: #3f51b5;
+    color: #343a40;
 }
 
 /* /////////////////////////////////////////////////////////

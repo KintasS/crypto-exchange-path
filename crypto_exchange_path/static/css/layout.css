@@ -2,13 +2,13 @@
 ////////////  STRUCTURAL FORMATING  ///////////////////////
 ///////////////////////////////////////////////////////// */
 
-.lead, .display-4, .display-5 {
+/* .lead, .display-4, .display-5 {
     font-weight: 400
 }
 
 body, h1, h2, h3, h4, h5, h6 {
     font-weight: 400;
-}
+} */
 
 .large-font {
     font-size: 1.2rem;
@@ -20,6 +20,30 @@ body, h1, h2, h3, h4, h5, h6 {
 
 .orange-color {
     color: #ff7043 !important;
+}
+
+.indigo-color {
+    color: #3f51b5;
+}
+
+.btn-deep-orange {
+    background-color: #ff7043 !important;
+    color: #fff !important
+}
+
+.badge-orange {
+    background-color: #f80 !important;
+    color: #fff !important
+}
+
+.btn-indigo {
+    background-color: #3f51b5 !important;
+    color: #fff !important
+}
+
+.btn-indigo-dark {
+    background-color: #303f9f !important;
+    color: #fff !important
 }
 
 .btn-grey {
@@ -44,8 +68,8 @@ body, h1, h2, h3, h4, h5, h6 {
 
 .navbar {
     background: #fff;
-    padding-top: 20px !important;
-    padding-bottom: 20px !important;
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
     border-bottom: 1px solid #ddd;
 }
 
@@ -70,7 +94,7 @@ body, h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
 }
 
-#currency-btn .dropdown-toggle {
+/* #currency-btn .dropdown-toggle {
     padding: .4rem 1rem .4rem 0.8rem;
 }
 
@@ -81,7 +105,7 @@ body, h1, h2, h3, h4, h5, h6 {
 #currency-btn .dropdown-menu .dropdown-item {
     padding: .3rem .0rem .3rem .75rem;
     font-size: 85%;
-}
+} */
 
 @media (max-width: 375px) {
     .navbar {
@@ -102,4 +126,23 @@ body, h1, h2, h3, h4, h5, h6 {
 
 footer {
     background-color: #212121;
+}
+
+footer.page-footer {
+    bottom: 0;
+    color: #fff
+}
+
+footer.page-footer .container-fluid {
+    width: auto
+}
+
+footer.page-footer .footer-copyright {
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, .2);
+    color: rgba(255, 255, 255, .6)
+}
+
+footer.page-footer a {
+    color: #fff
 }

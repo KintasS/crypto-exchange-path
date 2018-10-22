@@ -22,9 +22,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     <!-- Bootstrap core CSS -->
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-    <!-- Material Design Bootstrap -->
-    <link href="{{ url_for('static', filename='css/mdb.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
     <!-- Your custom styles -->
     <link href="{{ url_for('static', filename='css/layout.css') }}" rel="stylesheet">
     {% block style %}
@@ -60,7 +58,7 @@
                             <div class="d-block d-flex align-items-center">
                                 <!-- <span style="font-size: 1.5rem"><em>Crypto<b>FeeSaver</b></em><span class="grey-text">.com</span></span> -->
                                 <img class="img-logo" src="/static/img/logo/CFS_Logo_Left2_206x28.png" alt="CryptoFeeSaver">
-                                <span class="badge badge-warning ml-2 mr-0 mr-md-4">Beta</span>
+                                <span class="badge badge-orange ml-2 mr-0 mr-md-4">Beta</span>
                             </div>
                         </a>
                         <div id="navbarToggler" class="collapse navbar-collapse">
@@ -89,15 +87,15 @@
                             </ul>
                             <div id="currency-btn" class="btn-group">
                                 {% if curr == 'KRW' %}
-                                    <button class="btn btn-dark-grey dropdown-toggle" data-currency="WON" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-won-sign mx-2"></i>KRW</b></button>
+                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="WON" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-won-sign mx-2"></i>KRW</b></button>
                                 {% elif curr == 'GBP' %}
-                                    <button class="btn btn-dark-grey dropdown-toggle" data-currency="GBP" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-pound-sign mx-2"></i>GBP</b></button>
+                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="GBP" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-pound-sign mx-2"></i>GBP</b></button>
                                 {% elif curr == 'JPY' %}
-                                    <button class="btn btn-dark-grey dropdown-toggle" data-currency="JPY" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-yen-sign mx-2"></i>JPY</b></button>
+                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="JPY" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-yen-sign mx-2"></i>JPY</b></button>
                                 {% elif curr == 'EUR' %}
-                                    <button class="btn btn-dark-grey dropdown-toggle" data-currency="EUR" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-euro-sign mx-2"></i>EUR</b></button>
+                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="EUR" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-euro-sign mx-2"></i>EUR</b></button>
                                 {% else %}
-                                    <button class="btn btn-dark-grey dropdown-toggle" data-currency="USD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-dollar-sign mx-2"></i>USD</b></button>
+                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="USD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-dollar-sign mx-2"></i>USD</b></button>
                                 {% endif %}
                                 </button>
                                 <div class="dropdown-menu">
@@ -130,7 +128,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 py-2">
-                        <div class="py-3 flex-center">
+                        <div class="d-flex justify-content-center py-3">
                             <!-- Twitter -->
                             <a class="tw-ic" href="https://twitter.com/SaverFee" target="_blank">
                               <i class="fab fa-twitter white-text mr-5 fa-2x"> </i>
@@ -161,10 +159,10 @@
 
         <!-- Feedback Modal -->
         <div class="modal fade" id="modalFeedbackForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-modal-open={{open_feedback_modal}}>
-            <div class="modal-dialog modal-lg modal-notify modal-info" role="document">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header text-center" style="background-color: #212121;">
-                        <p class="heading lead font-weight-bold">Feedback</p>
+                    <div class="modal-header text-center">
+                        <div class="lead font-weight-bold">Feedback</div>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true" class="white-text">&times;</span>
                         </button>
@@ -177,20 +175,21 @@
                                 and your feedback is priceless to us... We are listening to you and will do our best to add the functionality you miss or to
                                 fix the bugs you might encounter.</p>
                             <p class="grey-text text-center mx-5">Keep in touch!</p>
-                            <div class="form-group mb-3">
+                            <div class="form-group">
+                                <label for="feedback-topic"><i class="fas fa-tag grey-text mr-2"></i>Subject</label>
                                 {% if feedback_form.topic.errors %}
-                                    {{ feedback_form.topic(id="feedback-topic", class="form-control d-inline is-invalid", type="text", autocomplete="off") }}
+                                    {{ feedback_form.topic(id="feedback-topic", class="form-control is-invalid", type="text", autocomplete="off") }}
                                     <div class="invalid-feedback">
                                         {% for error in feedback_form.topic.errors %}
                                             <span>{{ error }}</span>
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ feedback_form.topic(id="feedback-topic", class="form-control d-inline", type="text", placeholder="Location", autocomplete="off") }}
+                                    {{ feedback_form.topic(id="feedback-topic", class="form-control", type="text", placeholder="Select a topic", autocomplete="off") }}
                                 {% endif %}
                             </div>
-                            <div class="md-form mb-5">
-                                <i class="fas fa-tag prefix grey-text"></i>
+                            <div class="form-group">
+                                <label data-error="wrong" data-success="right" for="feedback-subject"><i class="fas fa-comment-alt grey-text mr-2"></i>Title</label>
                                 {% if feedback_form.subject.errors %}
                                     {{ feedback_form.subject(id="feedback-subject", class="form-control is-invalid", type="text", autocomplete="off") }}
                                     <div class="invalid-feedback">
@@ -201,10 +200,9 @@
                                 {% else %}
                                     {{ feedback_form.subject(id="feedback-subject", class="form-control", type="text", autocomplete="off") }}
                                 {% endif %}
-                                <label data-error="wrong" data-success="right" for="feedback-subject">Subject</label>
                             </div>
-                            <div class="md-form">
-                                <i class="fas fa-pen prefix grey-text"></i>
+                            <div class="form-group">
+                                <label data-error="wrong" data-success="right" for="feedback-text"><i class="fas fa-pen grey-text mr-2"></i>Your feedback</label>
                                 {% if feedback_form.detail.errors %}
                                     {{ feedback_form.detail(class="form-control is-invalid") }}
                                     <div class="invalid-feedback">
@@ -215,12 +213,11 @@
                                 {% else %}
                                     {{ feedback_form.detail(id="feedback-text", class="md-textarea form-control", rows="4", type="text") }}
                                 {% endif %}
-                                <label data-error="wrong" data-success="right" for="feedback-text">Your feedback</label>
                             </div>
                         </div>
                         <div class="modal-footer d-flex justify-content-center">
                             <div class="form-group">
-                                {{ feedback_form.feedback_submit(class="send-feedback-btn btn btn-dark-grey") }}
+                                {{ feedback_form.feedback_submit(class="send-feedback-btn btn btn-dark btn-sm") }}
                             </div>
                         </div>
                     </form>
@@ -233,13 +230,11 @@
 
     <!-- SCRIPTS -->
     <!-- JQuery -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <!-- Bootstrap tooltips -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <!-- MDB core JavaScript -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/mdb.min.js') }}"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
     {% block js %}
     {% endblock %}
     {% block extrajs %}
