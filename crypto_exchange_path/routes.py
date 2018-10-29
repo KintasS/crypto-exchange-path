@@ -73,7 +73,8 @@ def home():
                                          feedback_form=feedback_form,
                                          open_feedback_modal=open_fbck_modal,
                                          url_orig_coin=url_orig_coin,
-                                         url_dest_coin=url_dest_coin))
+                                         url_dest_coin=url_dest_coin,
+                                         add_flaticon_link=True))
     # Store session ID in cookie if it is not already stored
     session_id = request.cookies.get('session')
     if not session_id:

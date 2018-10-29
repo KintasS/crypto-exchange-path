@@ -93,7 +93,7 @@
                                         <button id="btn-apply" type="button" class="btn btn-deep-orange btn-sm mx-0 mt-3 mb-0">Apply</button>
                                   </form>
                                   <div class="dropdown-divider"></div>
-                                  <a class="whats-this d-flex justify-content-center align-items-center" href="#">
+                                  <a class="whats-this d-flex justify-content-center align-items-center" href="/blog/page/15#end-to-end-calculation" target="_blank">
                                       <span>What's this?<span>
                                       <i class="fas fa-external-link-alt ml-2"></i>
                                   </a>
@@ -123,7 +123,7 @@
                                         </tbody>
                                     </table>
                                     <div class="dropdown-divider"></div>
-                                    <a class="whats-this d-flex justify-content-center align-items-center" href="#">
+                                    <a class="whats-this d-flex justify-content-center align-items-center" href="/blog/page/15#market-taker-fees" target="_blank">
                                         <span>What's this?<span>
                                         <i class="fas fa-external-link-alt ml-2"></i>
                                     </a>
@@ -180,17 +180,30 @@
                                                 <th></th>
                                                 <td scope="row">One connection</td>
                                             </tr>
-                                            <tr class="connection-filter" data-connection-type="2">
+                                            <tr id="connection-filter-default" class="connection-filter" data-connection-type="2">
                                                 <th></th>
                                                 <td scope="row">Two connections</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                     <div class="dropdown-divider"></div>
-                                    <a class="whats-this d-flex justify-content-center align-items-center" href="#">
+                                    <a class="whats-this d-flex justify-content-center align-items-center" href="/blog/page/15#connections" target="_blank">
                                         <span>What's this?<span>
                                         <i class="fas fa-external-link-alt ml-2"></i>
                                     </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="filter-badges" class="d-none">
+                            <div class="d-flex justify-content-end align-items-center">
+                                <span class="mt-3 mr-2 font-weight-bold">Filters:</span>
+                                <div id="filter-badge-exchange" class="badge badge-pill ml-2 mt-3 d-none">
+                                    <span>Exchanges</span>
+                                    <i class="fas fa-times fa-sm ml-2" data-trigger="select-all-btn"></i>
+                                </div>
+                                <div id="filter-badge-connections" class="badge badge-pill ml-2 mt-3 d-none">
+                                    <span>Connections</span>
+                                    <i class="fas fa-times fa-sm ml-2" data-trigger="connection-filter-default"></i>
                                 </div>
                             </div>
                         </div>
@@ -220,9 +233,9 @@
 
                         <div class="d-inline-block d-flex justify-content-between">
                             {% if path_results == 1 %}
-                                <h5 class="mt-4 mb-3 font-weight-bold">Crypto Exchange Paths <small class="ml-1">({{ path_results }} result)</small></h5>
+                                <h5 class="mt-4 mb-3 font-weight-bold">Crypto Exchange Paths <small class="ml-1">(<span id="results-count"></span>{{ path_results }} result)</small></h5>
                             {% else %}
-                                <h5 class="mt-4 mb-3 font-weight-bold">Crypto Exchange Paths <small class="ml-1">({{ path_results }} results)</small></h5>
+                                <h5 class="mt-4 mb-3 font-weight-bold">Crypto Exchange Paths <small class="ml-1">(<span id="results-count"></span>{{ path_results }} results)</small></h5>
                             {% endif %}
                             <div class="d-block d-flex justify-content-center align-items-end mb-2 pl-md-2 font-weight-bold" style="width: 17%">
                                 <span>Estim. Fees</span>
@@ -365,7 +378,7 @@
                                         {% set promotions_displayed = promotions_displayed.append( path.hop_1.exchange.id ) %}
                                         <div class="d-flex justify-content-center">
                                             <div class="promo text-center">
-                                                <span class="badge badge-danger mr-1">Promo</span><span class="text-danger font-italic smaller-font"> Use <a class="promo-link" href="{{ path.hop_1.exchange.site_url }}" target="_blank" data-exch="{{ path.hop_1.exchange.name }}">this link</a> {{ path.hop_1.exch_promo }}</span>
+                                                <span class="badge badge-dark mr-1">Promo</span><span class="text-dark font-italic smaller-font"> Use <a class="promo-link" href="{{ path.hop_1.exchange.site_url }}" target="_blank" data-exch="{{ path.hop_1.exchange.name }}">this link</a> {{ path.hop_1.exch_promo }}</span>
                                             </div>
                                         </div>
                                     {% endif %}
@@ -375,7 +388,7 @@
                                         {% set promotions_displayed = promotions_displayed.append( path.hop_2.exchange.id ) %}
                                         <div class="d-flex justify-content-center">
                                             <div class="promo text-center">
-                                                <span class="badge badge-danger mr-1">Promo</span><span class="text-danger font-italic smaller-font"> Use <a class="promo-link" href="{{ path.hop_2.exchange.site_url }}" target="_blank" data-exch="{{ path.hop_2.exchange.name }}">this link</a> {{ path.hop_2.exch_promo }}</span>
+                                                <span class="badge badge-dark mr-1">Promo</span><span class="text-dark font-italic smaller-font"> Use <a class="promo-link" href="{{ path.hop_2.exchange.site_url }}" target="_blank" data-exch="{{ path.hop_2.exchange.name }}">this link</a> {{ path.hop_2.exch_promo }}</span>
                                             </div>
                                         </div>
                                     {% endif %}

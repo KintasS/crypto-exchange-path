@@ -36,6 +36,12 @@ body, h1, h2, h3, h4, h5, h6 {
     color: #fff !important
 }
 
+.btn-rounded {
+    border-radius: 3rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
 .btn-indigo {
     background-color: #3f51b5 !important;
     color: #fff !important
@@ -44,6 +50,11 @@ body, h1, h2, h3, h4, h5, h6 {
 .btn-indigo-dark {
     background-color: #303f9f !important;
     color: #fff !important
+}
+
+.btn-none-indigo {
+    font-weight: 700;
+    color: #303f9f !important;
 }
 
 .btn-grey {
@@ -62,6 +73,10 @@ body, h1, h2, h3, h4, h5, h6 {
     transform: rotate(180deg);
 }
 
+.mask-rgba-black-strong {
+    background-color: rgba(0, 0, 0, .7);
+}
+
 /* /////////////////////////////////////////////////////////
 ////////////  NAVBAR  /////////////////////////////////////
 ///////////////////////////////////////////////////////// */
@@ -76,7 +91,7 @@ body, h1, h2, h3, h4, h5, h6 {
 .navbar .navbar-nav a.nav-link {
     color: #333 !important;
     margin: 0 5px;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 1.2em;
 }
 
@@ -146,3 +161,69 @@ footer.page-footer .footer-copyright {
 footer.page-footer a {
     color: #fff
 }
+
+footer.page-footer a.conditions {
+    color: #ffffff99
+}
+
+/* TESTS */
+
+.section-bg {
+    background-color: #fafafa;
+}
+
+/**
+*Box-style
+**/
+
+.section-padding {
+    padding: 4rem 0;
+}
+
+.box {
+    padding: 2rem 1.5rem;
+    text-align: center;
+    -webkit-box-shadow: 0 0 0 0 #ffffff;
+    box-shadow: 0 0 0 0 #ffffff;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+    border-radius: 5px;
+    -webkit-transform: translateY(0);
+    transform: translateY(0)
+}
+
+.box:hover {
+    -webkit-box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+    background-color: #fcfcfc;
+    -webkit-transform: translateY(-5px);
+    transform: translateY(-5px)
+}
+
+.box .box-icon {
+    margin-bottom: 1.2rem;
+    max-width: 100%;
+    height: 8rem;
+}
+
+/* section#service-page .box .box-icon img {
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+}
+
+section#service-page .box:hover .box-icon img {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+
+section#feature-page .box .box-icon img {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+}
+
+section#feature-page .box:hover .box-icon img {
+    -webkit-filter: grayscale(0);
+    filter: grayscale(0)
+} */

@@ -13,7 +13,7 @@
 
     <!-- Hero Section-->
     <section class="hero" style="background: url(/static/img/background/coins_fs_low.jpg); background-size: cover; background-position: center center">
-        <div class="mask rgba-black-strong">
+        <div class="mask-rgba-black-strong">
             <div class="container">
                 <div class="row">
                     <div class="col-xl-8">
@@ -41,8 +41,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-10 col-xl-8">
-                        <h2 class="h3">All about exchanges, wallets, DEXs and other crypto services</h2>
-                        <p class="text-big">You've been around cryptos for some time now and you feel comfortable using exchanges and wallets. That's great.<br> From there, we want to help you <strong>take your knowledge to the next level</strong> by avoiding common misconceptions that are probably costing you money. Act smarter. Start today. Now.</p>
+                        <h2 class="h3">About Blockchain tech, exchanges, wallets, and other crypto services</h2>
+                        <p class="text-big">You've been around cryptos for some time now and you feel comfortable using exchanges and wallets. That's great.<br> From there, we want to <strong>help you take your knowledge to the next level</strong> by avoiding common misconceptions that are probably costing you money. Act smarter. Start today. Now.</p>
                     </div>
                 </div>
             </div>
@@ -62,9 +62,9 @@
                             <div class="post-thumbnail">
                                 <a href="{{ post.url }}">
                                     {% if post.meta.images %}
-                                        <img src="{{ post.meta.images[0] }}" alt="..." class="img-fluid">
+                                        <img src="{{ post.meta.images[0] }}" alt="{{ post.title }}" class="img-fluid">
                                     {% else %}
-                                        <img src="/static/img/blog/coins_fs_low.jpg" alt="..." class="img-fluid">
+                                        <img src="/static/img/blog/coins_fs_low.jpg" alt="{{ post.title }}" class="img-fluid">
                                     {% endif %}
                                 </a>
                             </div>
@@ -81,7 +81,7 @@
                                     </div>
                                 </div>
                                 <a href="{{ post.url }}">
-                                    <h3 class="h4">{{ post.title }}</h3>
+                                    <h4 class="h4">{{ post.title }}</h4>
                                 </a>
                                 {% if post.meta.summary %}
                                     <p class="text-muted">{{ post.meta.summary[0] }}</p>
@@ -155,9 +155,9 @@
                             <div class="image col-md-5 d-flex align-items-center">
                                 <a href="{{ post.url }}">
                                     {% if post.meta.images %}
-                                        <img src="{{ post.meta.images[0] }}" alt="...">
+                                        <img src="{{ post.meta.images[0] }}" alt="{{ post.title }}">
                                     {% else %}
-                                        <img src="/static/img/blog/coins_fs_low.jpg" alt="...">
+                                        <img src="/static/img/blog/coins_fs_low.jpg" alt="{{ post.title }}">
                                     {% endif %}
                                     {% for image in post.meta.images %}
                                         <meta property="og:image" content="{{ image }}">
@@ -172,9 +172,9 @@
                             <div class="image col-md-5 d-flex align-items-center">
                                 <a href="{{ post.url }}">
                                     {% if post.meta.images %}
-                                        <img src="{{ post.meta.images[0] }}" alt="...">
+                                        <img src="{{ post.meta.images[0] }}" alt="{{ post.title }}">
                                     {% else %}
-                                        <img src="/static/img/blog/coins_fs_low.jpg" alt="...">
+                                        <img src="/static/img/blog/coins_fs_low.jpg" alt="{{ post.title }}">
                                     {% endif %}
                                     {% for image in post.meta.images %}
                                         <meta property="og:image" content="{{ image }}">

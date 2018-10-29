@@ -207,10 +207,6 @@
     color: white;
 }
 
-.mask-rgba-black-strong {
-    background-color: rgba(0, 0, 0, .7);
-}
-
 section#search-canvas .search-box {
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: .5rem;
@@ -523,7 +519,7 @@ section#results a.no-link-tooltip {
 
 section#results .promo {
     border-radius: .5rem;
-    border: 1px solid #ff3547;
+    border: 1px solid #343a40;
     margin-top: 1rem;
     margin-bottom: 0.5rem;
     padding: 0.5rem 1rem;
@@ -606,6 +602,18 @@ section#results .exchange-hide {
 
 section#results a {
     text-decoration: none;
+}
+
+section#results #filter-badges .badge {
+    font-size: 0.9em;
+    padding: .4em 1em;
+    background-color: #ff7043;
+    color: white;
+    font-weight: 400;
+}
+
+section#results #filter-badges .badge i.fa-times {
+    cursor: pointer;
 }
 
 section#results .search-filter.dropdown .dropdown-menu a {

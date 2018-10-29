@@ -1,4 +1,5 @@
-<p class="text-center mt-4 mb-4" id="post-share-links">
+<div class="text-center font-weight-bold mt-5">Share with friends</div>
+<div class="d-flex justify-content-center align-items-center mt-2 mb-4" id="post-share-links">
 
     <a href="http://twitter.com/home?status={{ post.title | urlencode }}%20{{ request.url | urlencode }}%3Futm_source=twitter
 {% if config.BLOGGING_SITENAME %}%20%23{{ config.BLOGGING_SITENAME | replace(' ', '') | urlencode }}{% endif %}
@@ -14,14 +15,18 @@
         <i class="fab fa-linkedin fa-3x mr-4" style="color: #0077B5;"></i>
     </a>
 
+    <a href="https://wa.me/?text={{ request.url | urlencode }}" target="_blank" title="Share on WhatsApp">
+        <i class="fab fa-whatsapp-square fa-3x mr-4" style="color: #25d366;"></i>
+    </a>
+
     <a href="mailto:?subject={{ post.title }}&amp;body=I thought you might like this:
   {{ post.title }}
   {{ request.url }}?utm_source=email-share" target="_blank" title="Share via Email">
         <i class="fas fa-envelope fa-3x mr-4" style="color: #ec5b00;"></i>
     </a>
 
-    <a class="copy-link-tooltip" data-clipboard-text="{{ request.url }}" data-toggle="tooltip" data-trigger="manual" data-placement="top" title="Copy link">
-        <i class="fas fa-link fa-3x" style="color: #525252;"></i>
+    <a class="copy-link-tooltip" data-clipboard-text="{{ request.url }}" data-toggle="tooltip" data-trigger="manual" data-placement="top" title="Copy link" style="cursor: pointer;">
+        <i class="fas fa-link fa-3x" style="color: #525252; font-size: 2.5rem;"></i>
     </a>
 
-</p>
+</div>

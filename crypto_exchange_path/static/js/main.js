@@ -396,6 +396,11 @@ $(document).ready(function() {
     /////   RESULTS FILTERS - EXCHANGE OPTIONS
     ///////////////////////////////////////////////////////////////////////////
 
+    var $resultsCount = $('#results-count')
+    var $filterBadges = $('#filter-badges')
+    var $filterBadgeExchanges = $('#filter-badge-exchange')
+    var $filterBadgeConnections = $('#filter-badge-connections')
+
     // Actions if an EXCHANGE is clicked:
     //   - Select option (and clear previous option)
     //   - Filter results
@@ -416,9 +421,10 @@ $(document).ready(function() {
             $(this).prop('selected', true);
         });
         // Display all results
-        $('section#results .result-card').each(function() {
-            $(this).removeClass("exchange-hide")
-        });
+        // $('section#results .result-card').each(function() {
+        //     $(this).removeClass("exchange-hide")
+        // });
+        FilterResultsByExchange()
     });
 
     // Actions if 'Select All' button is clicked
@@ -432,9 +438,10 @@ $(document).ready(function() {
             $(this).prop('selected', false);
         });
         // Clear all results
-        $('section#results .result-card').each(function() {
-            $(this).addClass("exchange-hide")
-        });
+        // $('section#results .result-card').each(function() {
+        //     $(this).addClass("exchange-hide")
+        // });
+        FilterResultsByExchange()
     });
 
     // Actions if a checkbox is clicked
@@ -450,9 +457,13 @@ $(document).ready(function() {
     });
 
     // Checks the results and filters/displays results whose two exchanges
-    // are not checked
+    // are not checked. If anything is filtered, it adds the count and badge.
     function FilterResultsByExchange() {
+        var exchangeNum = 0;
+        var resultNum = 0;
+        var totalNum = 0;
         $('section#results .result-card').each(function() {
+            totalNum += 1;
             var exch1 = $(this).attr('data-exch-1');
             var exch2 = $(this).attr('data-exch-2');
             var option1 = $('#exchanges option[value=' + exch1 + ']').prop('selected');
@@ -463,10 +474,33 @@ $(document).ready(function() {
             }
             if (option1 && option2) {
                 $(this).removeClass("exchange-hide");
+                // Count result
+                exchangeNum += 1;
+                if (!$(this).hasClass("connection-hide")) {
+                    resultNum += 1;
+                }
             } else {
                 $(this).addClass("exchange-hide");
             }
         });
+        // Change results count and show badge
+        if (exchangeNum == totalNum) {
+            // If nothing is filtered by Exchanges, hide count and badge
+            $filterBadgeExchanges.addClass("d-none")
+            // If nothing is filtered by Connection nor Exchanges, reset counter
+            if (resultNum == totalNum) {
+                $filterBadges.addClass("d-none");
+                $resultsCount.html('');
+            } else {
+                // If there are still things filter by Exchange, keep counter
+                $resultsCount.html(resultNum + ' of ');
+            }
+        } else {
+            // If something is filtered, display count and badge
+            $resultsCount.html(resultNum + ' of ');
+            $filterBadges.removeClass("d-none")
+            $filterBadgeExchanges.removeClass("d-none")
+        }
     }
 
     // When website loads, filter results by exchange
@@ -480,6 +514,8 @@ $(document).ready(function() {
     // Actions if a CONNECTION TYPE is selected:
     //   - Select option (and clear previous option)
     //   - Filter results
+    //   - Change results count
+    //   - Show badge
     //   - Select input form option
     $('section#results .connection-filter').on('click', function() {
         var clickedConnectionType = $(this).attr('data-connection-type')
@@ -495,16 +531,44 @@ $(document).ready(function() {
                 $(this).find('th').html('')
             });
             // Filter results
+            var connectionNum = 0;
+            var resultNum = 0;
+            var totalNum = 0;
             $('section#results .result-card').each(function() {
                 // If connection Type <= Clicked Type --> Show result
                 if ($(this).attr('data-connection-type') <= clickedConnectionType) {
-                    $(this).removeClass("connection-hide")
+                    $(this).removeClass("connection-hide");
+                    // Count result
+                    connectionNum += 1;
+                    if (!$(this).hasClass("exchange-hide")) {
+                        resultNum += 1;
+                    }
                 }
                 // If connection Type > Clicked Type --> Hide result
                 else {
-                    $(this).addClass("connection-hide")
+                    $(this).addClass("connection-hide");
                 }
+
+                totalNum += 1;
             });
+            // Change results count and show badge
+            if (connectionNum == totalNum) {
+                // If nothing is filtered by Connections, hide count and badge
+                $filterBadgeConnections.addClass("d-none")
+                // If nothing is filtered by Connection nor Exchanges, reset counter
+                if (resultNum == totalNum) {
+                    $filterBadges.addClass("d-none");
+                    $resultsCount.html('');
+                } else {
+                    // If there are still things filter by Exchange, keep counter
+                    $resultsCount.html(resultNum + ' of ');
+                }
+            } else {
+                // If something is filtered, display count and badge
+                $resultsCount.html(resultNum + ' of ');
+                $filterBadges.removeClass("d-none")
+                $filterBadgeConnections.removeClass("d-none")
+            }
             // Select input form option
             $('#connection_type option').each(function() {
                 if ($(this).attr('value') == clickedConnectionType) {
@@ -533,8 +597,12 @@ $(document).ready(function() {
             });
         }
     });
-    console.log(1);
 
+    // Actions to close badges
+    $('#filter-badges .badge-pill i').on('click', function() {
+        var triggerElem = $(this).attr('data-trigger');
+        $('#' + triggerElem).trigger("click");
+    })
 
 
     ///////////////////////////////////////////////////////////////////////////
