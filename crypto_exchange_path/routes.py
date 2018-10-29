@@ -2,7 +2,9 @@ import datetime
 import math
 import traceback
 from secrets import token_hex
-from flask import render_template, url_for, redirect, request, make_response
+from flask import (render_template, url_for, redirect, request, make_response,
+                   current_app)
+from flask_blogging.views import _get_blogging_engine
 from crypto_exchange_path import app, db, mail
 from crypto_exchange_path.config import Params
 from crypto_exchange_path.forms import SearchForm, FeedbackForm
@@ -57,6 +59,21 @@ def home():
     exchanges = get_exchanges(['Exchange'])
     user_exchanges = [exch.id for exch in exchanges]
     open_fbck_modal = False
+    # Get Blog information
+    blogging_engine = _get_blogging_engine(current_app)
+    storage = blogging_engine.storage
+    # config = blogging_engine.config
+    # count = count or config.get("BLOGGING_POSTS_PER_PAGE", 10)
+    # meta = _get_meta(storage, count, page)
+    # offset = meta["offset"]
+    # meta["is_user_blogger"] = _is_blogger(blogging_engine.blogger_permission)
+    # meta["count"] = count
+    # meta["page"] = page
+    # render = config.get("BLOGGING_RENDER_TEXT", True)
+    posts = storage.get_posts(count=3, offset=0, include_draft=False,
+                              tag=None, user_id=None, recent=True)
+    for post in posts:
+        blogging_engine.process_post(post, render=True)
     # Actions if Feedback Form was filled
     if feedback_form.feedback_submit.data:
         # If form was filled, but with errors, open modal again
@@ -74,7 +91,8 @@ def home():
                                          open_feedback_modal=open_fbck_modal,
                                          url_orig_coin=url_orig_coin,
                                          url_dest_coin=url_dest_coin,
-                                         add_flaticon_link=True))
+                                         add_flaticon_link=True,
+                                         posts=posts))
     # Store session ID in cookie if it is not already stored
     session_id = request.cookies.get('session')
     if not session_id:

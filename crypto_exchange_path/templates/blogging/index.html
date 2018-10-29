@@ -12,12 +12,12 @@
     {% endif %}
 
     <!-- Hero Section-->
-    <section class="hero" style="background: url(/static/img/background/coins_fs_low.jpg); background-size: cover; background-position: center center">
+    <section class="hero open-sans-font section-padding-2rem" style="background: url(/static/img/background/coins_fs_low.jpg); background-size: cover; background-position: center center">
         <div class="mask-rgba-black-strong">
             <div class="container">
                 <div class="row">
                     <div class="col-xl-8">
-                        <h1>CryptoFeeSaver Blog</h1>
+                        <h1 class="font-weight-bold">CryptoFeeSaver Blog</h1>
                     </div>
                 </div>
             </div>
@@ -33,15 +33,15 @@
 
 
 
-    <!-- LAYBOUT FOR 'BLOG INDEX' -->
+    <!-- LAYOUT FOR 'BLOG INDEX' -->
     {% if not (meta.user_id or meta.tag) %}
 
         <!-- Intro Section-->
-        <section class="intro">
+        <section class="intro open-sans-font section-padding-2rem">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-10 col-xl-8">
-                        <h2 class="h3">About Blockchain tech, exchanges, wallets, and other crypto services</h2>
+                        <h2 class="font-weight-bold">About Blockchain tech, exchanges, wallets, and other crypto services</h2>
                         <p class="text-big">You've been around cryptos for some time now and you feel comfortable using exchanges and wallets. That's great.<br> From there, we want to <strong>help you take your knowledge to the next level</strong> by avoiding common misconceptions that are probably costing you money. Act smarter. Start today. Now.</p>
                     </div>
                 </div>
@@ -49,10 +49,10 @@
         </section>
 
         <!-- Latest Posts -->
-        <section class="latest-posts">
+        <section class="latest-posts open-sans-font section-padding-2rem">
             <div class="container">
                 <header>
-                    <h2>Latest from the blog</h2>
+                    <h2 class="font-weight-bold">Latest from the blog</h2>
                     <p class="text-big">Latest posts from our team and blog collaborators.</p>
                 </header>
                 <div class="row">
@@ -81,7 +81,7 @@
                                     </div>
                                 </div>
                                 <a href="{{ post.url }}">
-                                    <h4 class="h4">{{ post.title }}</h4>
+                                    <h4 class="h4 font-weight-bold">{{ post.title }}</h4>
                                 </a>
                                 {% if post.meta.summary %}
                                     <p class="text-muted">{{ post.meta.summary[0] }}</p>
@@ -103,17 +103,17 @@
     <!-- LAYBOUT FOR 'AUTHOR AND TAG INDEX'-->
     {% else %}
         <!-- Featured posts-->
-        <section class="featured-posts">
+        <section class="featured-posts open-sans-font section-padding-2rem">
             <div class="container">
 
                 <header>
                     <!-- Intro for Author page -->
                     {% if meta.user_id %}
-                        <h2>Posts from {{ meta.author|string }}</h2>
+                        <h2 class="font-weight-bold">Posts from {{ meta.author|string }}</h2>
                         <p class="text-big">All post in our blog from {{ meta.author|string }}.</p>
                     {% else %}
                     <!-- Intro for Tag page -->
-                        <h2>{{ meta.tag.upper() }}</h2>
+                        <h2 class="font-weight-bold">{{ meta.tag.upper() }}</h2>
                         <p class="text-big">All posts in our blog belonging to '{{ meta.tag.upper() }}' category.</p>
                     {% endif %}
                 </header>
@@ -137,7 +137,7 @@
                                                 {% endif %}
                                             </div>
                                             <a href="{{ post.url }}">
-                                                <h2 class="h4">{{ post.title }}</h2>
+                                                <h2 class="h4 font-weight-bold">{{ post.title }}</h2>
                                             </a>
                                         </header>
                                         {% if post.meta.summary %}
@@ -194,7 +194,7 @@
                                                 {% endif %}
                                             </div>
                                             <a href="{{ post.url }}">
-                                                <h2 class="h4">{{ post.title }}</h2>
+                                                <h2 class="h4 font-weight-bold">{{ post.title }}</h2>
                                             </a>
                                         </header>
                                         {% if post.meta.summary %}
@@ -225,5 +225,5 @@
 
 {% block extrajs %}
 <!-- MDB core JavaScript -->
-<script type="text/javascript" src="{{ url_for('static', filename='js/blog_index.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/blog.js') }}"></script>
 {% endblock extrajs %}
