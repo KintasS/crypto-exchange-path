@@ -1,14 +1,34 @@
 <section class="latest-posts">
     <div class="container">
         <header>
-            {% if title == 'Home' %}
-                <a class="no-link-format" href="/blog"><h2 class="font-weight-bold">Latest from the blog</h2></a>
-            {% elif title == 'Exchanges' %}
-                <a class="no-link-format" href="/blog"><h2 class="font-weight-bold">Latest from our blog about Exchanges</h2></a>
+            <!-- Titles for pages inside the Blog section -->
+            {% if meta is defined %}
+                <!-- Title for Global Index page -->
+                {% if not (meta.user_id or meta.tag) %}
+                    <h2 class="font-weight-bold">Latest from our blog</h2>
+                    <p class="lead">Latest posts from our team and blog collaborators.</p>
+                <!-- Title for Author Index page -->
+                {% elif meta.user_id %}
+                    <h2 class="font-weight-bold">Posts from {{ meta.author|string }}</h2>
+                    <p class="text-big">All posts in our blog from {{ meta.author|string }}.</p>
+                <!-- Title for Tag Index page -->
+                {% else %}
+                    <h2 class="font-weight-bold">{{ meta.tag.upper() }}</h2>
+                    <p class="text-big">All posts in our blog belonging to '{{ meta.tag.upper() }}' category.</p>
+                {% endif %}
+            <!-- Titles for pages outside the Blog section -->
             {% else %}
-                <h2 class="font-weight-bold">Latest from our blog</h2>
+                {% if title == 'Home' %}
+                    <a class="no-link-format" href="/blog"><h2 class="font-weight-bold">Latest from the blog</h2></a>
+                    <p class="lead">Latest posts from our team and blog collaborators.</p>
+                {% elif title == 'Exchanges' %}
+                    <a class="no-link-format" href="/blog"><h2 class="font-weight-bold">Latest from our blog about Exchanges</h2></a>
+                    <p class="lead">Latest posts from our team and blog collaborators.</p>
+                {% else %}
+                    <h2 class="font-weight-bold">Latest from our blog</h2>
+                    <p class="lead">Latest posts from our team and blog collaborators.</p>
+                {% endif %}
             {% endif %}
-            <p class="lead">Latest posts from our team and blog collaborators.</p>
         </header>
         <div class="row">
 

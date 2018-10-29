@@ -34,148 +34,24 @@
 
 
     <!-- LAYOUT FOR 'BLOG INDEX' -->
-    {% if not (meta.user_id or meta.tag) %}
 
-        <!-- Intro Section-->
-        <section class="intro open-sans-font section-padding-2rem">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-10 col-xl-8">
-                        <h2 class="font-weight-bold">About Blockchain tech, exchanges, wallets, and other crypto services</h2>
-                        <p class="text-big">You've been around cryptos for some time now and you feel comfortable using exchanges and wallets. That's great.<br> From there, we want to <strong>help you take your knowledge to the next level</strong> by avoiding common misconceptions that are probably costing you money. Act smarter. Start today. Now.</p>
-                    </div>
+    <!-- Intro Section-->
+    <section class="intro open-sans-font section-padding-2rem">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 col-xl-8">
+                    <h2 class="font-weight-bold">About Blockchain tech, exchanges, wallets, and other crypto services</h2>
+                    <p class="text-big">You've been around cryptos for some time now and you feel comfortable using exchanges and wallets. That's great.<br> From there, we want to <strong>help you take your knowledge to the next level</strong> by avoiding common misconceptions that are probably costing you money. Act smarter. Start today. Now.</p>
                 </div>
             </div>
-        </section>
-
-        <!-- Latest Posts -->
-        <div class="open-sans-font section-padding-2rem">
-            {% include '_blog_posts.html' %}
         </div>
+    </section>
 
+    <!-- Latest Posts -->
+    <div class="open-sans-font section-padding-2rem">
+        {% include 'blogging/_blog_posts.html' %}
+    </div>
 
-
-
-
-
-
-    <!-- LAYBOUT FOR 'AUTHOR AND TAG INDEX'-->
-    {% else %}
-        <!-- Featured posts-->
-        <section class="featured-posts open-sans-font section-padding-2rem">
-            <div class="container">
-
-                <header>
-                    <!-- Intro for Author page -->
-                    {% if meta.user_id %}
-                        <h2 class="font-weight-bold">Posts from {{ meta.author|string }}</h2>
-                        <p class="text-big">All post in our blog from {{ meta.author|string }}.</p>
-                    {% else %}
-                    <!-- Intro for Tag page -->
-                        <h2 class="font-weight-bold">{{ meta.tag.upper() }}</h2>
-                        <p class="text-big">All posts in our blog belonging to '{{ meta.tag.upper() }}' category.</p>
-                    {% endif %}
-                </header>
-
-                {% set ns = namespace(post_count=1) %}
-                {% for post in posts %}
-
-                    {% if ns.post_count == 1 %}
-                        <!-- Post template for Odd numbers-->
-                        <div class="row d-flex align-items-stretch py-4">
-                            <div class="text col-md-7">
-                                <div class="text-inner d-flex align-items-center">
-                                    <div class="content">
-                                        <header class="post-header">
-                                            <div class="category">
-                                                <!-- article tags-->
-                                                {% if post.tags %}
-                                                    {% for tag in post.tags %}
-                                                        <a href="{{ url_for('blogging.posts_by_tag', tag=tag.lower()) }}">{{ tag }}</a>
-                                                    {% endfor %}
-                                                {% endif %}
-                                            </div>
-                                            <a href="{{ post.url }}">
-                                                <h2 class="h4 font-weight-bold">{{ post.title }}</h2>
-                                            </a>
-                                        </header>
-                                        {% if post.meta.summary %}
-                                            <p>{{ post.meta.summary[0] }}</p>
-                                        {% endif %}
-                                        <div class="post-footer d-flex align-items-center">
-                                            <a href="{{ url_for('blogging.posts_by_author', user_id=post.user_id)}}" class="author d-flex align-items-center flex-wrap">
-                                                <div class="title"><span>{{post.user_name}}</span></div>
-                                            </a>
-                                            <div class="date">{{post.post_date.strftime('%d %b, %Y')}}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="image col-md-5 d-flex align-items-center">
-                                <a href="{{ post.url }}">
-                                    {% if post.meta.images %}
-                                        <img src="{{ post.meta.images[0] }}" alt="{{ post.title }}">
-                                    {% else %}
-                                        <img src="/static/img/blog/coins_fs_low.jpg" alt="{{ post.title }}">
-                                    {% endif %}
-                                    {% for image in post.meta.images %}
-                                        <meta property="og:image" content="{{ image }}">
-                                    {% endfor %}
-                                </a>
-                            </div>
-                        </div>
-
-                    {% else %}
-                        <!-- Post template for Even numbers-->
-                        <div class="row d-flex align-items-stretch my-5">
-                            <div class="image col-md-5 d-flex align-items-center">
-                                <a href="{{ post.url }}">
-                                    {% if post.meta.images %}
-                                        <img src="{{ post.meta.images[0] }}" alt="{{ post.title }}">
-                                    {% else %}
-                                        <img src="/static/img/blog/coins_fs_low.jpg" alt="{{ post.title }}">
-                                    {% endif %}
-                                    {% for image in post.meta.images %}
-                                        <meta property="og:image" content="{{ image }}">
-                                    {% endfor %}
-                                </a>
-                            </div>
-                            <div class="text col-md-7">
-                                <div class="text-inner d-flex align-items-center">
-                                    <div class="content">
-                                        <header class="post-header">
-                                            <div class="category">
-                                                <!-- article tags-->
-                                                {% if post.tags %}
-                                                    {% for tag in post.tags %}
-                                                        <a href="{{ url_for('blogging.posts_by_tag', tag=tag.lower()) }}">{{ tag }}</a>
-                                                    {% endfor %}
-                                                {% endif %}
-                                            </div>
-                                            <a href="{{ post.url }}">
-                                                <h2 class="h4 font-weight-bold">{{ post.title }}</h2>
-                                            </a>
-                                        </header>
-                                        {% if post.meta.summary %}
-                                            <p>{{ post.meta.summary[0] }}</p>
-                                        {% endif %}
-                                        <div class="post-footer d-flex align-items-center">
-                                            <a href="{{ url_for('blogging.posts_by_author', user_id=post.user_id)}}" class="author d-flex align-items-center flex-wrap">
-                                                <div class="title"><span>{{post.user_name}}</span></div>
-                                            </a>
-                                            <div class="date">{{post.post_date.strftime('%d %b, %Y')}}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
-                    {% set ns.post_count = (ns.post_count + 1) % 2 %}
-                {% endfor %}
-
-            </div>
-        </section>
-    {% endif %}
 
 
 
