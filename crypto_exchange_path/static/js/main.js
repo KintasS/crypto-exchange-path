@@ -327,15 +327,16 @@ $(document).ready(function() {
     //   - If Origin location and Destination location are emtpy, fill them
     $('#submit-btn').on('click', function() {
         // Hide current results being displayed
-        $('#results').fadeOut(200);
-        $('#intro').fadeOut(200);
+        // $('#results').fadeOut(200);
+        // $('#intro').fadeOut(200);
         // Hide 'Connecting options'
         $('#options-collapse').collapse('hide');
-        // Show processing modal (if form was filled!)
+        // Show processing animation (if form was filled!)
         if ($('#dest_coin').val().length > 0 &&
             $('#orig_amt').val().length > 0 &&
             $('#orig_coin').val().length > 0) {
-            $('#processing-modal').modal('show')
+            $('#loading-bg').removeClass('d-none')
+            $('#cssload-pgloading').removeClass('d-none')
         }
         // Replace ',' by '.' in origin amount
         var $origAmt = $('#orig_amt')
