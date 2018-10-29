@@ -42,6 +42,20 @@ def manage_feedback_form(feedback_form):
     db.session.commit()
 
 
+def get_latest_posts(tag=None, count=3):
+    """ Gets the latest 'count' posts of the given tag.
+    If no tag is given, it gets posts from any tag.
+    Returns a list of posts objects.
+    """
+    blogging_engine = _get_blogging_engine(current_app)
+    storage = blogging_engine.storage
+    posts = storage.get_posts(count=count, offset=0, include_draft=False,
+                              tag=tag, user_id=None, recent=True)
+    for post in posts:
+        blogging_engine.process_post(post, render=True)
+    return posts
+
+
 @app.route("/home", methods=['GET', 'POST'])
 @app.route("/", methods=['GET', 'POST'])
 def home():
@@ -60,20 +74,7 @@ def home():
     user_exchanges = [exch.id for exch in exchanges]
     open_fbck_modal = False
     # Get Blog information
-    blogging_engine = _get_blogging_engine(current_app)
-    storage = blogging_engine.storage
-    # config = blogging_engine.config
-    # count = count or config.get("BLOGGING_POSTS_PER_PAGE", 10)
-    # meta = _get_meta(storage, count, page)
-    # offset = meta["offset"]
-    # meta["is_user_blogger"] = _is_blogger(blogging_engine.blogger_permission)
-    # meta["count"] = count
-    # meta["page"] = page
-    # render = config.get("BLOGGING_RENDER_TEXT", True)
-    posts = storage.get_posts(count=3, offset=0, include_draft=False,
-                              tag=None, user_id=None, recent=True)
-    for post in posts:
-        blogging_engine.process_post(post, render=True)
+    posts = get_latest_posts()
     # Actions if Feedback Form was filled
     if feedback_form.feedback_submit.data:
         # If form was filled, but with errors, open modal again
@@ -86,7 +87,7 @@ def home():
     resp = make_response(render_template('home.html', form=input_form,
                                          curr=curr, exchanges=exchanges,
                                          user_exchanges=user_exchanges,
-                                         title='Exchanges',
+                                         title='Home',
                                          feedback_form=feedback_form,
                                          open_feedback_modal=open_fbck_modal,
                                          url_orig_coin=url_orig_coin,
@@ -117,6 +118,8 @@ def exchanges():
     exchanges = get_exchanges(['Exchange'])
     user_exchanges = [exch.id for exch in exchanges]
     open_fbck_modal = False
+    # Get Blog information
+    posts = get_latest_posts('CFS')
     # Actions if Feedback Form was filled
     if feedback_form.feedback_submit.data:
         # If form was filled, but with errors, open modal again
@@ -133,7 +136,8 @@ def exchanges():
                                          feedback_form=feedback_form,
                                          open_feedback_modal=open_fbck_modal,
                                          url_orig_coin=url_orig_coin,
-                                         url_dest_coin=url_dest_coin))
+                                         url_dest_coin=url_dest_coin,
+                                         posts=posts))
     # Store session ID in cookie if it is not already stored
     session_id = request.cookies.get('session')
     if not session_id:

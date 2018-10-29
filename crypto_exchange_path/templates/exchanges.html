@@ -23,18 +23,43 @@
 
 {% block main %}
 
+
+
+
+
+
+
+
+
     {% include '_search_canvas_easy.html' %}
 
 
+
+
+
+
+
+
+
+
+
+
+
     <!--Section: Top-Coins-->
-    <section id="top-coins" class="text-center">
+    <section id="top-coins" class="text-center section-padding-4rem">
 
-        <!-- Heading -->
-        <h2 class="mt-4 mt-sm-5 mb-3 mb-sm-4 font-weight-bold">Trending Searches</h2>
+            <!-- Heading -->
+            <h2 class="mb-3 mb-md-4 font-weight-bold">Trending Searches</h2>
 
-        <div class="container px-2">
+            <div class="container">
 
-            <div class="row no-gutters mt-4 mt-lg-5">
+                <div class="row d-flex justify-content-center mb-4">
+                    <div class="col-xs-12 col-sm-8 col-sm-offset-3 text-center">
+                        <p class="lead">Check out what other users are searching in our Crypto Exchange Search Engine these past days. You might be missing something... :)</p>
+                    </div>
+                </div>
+
+            <div class="row no-gutters">
 
                 <div class="col-3 px-2 px-lg-3">
                     <div class="d-inline-block d-flex justify-content-center align-items-center">
@@ -97,19 +122,19 @@
 
 
 
-    <hr class="my-5">
+
 
     <!--Section: Popular Exchanges-->
-    <section id="popular-exchanges" class="text-center">
+    <section id="popular-exchanges" class="text-center light-gray-bg section-padding-4rem">
 
         <!-- Heading -->
-        <h2 class="mt-4 mt-md-5 mb-3 mb-md-4 font-weight-bold">Popular Exchange Sites</h2>
+        <h2 class="mb-3 mb-md-4 font-weight-bold">Popular Exchange Sites</h2>
 
         <div class="container">
 
             <div class="row d-flex justify-content-center mb-4">
-                <div class="col-md-8">
-                    <p class="mb-1 mb-md-3">Crypto exchange sites operate in a highly unregulated environment. Always proceed with caution and do your own research before starting to operate with any platform. These are currently the 3 top sites picked by our users.</p>
+                <div class="col-xs-12 col-sm-8 col-sm-offset-3 text-center">
+                    <p class="lead">Crypto exchange sites operate in a highly unregulated environment. Always proceed with caution and do your own research before depositing funds in any platform. These are the top-3 sites picked by our users.</p>
                 </div>
             </div>
 
@@ -121,13 +146,13 @@
                 </div>
 
                 <div class="col-4 px-2 px-md-3">
-                    <img class="img-popular-services" src="/static/img/exchanges/60/Binance.jpg" alt="Binance logo" height="60" width="60">
+                    <img class="img-popular-services" src="/static/img/exchanges/60/Binance.png" alt="Binance logo" height="60" width="60">
                     <h4 class="my-3 font-weight-bold">Binance</h4>
                     <p class="grey-text">Binance is currently the exchange site with highest volume. Its trading fees are very competitive and supperts a very wide range of cryptoassets.</p>
                 </div>
 
                 <div class="col-4 px-2 px-md-3">
-                    <img class="img-popular-services" src="/static/img/exchanges/60/Huobi.jpg" alt="Huobi logo" height="60" width="60">
+                    <img class="img-popular-services" src="/static/img/exchanges/60/Huobi.png" alt="Huobi logo" height="60" width="60">
                     <h4 class="my-3 font-weight-bold">Huobi</h4>
                     <p class="grey-text">The Singapore-based exchange already ranks among the top-three sites in trading volume, and offers its services worldwide in up to 15 different languages.</p>
                 </div>
@@ -149,6 +174,19 @@
         </div>
 
     </section>
+
+
+
+
+
+
+
+
+    <!-- Latest Posts -->
+    <div class="section-padding-4rem">
+        {% include '_blog_posts.html' %}
+    </div>
+
 
 
 {% endblock main %}

@@ -13,6 +13,10 @@ a:hover, a:focus, i:hover, i:focus, span:hover, span:focus {
     text-decoration: none;
 } */
 
+strong {
+    font-weight: 700;
+}
+
 .no-link-format {
     color: #212529;
     text-decoration: none;
@@ -89,7 +93,7 @@ a:hover, a:focus, i:hover, i:focus, span:hover, span:focus {
     background-color: rgba(0, 0, 0, .7);
 }
 
-.section-bg {
+.light-gray-bg {
     background-color: #fafafa;
 }
 
@@ -107,7 +111,7 @@ a:hover, a:focus, i:hover, i:focus, span:hover, span:focus {
 
 .text-big {
     font-size: 1.3em !important;
-    font-weight: 400 !important;
+    font-weight: 300 !important;
     line-height: 1.8em !important;
     color: #333333 !important;
 }

@@ -49,50 +49,9 @@
         </section>
 
         <!-- Latest Posts -->
-        <section class="latest-posts open-sans-font section-padding-2rem">
-            <div class="container">
-                <header>
-                    <h2 class="font-weight-bold">Latest from the blog</h2>
-                    <p class="text-big">Latest posts from our team and blog collaborators.</p>
-                </header>
-                <div class="row">
-
-                    {% for post in posts %}
-                        <div class="post col-sm-6 col-xl-4 mb-5">
-                            <div class="post-thumbnail">
-                                <a href="{{ post.url }}">
-                                    {% if post.meta.images %}
-                                        <img src="{{ post.meta.images[0] }}" alt="{{ post.title }}" class="img-fluid">
-                                    {% else %}
-                                        <img src="/static/img/blog/coins_fs_low.jpg" alt="{{ post.title }}" class="img-fluid">
-                                    {% endif %}
-                                </a>
-                            </div>
-                            <div class="post-details">
-                                <div class="post-meta d-flex justify-content-start">
-                                    <div class="date">{{post.post_date.strftime('%d %b, %Y')}}</div>
-                                    <a href="{{ url_for('blogging.posts_by_author', user_id=post.user_id)}}" class="author d-flex align-items-center flex-wrap">
-                                        <div class="title"><span>{{post.user_name}}</span></div>
-                                    </a>
-                                    <div class="category ml-auto">
-                                        {% if post.tags %}
-                                            <a href="{{ url_for('blogging.posts_by_tag', tag=post.tags[0].lower()) }}">{{ post.tags[0] }}</a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <a href="{{ post.url }}">
-                                    <h4 class="h4 font-weight-bold">{{ post.title }}</h4>
-                                </a>
-                                {% if post.meta.summary %}
-                                    <p class="text-muted">{{ post.meta.summary[0] }}</p>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endfor %}
-
-                </div>
-            </div>
-        </section>
+        <div class="open-sans-font section-padding-2rem">
+            {% include '_blog_posts.html' %}
+        </div>
 
 
 
