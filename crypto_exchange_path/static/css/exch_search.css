@@ -2,7 +2,7 @@
 ////////////  STRUCTURAL FORMATING  ///////////////////////
 ///////////////////////////////////////////////////////// */
 
-@media (max-width: 410px) {
+@media (max-width: 410.98px) {
     html {
         /* font-size: 11px; */
     }
@@ -21,20 +21,12 @@
         width: 9px;
         height: 9px;
     }
-    img.img-trending-coin {
-        width: 25px;
-        height: 25px;
-    }
-    img.img-popular-services {
-        width: 35px;
-        height: 35px;
-    }
     /* img.img-logo {
         height: 22px;
     } */
 }
 
-@media (min-width: 411px) and (max-width: 480px) {
+@media (min-width: 411px) and (max-width: 480.98px) {
     html {
         /* font-size: 12px; */
     }
@@ -53,20 +45,12 @@
         width: 10px;
         height: 10px;
     }
-    img.img-trending-coin {
-        width: 30px;
-        height: 30px;
-    }
-    img.img-popular-services {
-        width: 35px;
-        height: 35px;
-    }
     /* img.img-logo {
         height: 24px;
     } */
 }
 
-@media (min-width: 481px) and (max-width: 575px) {
+@media (min-width: 481px) and (max-width: 575.98px) {
     html {
         /* font-size: 13px; */
     }
@@ -85,20 +69,12 @@
         width: 12px;
         height: 12px;
     }
-    img.img-trending-coin {
-        width: 35px;
-        height: 35px;
-    }
-    img.img-popular-services {
-        width: 45px;
-        height: 45px;
-    }
     /* img.img-logo {
         height: 24px;
     } */
 }
 
-@media (min-width: 576px) and (max-width: 767px) {
+@media (min-width: 576px) and (max-width: 767.98px) {
     html {
         /* font-size: 14px; */
     }
@@ -117,20 +93,12 @@
         width: 14px;
         height: 14px
     }
-    img.img-trending-coin {
-        width: 35px;
-        height: 35px;
-    }
-    img.img-popular-services {
-        width: 60px;
-        height: 60px;
-    }
     /* img.img-logo {
         height: 24px;
     } */
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 768px) and (max-width: 991.98px) {
     html {
         /* font-size: 14px; */
     }
@@ -148,14 +116,6 @@
     img.img-coin {
         width: 14px;
         height: 14px
-    }
-    img.img-trending-coin {
-        width: 45px;
-        height: 45px;
-    }
-    img.img-popular-services {
-        width: 60px;
-        height: 60px;
     }
     /* img.img-logo {
         height: 22px;
@@ -181,14 +141,6 @@
         width: 16px;
         height: 16px
     }
-    img.img-trending-coin {
-        width: 60px;
-        height: 60px;
-    }
-    img.img-popular-services {
-        width: 60px;
-        height: 60px;
-    }
     img.img-logo {
         height: 28px;
     }
@@ -213,6 +165,10 @@ section#search-canvas .search-box {
     border: 1px solid #b6b6b6;
 }
 
+section#search-canvas .slogan {
+    font-size: inherit;
+}
+
 #search-form .form-control {
     border-radius: .1rem;
 }
@@ -233,10 +189,11 @@ section#search-canvas .search-box {
 /* Typeahead results */
 
 #search-form .typeahead li.dropdown-item {
-    padding-top: 0.25rem;
+    padding-top: 0.125rem;
     padding-bottom: 0.125rem;
     padding-right: 0.5rem;
     padding-left: 1rem;
+    font-size: 0.9em;
 }
 
 #search-form .typeahead a.dropdown-item {
@@ -256,9 +213,12 @@ section#search-canvas .search-box {
     color: white;
 }
 
-@media (max-width: 575px) {
+@media (max-width: 575.98px) {
     #search-form .typeahead .dropdown-item {
-        font-size: 1rem;
+        font-size: 0.9rem;
+    }
+    section#search-canvas .slogan {
+        font-size: 0.75rem;
     }
 }
 
@@ -548,7 +508,7 @@ section#results .border-left {
     font-size: 90%;
 }
 
-/* @media (max-width: 767px) {
+/* @media (max-width: 767.98px) {
     .select-btn {
         font-size: 0.8rem;
         font-weight: bold;
@@ -687,7 +647,7 @@ section#results .typeahead .active.dropdown-item .dropdown-item {
     color: white;
 }
 
-@media (max-width: 575px) {
+@media (max-width: 575.98px) {
     section#results .typeahead .dropdown-item {
         font-size: 1rem;
     }
@@ -721,343 +681,4 @@ section#results .typeahead .active.dropdown-item .dropdown-item {
     z-index: 99;
     /* Make sure it does not overlap */
     color: #343a40;
-}
-
-/* /////////////////////////////////////////////////////////
-////////////  LOADING ANIMATION  //////////////////////////
-///////////////////////////////////////////////////////// */
-
-#cssload-pgloading {}
-
-#cssload-pgloading:after {
-    content: "";
-    z-index: 999;
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-}
-
-#cssload-pgloading .cssload-loadingwrap {
-    position: fixed;
-    top: 45%;
-    bottom: 45%;
-    left: 25%;
-    right: 25%;
-    z-index: 999;
-}
-
-#cssload-pgloading .cssload-bokeh {
-    font-size: 82px;
-    width: 1em;
-    height: 1em;
-    position: relative;
-    margin: 0 auto;
-    list-style: none;
-    padding: 0;
-    border-radius: 50%;
-    -o-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-}
-
-#cssload-pgloading .cssload-bokeh li {
-    position: absolute;
-    width: .2em;
-    height: .2em;
-    border-radius: 50%;
-    -o-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-}
-
-#cssload-pgloading .cssload-bokeh li:nth-child(1) {
-    left: 50%;
-    top: 0;
-    margin: 0 0 0 -.1em;
-    background: rgba(51, 59, 150, 0.98);
-    transform-origin: 50% 250%;
-    -o-transform-origin: 50% 250%;
-    -ms-transform-origin: 50% 250%;
-    -webkit-transform-origin: 50% 250%;
-    -moz-transform-origin: 50% 250%;
-    animation: cssload-rota 1.3s linear infinite, cssload-opa 4.22s ease-in-out infinite alternate;
-    -o-animation: cssload-rota 1.3s linear infinite, cssload-opa 4.22s ease-in-out infinite alternate;
-    -ms-animation: cssload-rota 1.3s linear infinite, cssload-opa 4.22s ease-in-out infinite alternate;
-    -webkit-animation: cssload-rota 1.3s linear infinite, cssload-opa 4.22s ease-in-out infinite alternate;
-    -moz-animation: cssload-rota 1.3s linear infinite, cssload-opa 4.22s ease-in-out infinite alternate;
-}
-
-#cssload-pgloading .cssload-bokeh li:nth-child(2) {
-    top: 50%;
-    right: 0;
-    margin: -.1em 0 0 0;
-    background: rgb(255, 0, 60);
-    transform-origin: -150% 50%;
-    -o-transform-origin: -150% 50%;
-    -ms-transform-origin: -150% 50%;
-    -webkit-transform-origin: -150% 50%;
-    -moz-transform-origin: -150% 50%;
-    animation: cssload-rota 2.14s linear infinite, cssload-opa 4.93s ease-in-out infinite alternate;
-    -o-animation: cssload-rota 2.14s linear infinite, cssload-opa 4.93s ease-in-out infinite alternate;
-    -ms-animation: cssload-rota 2.14s linear infinite, cssload-opa 4.93s ease-in-out infinite alternate;
-    -webkit-animation: cssload-rota 2.14s linear infinite, cssload-opa 4.93s ease-in-out infinite alternate;
-    -moz-animation: cssload-rota 2.14s linear infinite, cssload-opa 4.93s ease-in-out infinite alternate;
-}
-
-#cssload-pgloading .cssload-bokeh li:nth-child(3) {
-    left: 50%;
-    bottom: 0;
-    margin: 0 0 0 -.1em;
-    background: rgb(250, 190, 40);
-    transform-origin: 50% -150%;
-    -o-transform-origin: 50% -150%;
-    -ms-transform-origin: 50% -150%;
-    -webkit-transform-origin: 50% -150%;
-    -moz-transform-origin: 50% -150%;
-    animation: cssload-rota 1.67s linear infinite, cssload-opa 5.89s ease-in-out infinite alternate;
-    -o-animation: cssload-rota 1.67s linear infinite, cssload-opa 5.89s ease-in-out infinite alternate;
-    -ms-animation: cssload-rota 1.67s linear infinite, cssload-opa 5.89s ease-in-out infinite alternate;
-    -webkit-animation: cssload-rota 1.67s linear infinite, cssload-opa 5.89s ease-in-out infinite alternate;
-    -moz-animation: cssload-rota 1.67s linear infinite, cssload-opa 5.89s ease-in-out infinite alternate;
-}
-
-#cssload-pgloading .cssload-bokeh li:nth-child(4) {
-    top: 50%;
-    left: 0;
-    margin: -.1em 0 0 0;
-    background: rgb(136, 193, 0);
-    transform-origin: 250% 50%;
-    -o-transform-origin: 250% 50%;
-    -ms-transform-origin: 250% 50%;
-    -webkit-transform-origin: 250% 50%;
-    -moz-transform-origin: 250% 50%;
-    animation: cssload-rota 1.98s linear infinite, cssload-opa 6.04s ease-in-out infinite alternate;
-    -o-animation: cssload-rota 1.98s linear infinite, cssload-opa 6.04s ease-in-out infinite alternate;
-    -ms-animation: cssload-rota 1.98s linear infinite, cssload-opa 6.04s ease-in-out infinite alternate;
-    -webkit-animation: cssload-rota 1.98s linear infinite, cssload-opa 6.04s ease-in-out infinite alternate;
-    -moz-animation: cssload-rota 1.98s linear infinite, cssload-opa 6.04s ease-in-out infinite alternate;
-}
-
-@keyframes cssload-rota {
-    from {}
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-@-o-keyframes cssload-rota {
-    from {}
-    to {
-        -o-transform: rotate(360deg);
-    }
-}
-
-@-ms-keyframes cssload-rota {
-    from {}
-    to {
-        -ms-transform: rotate(360deg);
-    }
-}
-
-@-webkit-keyframes cssload-rota {
-    from {}
-    to {
-        -webkit-transform: rotate(360deg);
-    }
-}
-
-@-moz-keyframes cssload-rota {
-    from {}
-    to {
-        -moz-transform: rotate(360deg);
-    }
-}
-
-@keyframes cssload-opa {
-    0% {}
-    12.0% {
-        opacity: 0.80;
-    }
-    19.5% {
-        opacity: 0.88;
-    }
-    37.2% {
-        opacity: 0.64;
-    }
-    40.5% {
-        opacity: 0.52;
-    }
-    52.7% {
-        opacity: 0.69;
-    }
-    60.2% {
-        opacity: 0.60;
-    }
-    66.6% {
-        opacity: 0.52;
-    }
-    70.0% {
-        opacity: 0.63;
-    }
-    79.9% {
-        opacity: 0.60;
-    }
-    84.2% {
-        opacity: 0.75;
-    }
-    91.0% {
-        opacity: 0.87;
-    }
-}
-
-@-o-keyframes cssload-opa {
-    0% {}
-    12.0% {
-        opacity: 0.80;
-    }
-    19.5% {
-        opacity: 0.88;
-    }
-    37.2% {
-        opacity: 0.64;
-    }
-    40.5% {
-        opacity: 0.52;
-    }
-    52.7% {
-        opacity: 0.69;
-    }
-    60.2% {
-        opacity: 0.60;
-    }
-    66.6% {
-        opacity: 0.52;
-    }
-    70.0% {
-        opacity: 0.63;
-    }
-    79.9% {
-        opacity: 0.60;
-    }
-    84.2% {
-        opacity: 0.75;
-    }
-    91.0% {
-        opacity: 0.87;
-    }
-}
-
-@-ms-keyframes cssload-opa {
-    0% {}
-    12.0% {
-        opacity: 0.80;
-    }
-    19.5% {
-        opacity: 0.88;
-    }
-    37.2% {
-        opacity: 0.64;
-    }
-    40.5% {
-        opacity: 0.52;
-    }
-    52.7% {
-        opacity: 0.69;
-    }
-    60.2% {
-        opacity: 0.60;
-    }
-    66.6% {
-        opacity: 0.52;
-    }
-    70.0% {
-        opacity: 0.63;
-    }
-    79.9% {
-        opacity: 0.60;
-    }
-    84.2% {
-        opacity: 0.75;
-    }
-    91.0% {
-        opacity: 0.87;
-    }
-}
-
-@-webkit-keyframes cssload-opa {
-    0% {}
-    12.0% {
-        opacity: 0.80;
-    }
-    19.5% {
-        opacity: 0.88;
-    }
-    37.2% {
-        opacity: 0.64;
-    }
-    40.5% {
-        opacity: 0.52;
-    }
-    52.7% {
-        opacity: 0.69;
-    }
-    60.2% {
-        opacity: 0.60;
-    }
-    66.6% {
-        opacity: 0.52;
-    }
-    70.0% {
-        opacity: 0.63;
-    }
-    79.9% {
-        opacity: 0.60;
-    }
-    84.2% {
-        opacity: 0.75;
-    }
-    91.0% {
-        opacity: 0.87;
-    }
-}
-
-@-moz-keyframes cssload-opa {
-    0% {}
-    12.0% {
-        opacity: 0.80;
-    }
-    19.5% {
-        opacity: 0.88;
-    }
-    37.2% {
-        opacity: 0.64;
-    }
-    40.5% {
-        opacity: 0.52;
-    }
-    52.7% {
-        opacity: 0.69;
-    }
-    60.2% {
-        opacity: 0.60;
-    }
-    66.6% {
-        opacity: 0.52;
-    }
-    70.0% {
-        opacity: 0.63;
-    }
-    79.9% {
-        opacity: 0.60;
-    }
-    84.2% {
-        opacity: 0.75;
-    }
-    91.0% {
-        opacity: 0.87;
-    }
 }

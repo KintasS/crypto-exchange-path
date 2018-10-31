@@ -63,13 +63,14 @@
                                         </div>
                                     </div>
                                     <h1 class="font-weight-bold">{{ post.title }}</h1>
-                                    <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
-                                        <a href="{{ url_for('blogging.posts_by_author', user_id=post.user_id)}}" class="author d-flex align-items-center flex-wrap">
+                                    <div class="post-footer d-flex align-items-center justify-content-start">
+                                        <i class="fas fa-user mx-2"></i>
+                                        <a href="{{ url_for('blogging.posts_by_author', user_id=post.user_id)}}">
                                             <div class="title"><span>{{post.user_name}}</span></div>
                                         </a>
-                                        <div class="d-flex align-items-center flex-wrap">
-                                            <div class="date">{{post.post_date.strftime('%d %b, %Y')}}</div>
-                                        </div>
+                                        <div class="mx-2"> | </div>
+                                        <i class="fas fa-clock mr-2"></i>
+                                        <div class="date">{{post.post_date.strftime('%d %b, %Y')}}</div>
                                     </div>
                                     <div class="post-body">
                                         {{post.rendered_text | safe}}

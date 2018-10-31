@@ -237,9 +237,8 @@ $(document).ready(function() {
         }
     }
 
-    var originLocError = false;
-    var destLocError = false;
-    // Checks whether there is input in the forms to make it bold
+    // Checks whether there is input in the forms to make it bold.
+    // Returns 'True' if a valid input was given
     function CheckLocationInput($input, exchList) {
         var value = $input.val();
         // Change Coinbase to look by ID
@@ -254,14 +253,14 @@ $(document).ready(function() {
                     'color': '#212529',
                     'font-weight': '500'
                 });
-                originLocError = false;
+                return true;
             } else {
                 $input.css({
                     'font-style': 'italic',
                     'color': '#f44e4e',
                     'font-weight': '700'
                 });
-                originLocError = true;
+                return false;
             }
         } else {
             // Format if field is empty
@@ -270,6 +269,7 @@ $(document).ready(function() {
                 'color': '#495057',
                 'font-weight': '400'
             });
+            return false;
         }
     }
 
@@ -290,14 +290,22 @@ $(document).ready(function() {
             inputDestExchanges = [];
         } else if (id == 'orig_loc') {
             // Checks for Origin Location
-            CheckLocationInput($(this), inputOrigExchanges);
+            var status = CheckLocationInput($(this), inputOrigExchanges);
             // Force change in form inputs
             $('#' + id).val($(this).val())
+            // Auto-run query if input was correct
+            if (status) {
+                $('#submit-btn').trigger("click");
+            }
         } else if (id == 'dest_loc') {
             // Checks for Destination Location
-            CheckLocationInput($(this), inputDestExchanges);
+            var status = CheckLocationInput($(this), inputDestExchanges);
             // Force change in form inputs
             $('#' + id).val($(this).val())
+            // Auto-run query if input was correct
+            if (status) {
+                $('#submit-btn').trigger("click");
+            }
         }
     });
 
@@ -335,8 +343,8 @@ $(document).ready(function() {
         if ($('#dest_coin').val().length > 0 &&
             $('#orig_amt').val().length > 0 &&
             $('#orig_coin').val().length > 0) {
-            $('#loading-bg').removeClass('d-none')
-            $('#cssload-pgloading').removeClass('d-none')
+            $('#loading-bg').fadeIn()
+            $('#cssload-pgloading').fadeIn()
         }
         // Replace ',' by '.' in origin amount
         var $origAmt = $('#orig_amt')
@@ -354,6 +362,8 @@ $(document).ready(function() {
             $destLoc.val('(Default)');
         }
     });
+
+    console.log(2);
 
 
 

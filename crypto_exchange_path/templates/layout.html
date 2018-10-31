@@ -56,7 +56,6 @@
                         </button>
                         <a class="navbar-brand" href="{{ url_for('home') }}">
                             <div class="d-block d-flex align-items-center">
-                                <!-- <span style="font-size: 1.5rem"><em>Crypto<b>FeeSaver</b></em><span class="grey-text">.com</span></span> -->
                                 <img class="img-logo" src="/static/img/logo/CFS_Logo_Left2_206x28.png" alt="CryptoFeeSaver">
                                 <span class="badge badge-orange ml-2 mr-0 mr-md-4">Beta</span>
                             </div>
@@ -164,11 +163,11 @@
         <!-- MODALS -->
 
         <!-- Dim screen when processing -->
-        <div id="loading-bg" class="d-none">
+        <div id="loading-bg">
         </div>
 
         <!-- Animation when processing -->
-        <div id="cssload-pgloading" class="d-none">
+        <div id="cssload-pgloading">
             <div class="cssload-loadingwrap">
                 <ul class="cssload-bokeh">
                     <li></li>
@@ -196,12 +195,12 @@
                         {{ feedback_form.hidden_tag() }}
                         <div class="modal-body mx-0 mx-sm-3">
                             <h2 class="font-weight-bold text-center mt-2 mb-4" style="color: #212529;">We are listening</h2>
-                            <p class="grey-text text-center mx-0 mx-md-5">Let us know what you think about our platform. We are working hard to improve it every day,
+                            <p class="grey-color text-center mx-0 mx-md-5">Let us know what you think about our platform. We are working hard to improve it every day,
                                 and your feedback is priceless to us... We are listening to you and will do our best to add the functionality you miss or to
                                 fix the bugs you might encounter.</p>
-                            <p class="grey-text text-center mx-5">Keep in touch!</p>
+                            <p class="grey-color text-center mx-5">Keep in touch!</p>
                             <div class="form-group">
-                                <label for="feedback-topic"><i class="fas fa-tag grey-text mr-2"></i>Subject</label>
+                                <label for="feedback-topic"><i class="fas fa-tag grey-color mr-2"></i>Subject</label>
                                 {% if feedback_form.topic.errors %}
                                     {{ feedback_form.topic(id="feedback-topic", class="form-control is-invalid", type="text", autocomplete="off") }}
                                     <div class="invalid-feedback">
@@ -214,7 +213,7 @@
                                 {% endif %}
                             </div>
                             <div class="form-group">
-                                <label data-error="wrong" data-success="right" for="feedback-subject"><i class="fas fa-comment-alt grey-text mr-2"></i>Title</label>
+                                <label data-error="wrong" data-success="right" for="feedback-subject"><i class="fas fa-comment-alt grey-color mr-2"></i>Title</label>
                                 {% if feedback_form.subject.errors %}
                                     {{ feedback_form.subject(id="feedback-subject", class="form-control is-invalid", type="text", autocomplete="off") }}
                                     <div class="invalid-feedback">
@@ -227,7 +226,7 @@
                                 {% endif %}
                             </div>
                             <div class="form-group">
-                                <label data-error="wrong" data-success="right" for="feedback-text"><i class="fas fa-pen grey-text mr-2"></i>Your feedback</label>
+                                <label data-error="wrong" data-success="right" for="feedback-text"><i class="fas fa-pen grey-color mr-2"></i>Your feedback</label>
                                 {% if feedback_form.detail.errors %}
                                     {{ feedback_form.detail(class="form-control is-invalid") }}
                                     <div class="invalid-feedback">

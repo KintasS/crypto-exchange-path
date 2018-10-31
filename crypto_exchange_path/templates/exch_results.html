@@ -23,7 +23,7 @@
 
 {% block main %}
 
-    {% include '_search_canvas_easy.html' %}
+    {% include '_search_canvas.html' %}
 
     <!-- Variable to store promotions that have been displayed and must not to be displayed again. -->
     {% set promotions_displayed = [] %}
@@ -445,16 +445,16 @@
                                                 {% if (path.origin.exchange.id == 'Wallet') or (path.origin.exchange.id == 'Bank') %}
                                                     {% if path.hop_1.deposit_details == '' %}
                                                         <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="Withdrawal fees may apply depending on the wallet or bank you use. Please, take them into account as well.</em>">
-                                                            <i class="fas fa-info-circle grey-text"></i>
+                                                            <i class="fas fa-info-circle"></i>
                                                         </a>
                                                     {% else %}
                                                         <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_1.deposit_details }}<br>- - -</br><em>Withdrawal fees may apply depending on the wallet or bank you use. Please, take them into account as well.</em>">
-                                                            <i class="fas fa-info-circle grey-text"></i>
+                                                            <i class="fas fa-info-circle"></i>
                                                         </a>
                                                     {% endif %}
                                                 {% else %}
                                                     <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.origin.withdraw_details }}<br>{{ path.hop_1.deposit_details }}">
-                                                        <i class="fas fa-info-circle grey-text"></i>
+                                                        <i class="fas fa-info-circle"></i>
                                                     </a>
                                                 {% endif %}
                                             </div>
@@ -515,7 +515,7 @@
                                         <div class="col-3 pl-2">
                                             <span>In <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a>, trade your <b>{{ path.hop_1.trade.sell_coin.symbol }}</b> for <b>{{ path.hop_1.trade.buy_coin.symbol }}</b></span>
                                             <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_1.trade_details }}">
-                                                <i class="fas fa-info-circle grey-text"></i>
+                                                <i class="fas fa-info-circle"></i>
                                             </a>
                                         </div>
                                         <div class="col">
@@ -584,7 +584,7 @@
                                                     <span>Transfer your <b>{{ path.hop_1.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a> to <a class="referral-detail-link-1 font-weight-bold" href="{{ step2b_dest.site_url }}" target="_blank" role="button">{{ step2b_dest.name }}</a></span>
                                                 {% endif %}
                                                 <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="<p class='mb-1'>{{ path.hop_1.withdraw_details }}</p><p class='mb-1'>{{ path.hop_2.deposit_details }}</p>">
-                                                    <i class="fas fa-info-circle grey-text"></i>
+                                                    <i class="fas fa-info-circle"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
@@ -645,7 +645,7 @@
                                             <div class="col-3 pl-2">
                                                 <span>In <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a>, trade your <b>{{ path.hop_2.trade.sell_coin.symbol }}</b> for <b>{{ path.hop_2.trade.buy_coin.symbol }}</b></span>
                                                 <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_2.trade_details }}">
-                                                    <i class="fas fa-info-circle grey-text"></i>
+                                                    <i class="fas fa-info-circle"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
@@ -707,7 +707,7 @@
                                                     <span>Transfer your <b>{{ path.hop_2.trade.buy_coin.symbol }}</b> from <a class="referral-detail-link-1 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a> to <a class="referral-detail-link-1 font-weight-bold" href="{{ path.destination.exchange.site_url }}" target="_blank" role="button">{{ path.destination.exchange.name }}</a></span>
                                                 {% endif %}
                                                 <a class="no-link-tooltip text-right" href="#" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_2.withdraw_details }}<br>{{ path.destination.deposit_details }}">
-                                                    <i class="fas fa-info-circle grey-text"></i>
+                                                    <i class="fas fa-info-circle"></i>
                                                 </a>
                                             </div>
                                             <div class="col">

@@ -74,7 +74,7 @@ def home():
     user_exchanges = [exch.id for exch in exchanges]
     open_fbck_modal = False
     # Get Blog information
-    posts = get_latest_posts()
+    posts = get_latest_posts(None, 4)
     # Actions if Feedback Form was filled
     if feedback_form.feedback_submit.data:
         # If form was filled, but with errors, open modal again
@@ -119,7 +119,7 @@ def exchanges():
     user_exchanges = [exch.id for exch in exchanges]
     open_fbck_modal = False
     # Get Blog information
-    posts = get_latest_posts('CFS')
+    posts = get_latest_posts('CFS', 4)
     # Actions if Feedback Form was filled
     if feedback_form.feedback_submit.data:
         # If form was filled, but with errors, open modal again

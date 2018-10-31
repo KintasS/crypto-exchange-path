@@ -17,7 +17,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xl-8">
-                        <h1 class="font-weight-bold">CryptoFeeSaver Blog</h1>
+                        <a class="no-link-format" href="/blog"><h1 class="font-weight-bold">CryptoFeeSaver Blog</h1></a>
                     </div>
                 </div>
             </div>
@@ -34,18 +34,21 @@
 
 
     <!-- LAYOUT FOR 'BLOG INDEX' -->
-
-    <!-- Intro Section-->
-    <section class="intro open-sans-font section-padding-2rem">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 col-xl-8">
-                    <h2 class="font-weight-bold">About Blockchain tech, exchanges, wallets, and other crypto services</h2>
-                    <p class="text-big">You've been around cryptos for some time now and you feel comfortable using exchanges and wallets. That's great.<br> From there, we want to <strong>help you take your knowledge to the next level</strong> by avoiding common misconceptions that are probably costing you money. Act smarter. Start today. Now.</p>
+    {% if meta is defined %}
+        {% if not (meta.user_id or meta.tag) %}
+            <!-- Intro Section-->
+            <section class="intro open-sans-font section-padding-2rem">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-10 col-xl-8">
+                            <h2 class="font-weight-bold">About Blockchain tech, exchanges, wallets, and other crypto services</h2>
+                            <p class="text-big">You've been around cryptos for some time now and you feel comfortable using exchanges and wallets. That's great.<br> From there, we want to <strong>help you take your knowledge to the next level</strong> by avoiding common misconceptions that are probably costing you money. Act smarter. Start today. Now.</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </section>
+            </section>
+        {% endif %}
+    {% endif %}
 
     <!-- Latest Posts -->
     <div class="open-sans-font section-padding-2rem">

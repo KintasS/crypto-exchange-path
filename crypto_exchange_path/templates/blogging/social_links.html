@@ -1,32 +1,41 @@
-<div class="text-center font-weight-bold mt-5">Share with friends</div>
-<div class="d-flex justify-content-center align-items-center mt-2 mb-4" id="post-share-links">
+<!--Section: Search Canvas-->
+<section class="social-links">
 
-    <a href="http://twitter.com/home?status={{ post.title | urlencode }}%20{{ request.url | urlencode }}%3Futm_source=twitter
-{% if config.BLOGGING_SITENAME %}%20%23{{ config.BLOGGING_SITENAME | replace(' ', '') | urlencode }}{% endif %}
-{% if config.BLOGGING_TWITTER_USERNAME %}%20{{ config.BLOGGING_TWITTER_USERNAME | urlencode }}{% endif %}" target="_blank" title="Share on Twitter">
-        <i class="fab fa-twitter-square fa-3x mr-4" style="color: #1DA1F2;"></i>
-    </a>
+    <div class="text-center font-weight-bold mt-3 mt-sm-5">Share with friends</div>
 
-    <a href="http://www.facebook.com/sharer/sharer.php?u={{ request.url | urlencode }}%3Futm_source=facebook" target="_blank" title="Share on Facebook">
-        <i class="fab fa-facebook fa-3x mr-4" style="color: #4867AA;"></i>
-    </a>
 
-    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.url | urlencode }}&title={{ post.title | urlencode }}" target="_blank" title="Share on LinkedIn">
-        <i class="fab fa-linkedin fa-3x mr-4" style="color: #0077B5;"></i>
-    </a>
 
-    <a href="https://wa.me/?text={{ request.url | urlencode }}" target="_blank" title="Share on WhatsApp">
-        <i class="fab fa-whatsapp-square fa-3x mr-4" style="color: #25d366;"></i>
-    </a>
+    <div class="d-flex justify-content-center align-items-center mt-1 mt-sm-2 mb-4" id="post-share-links">
 
-    <a href="mailto:?subject={{ post.title }}&amp;body=I thought you might like this:
-  {{ post.title }}
-  {{ request.url }}?utm_source=email-share" target="_blank" title="Share via Email">
-        <i class="fas fa-envelope fa-3x mr-4" style="color: #ec5b00;"></i>
-    </a>
+        <a href="http://twitter.com/home?status={{ post.title | urlencode }}%20{{ request.url | urlencode }}%3Futm_source=twitter
+    {% if config.BLOGGING_SITENAME %}%20%23{{ config.BLOGGING_SITENAME | replace(' ', '') | urlencode }}{% endif %}
+    {% if config.BLOGGING_TWITTER_USERNAME %}%20{{ config.BLOGGING_TWITTER_USERNAME | urlencode }}{% endif %}" target="_blank" title="Share on Twitter">
+            <i class="fab fa-twitter-square fa-3x mr-3 mr-sm-4" style="color: #1DA1F2;"></i>
+        </a>
 
-    <a class="copy-link-tooltip" data-clipboard-text="{{ request.url }}" data-toggle="tooltip" data-trigger="manual" data-placement="top" title="Copy link" style="cursor: pointer;">
-        <i class="fas fa-link fa-3x" style="color: #525252; font-size: 2.5rem;"></i>
-    </a>
+        <a href="http://www.facebook.com/sharer/sharer.php?u={{ request.url | urlencode }}%3Futm_source=facebook" target="_blank" title="Share on Facebook">
+            <i class="fab fa-facebook fa-3x mr-3 mr-sm-4" style="color: #4867AA;"></i>
+        </a>
 
-</div>
+        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.url | urlencode }}&title={{ post.title | urlencode }}" target="_blank" title="Share on LinkedIn">
+            <i class="fab fa-linkedin fa-3x mr-3 mr-sm-4" style="color: #0077B5;"></i>
+        </a>
+
+        <a href="https://wa.me/?text={{ request.url | urlencode }}" target="_blank" title="Share on WhatsApp">
+            <i class="fab fa-whatsapp-square fa-3x mr-3 mr-sm-4" style="color: #25d366;"></i>
+        </a>
+
+        <a href="mailto:?subject={{ post.title }}&amp;body=I thought you might like this:
+      {{ post.title }}
+      {{ request.url }}?utm_source=email-share" target="_blank" title="Share via Email">
+            <i class="fas fa-envelope fa-3x mr-3 mr-sm-4" style="color: #ec5b00;"></i>
+        </a>
+
+        <a class="copy-link-tooltip" data-clipboard-text="{{ request.url }}" data-toggle="tooltip" data-trigger="manual" data-placement="top" title="Copy link" style="cursor: pointer;">
+            <i class="fas fa-link" style="color: #525252;"></i>
+        </a>
+
+    </div>
+
+
+</section>
