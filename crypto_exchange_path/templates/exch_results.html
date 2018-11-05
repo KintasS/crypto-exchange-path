@@ -7,15 +7,6 @@
 {% endblock style %}
 
 
-{% block title %}
-    {% if title %}
-        <title>CryptoFeeSaver | The Crypto Search Engine that helps you save money</title>
-    {% else %}
-        <title>CryptoFeeSaver | The Crypto Search Engine that helps you save money</title>
-    {% endif %}
-{% endblock title %}
-
-
 {% block activepage %}
     <div id="navlink-selector" class="d-none" data-active="nav-link-exchanges"></div>
 {% endblock activepage %}
@@ -33,14 +24,14 @@
 
         <div class="container">
             <div class="row no-gutters d-flex justify-content-center py-3 py-sm-4">
-                <div class="col-12 col-md-10 col-lg-8 col-xl-7 px-1 px-md-0">
+                <div class="col-12 col-md-10 col-lg-9 col-xl-8 px-1 px-md-0">
 
                     {% if paths %}
 
 
 
                         <!-- SEARCH SUMMARY -->
-                        <div class="search-summary d-inline-block d-flex align-items-start justify-content-center mb-3">
+                        <div class="search-summary d-inline-block d-flex align-items-start justify-content-center mb-3 mb-lg-4">
                             <div id="remove-dec" class="font-weight-bold">{{ paths[0].origin.amount }}</div>
                             <div class="d-sm-none d-flex flex-column align-items-center ml-2">
                                 <div class="font-weight-bold text-center">{{ paths[0].origin.coin.long_name }}</div>

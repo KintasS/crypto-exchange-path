@@ -294,3 +294,15 @@ def str_2_float(str_number):
     str_number = str_number.replace(",", "")
     str_number = str_number.replace(" ", "")
     return float(str_number)
+
+
+def get_meta_tags(page, tag, args=[]):
+    """Returns the tag 'tag' for the page 'page'.
+    The arg argument fills variables in the tag string.
+    """
+    meta_tags = Params.META_TAGS
+    tag = meta_tags[page][tag]
+    if args:
+        return tag.format(*args)
+    else:
+        return tag

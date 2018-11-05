@@ -1,8 +1,7 @@
 from secrets import token_hex
 from flask import Markup
 from crypto_exchange_path.config import Params
-from crypto_exchange_path.utils_db import (calc_fee, fx_exchange,
-                                           is_crypto, get_exchange)
+from crypto_exchange_path.utils_db import calc_fee, fx_exchange
 from crypto_exchange_path.utils import (num_2_str, round_amount, str_2_float,
                                         round_amount_by_price)
 

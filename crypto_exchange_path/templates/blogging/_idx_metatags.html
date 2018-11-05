@@ -1,0 +1,28 @@
+<!-- PAGE TITLE -->
+<!-- Title for blog pages -->
+{% if meta and meta.blog_title %}
+    <title>{{ meta.blog_title }}</title>
+<!-- Default title-->
+{% else %}
+    <title>CryptoFeeSaver: The Crypto Search Engine that saves you money</title>
+{% endif %}
+
+<!-- PAGE DESCRIPTION -->
+<!-- Description for blog pages -->
+{% if meta and meta.blog_description %}
+    <meta name="description" content="{{ meta.blog_description }}"/>
+<!-- Default description-->
+{% else %}
+    <meta name="description" content="Start saving money by choosing the best crypto exchanges, wallets and DEXs. Our Crypto Search Engines do all the magic for you. Start choosing smarter today!"/>
+{% endif %}
+
+
+<meta property="og:title" content="{{ title }}" />
+<meta property="og:url" content="{{ request.url }}" />
+<meta property="og:description" content="{{ description }}">
+<meta property="og:image" content="https://www.cryptofeesaver.com/static/img/blog/search_canvas.jpg">
+<meta property="og:type" content="website" />
+<!-- Specific tags for Twitter -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@SaverFee" />
+<meta name="twitter:creator" content="@SaverFee" />

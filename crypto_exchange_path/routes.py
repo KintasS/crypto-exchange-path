@@ -10,7 +10,7 @@ from crypto_exchange_path.config import Params
 from crypto_exchange_path.forms import SearchForm, FeedbackForm
 from crypto_exchange_path.path_calculator import calc_paths
 from crypto_exchange_path.utils import (set_logger, error_notifier,
-                                        feedback_notifier)
+                                        feedback_notifier, get_meta_tags)
 from crypto_exchange_path.utils_db import (get_exch_by_name, get_exchanges,
                                            get_coin_by_longname, get_coin,
                                            fx_exchange)
@@ -75,6 +75,9 @@ def home():
     open_fbck_modal = False
     # Get Blog information
     posts = get_latest_posts(None, 4)
+    # Get Meta tags
+    title = get_meta_tags('Home', 'Title')
+    description = get_meta_tags('Home', 'Description')
     # Actions if Feedback Form was filled
     if feedback_form.feedback_submit.data:
         # If form was filled, but with errors, open modal again
@@ -87,7 +90,8 @@ def home():
     resp = make_response(render_template('home.html', form=input_form,
                                          curr=curr, exchanges=exchanges,
                                          user_exchanges=user_exchanges,
-                                         title='Home',
+                                         title=title,
+                                         description=description,
                                          feedback_form=feedback_form,
                                          open_feedback_modal=open_fbck_modal,
                                          url_orig_coin=url_orig_coin,
@@ -120,19 +124,14 @@ def exchanges():
     open_fbck_modal = False
     # Get Blog information
     posts = get_latest_posts('CFS', 4)
-    # Actions if Feedback Form was filled
-    if feedback_form.feedback_submit.data:
-        # If form was filled, but with errors, open modal again
-        open_fbck_modal = True
-        if feedback_form.validate():
-            # If form was properly filled, close modal again
-            open_fbck_modal = False
-            manage_feedback_form(feedback_form)
-            return redirect(url_for('home'))
+    # Get Meta tags
+    title = get_meta_tags('Exchanges', 'Title')
+    description = get_meta_tags('Exchanges', 'Description')
     resp = make_response(render_template('exchanges.html', form=input_form,
                                          curr=curr, exchanges=exchanges,
                                          user_exchanges=user_exchanges,
-                                         title='Exchanges',
+                                         title=title,
+                                         description=description,
                                          feedback_form=feedback_form,
                                          open_feedback_modal=open_fbck_modal,
                                          url_orig_coin=url_orig_coin,
@@ -149,9 +148,8 @@ def exchanges():
 @app.route("/exchanges/result/<url_orig_coin>+<url_dest_coin>",
            methods=['GET', 'POST'])
 def exch_results(url_orig_coin=None, url_dest_coin=None):
-    """There are three ways of landing in this page:
+    """There are two ways of landing in this page:
          - Search form was filled: performs search and returns results
-         - Feedback form was filled: handles form and returns here
          - Direct external link (no form was filled!): in this case,
          the user is redirected to a temporal website where the search form
          is filled and automatically executed.
@@ -177,6 +175,13 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
     user_exchanges = [exch.id for exch in exchanges]
     path_results = None
     open_fbck_modal = False
+    # Get Meta tags (in case form was not filled)
+    title = get_meta_tags('Exchanges|Results',
+                          'Title',
+                          [url_orig_coin, url_dest_coin])
+    description = get_meta_tags('Exchanges|Results',
+                                'Description',
+                                [url_orig_coin, url_dest_coin])
     # 1) ACTIONS IF *SEARCH* FORM WAS FILLED
     if input_form.search_submit.data:
         if input_form.validate():
@@ -192,6 +197,14 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
             dest_coin = get_coin_by_longname(input_form.dest_coin.data)
             connection_type = input_form.connection_type.data
             user_exchanges = input_form.exchanges.data
+            # Get Meta tags (again, if form was filled)
+            title = get_meta_tags('Exchanges|Results',
+                                  'Title',
+                                  [orig_coin.symbol, dest_coin.symbol])
+            description = get_meta_tags('Exchanges|Results',
+                                        'Description',
+                                        [orig_coin.long_name,
+                                         dest_coin.long_name])
             # If user selected all Exchanges or none of them, don't filter
             if len(user_exchanges) == len(exchanges):
                 user_exchanges = []
@@ -245,15 +258,7 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
             # Return capped list of results
             sorted_paths = sorted(paths, key=lambda x: x.total_fees)
             sorted_paths = sorted_paths[0:Params.MAX_PATHS]
-    # 2) ACTIONS IF *FEEDBACK* FORM WAS FILLED
-    elif feedback_form.feedback_submit.data:
-        # If form was filled, but with errors, open modal again
-        open_fbck_modal = True
-        if feedback_form.validate():
-            open_fbck_modal = False
-            manage_feedback_form(feedback_form)
-            return redirect(url_for('home'))
-    # 3) ACTIONS IF *NO* FORM WAS FILLED (DIRECT LINK!)
+    # 2) ACTIONS IF *NO* FORM WAS FILLED (DIRECT LINK!)
     else:
         return redirect(url_for('auto_search',
                                 url_orig_coin=url_orig_coin,
@@ -265,7 +270,8 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                                          path_results=path_results,
                                          auto_search=auto_search,
                                          feedback_form=feedback_form,
-                                         title='Exchanges',
+                                         title=title,
+                                         description=description,
                                          open_feedback_modal=open_fbck_modal,
                                          url_orig_coin=url_orig_coin,
                                          url_dest_coin=url_dest_coin))
@@ -306,31 +312,25 @@ def auto_search(url_orig_coin=None, url_dest_coin=None):
     user_exchanges = [exch.id for exch in exchanges]
     path_results = None
     open_fbck_modal = False
-    # 1) ACTIONS IF *FEEDBACK* FORM WAS FILLED
-    if feedback_form.feedback_submit.data:
-        # If form was filled, but with errors, open modal again
-        open_fbck_modal = True
-        if feedback_form.validate():
-            open_fbck_modal = False
-            manage_feedback_form(feedback_form)
-            return redirect(url_for('auto_search'))
-    # 2) ACTIONS IF *NO* FORM WAS FILLED (DIRECT LINK!)
+    # Get Meta tags
+    title = get_meta_tags('Exchanges', 'Title')
+    description = get_meta_tags('Exchanges', 'Description')
+    # 1) ACTIONS IF *NO* FORM WAS FILLED (DIRECT LINK!)
+    if url_orig_coin and url_dest_coin:
+        url_orig_coin = url_orig_coin.upper()
+        url_dest_coin = url_dest_coin.upper()
+        orig_coin = get_coin(url_orig_coin)
+        dest_coin = get_coin(url_dest_coin)
+        if orig_coin:
+            input_form.orig_coin.data = orig_coin.long_name
+            amt = fx_exchange("USD", orig_coin.id, 3000, logger)
+            input_form.orig_amt.data = str(math.ceil(amt)) + " "
+        if dest_coin:
+            input_form.dest_coin.data = dest_coin.long_name
+        auto_search = True
     else:
-        if url_orig_coin and url_dest_coin:
-            url_orig_coin = url_orig_coin.upper()
-            url_dest_coin = url_dest_coin.upper()
-            orig_coin = get_coin(url_orig_coin)
-            dest_coin = get_coin(url_dest_coin)
-            if orig_coin:
-                input_form.orig_coin.data = orig_coin.long_name
-                amt = fx_exchange("USD", orig_coin.id, 3000, logger)
-                input_form.orig_amt.data = str(math.ceil(amt)) + " "
-            if dest_coin:
-                input_form.dest_coin.data = dest_coin.long_name
-            auto_search = True
-        else:
-            url_orig_coin = 'empty'
-            url_dest_coin = 'empty'
+        url_orig_coin = 'empty'
+        url_dest_coin = 'empty'
     resp = make_response(render_template('exch_results.html', form=input_form,
                                          curr=curr, exchanges=exchanges,
                                          user_exchanges=user_exchanges,
@@ -338,7 +338,8 @@ def auto_search(url_orig_coin=None, url_dest_coin=None):
                                          path_results=path_results,
                                          auto_search=auto_search,
                                          feedback_form=feedback_form,
-                                         title='Exchanges',
+                                         title=title,
+                                         description=description,
                                          open_feedback_modal=open_fbck_modal,
                                          url_orig_coin=url_orig_coin,
                                          url_dest_coin=url_dest_coin))

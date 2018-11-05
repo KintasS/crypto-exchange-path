@@ -5,11 +5,14 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Looking for the Cheapest Exchange to buy or exchange cryptocurrencies? Our Crypto Exchange Engine compares all of them for you. Try it now!"/>
+
     {% block meta %}
+        <!-- TITLE & METADATA -->
+        <!-- Info for regular pages (for blog pages it is loaded in their templates) -->
+        {% if not meta %}
+            {% include '_metatags.html' %}
+        {% endif %}
     {% endblock meta %}
-    {% block title %}
-    {% endblock title %}
 
     <!-- Site icon -->
     <link rel="icon" href="{{ url_for('static', filename='img/logo/CFS_icon_transparent.png') }}">
@@ -82,7 +85,7 @@
                             <!-- Navbar Right Side -->
                             <ul class="navbar-nav ml-md-auto mr-md-3">
                                 <li class="nav-item">
-                                    <a class="nav-item nav-link" href="#" data-toggle="modal" data-target="#modalFeedbackForm">Feedback</a>
+                                    <a class="open-feedback nav-item nav-link" href="#" data-toggle="modal" data-target="#modalFeedbackForm">Feedback</a>
                                 </li>
                             </ul>
                             <div id="currency-btn" class="btn-group">

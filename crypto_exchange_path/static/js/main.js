@@ -771,6 +771,8 @@ $(document).ready(function() {
     ///////////////////////////////////////////////////////////////////////////
 
 
+    console.log(1);
+
     // EXCHANGE SEARCHES //
 
     $('#submit-btn').on('click', function() {
@@ -790,6 +792,14 @@ $(document).ready(function() {
         gtag('event', 'Trending search', {
             'event_category': 'Click',
             'event_label': 'Trending search: ' + String(dataClick)
+        });
+    });
+
+    // 'Open Feedback' Event
+    $(".open-feedback").click(function() {
+        gtag('event', 'Open feedback', {
+            'event_category': 'Click',
+            'event_label': 'Open feedback: ' + String(window.location.href)
         });
     });
 

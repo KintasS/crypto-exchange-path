@@ -28,5 +28,5 @@ def register(app):
     signals.index_posts_fetched.connect(get_feedback_modal_index)
     signals.posts_by_tag_fetched.connect(get_feedback_modal_index)
     signals.posts_by_author_fetched.connect(get_feedback_modal_index)
-    signals.feed_posts_fetched.connect(get_feedback_modal_index)
+    # signals.feed_posts_fetched.connect(get_feedback_modal_index)
     return

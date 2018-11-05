@@ -132,6 +132,11 @@ strong {
     color: #333333 !important;
 }
 
+.promo-link {
+    color: inherit;
+    text-decoration: underline;
+}
+
 .open-sans-font {
     font-family: "Open Sans", sans-serif;
 }
