@@ -238,17 +238,17 @@ def round_amount_by_price(amount, coin):
         if price:
             price = price.price
             if price > 10000:
-                decs = 8
-            elif price > 1000:
                 decs = 7
-            elif price > 100:
+            elif price > 1000:
                 decs = 6
-            elif price > 10:
+            elif price > 100:
                 decs = 5
-            elif price > 1:
+            elif price > 10:
                 decs = 4
-            elif price > 0.1:
+            elif price > 1:
                 decs = 3
+            elif price > 0.1:
+                decs = 2
             elif price > 0.01:
                 decs = 2
             elif price > 0.001:
@@ -266,15 +266,15 @@ def round_amount(number, decs=None):
         return None
     if decs is None:
         if number > 10000:
-            decs = 3
+            decs = 1
         elif number > 1000:
-            decs = 4
+            decs = 2
         elif number > 100:
-            decs = 5
+            decs = 3
         elif number > 10:
-            decs = 6
+            decs = 4
         elif number > 1:
-            decs = 7
+            decs = 5
         else:
             decs = 8
     try:
@@ -283,3 +283,14 @@ def round_amount(number, decs=None):
         return number
     except TypeError as e:
         return number
+
+
+def str_2_float(str_number):
+    """Converts a String in a float number.
+    Solves the problem when casting a string with commas.
+    """
+    if str_number is None:
+        return None
+    str_number = str_number.replace(",", "")
+    str_number = str_number.replace(" ", "")
+    return float(str_number)

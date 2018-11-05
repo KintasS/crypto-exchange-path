@@ -26,8 +26,16 @@ strong {
     text-decoration: none;
 }
 
+.smaller-font {
+    font-size: 0.9em;
+}
+
+.extra-smaller-font {
+    font-size: 0.75em;
+}
+
 .large-font {
-    font-size: 1.2rem;
+    font-size: 1.2em;
 }
 
 .light-grey-color {

@@ -3,7 +3,7 @@ from flask import Markup
 from crypto_exchange_path.config import Params
 from crypto_exchange_path.utils_db import (calc_fee, fx_exchange,
                                            is_crypto, get_exchange)
-from crypto_exchange_path.utils import (num_2_str, round_amount,
+from crypto_exchange_path.utils import (num_2_str, round_amount, str_2_float,
                                         round_amount_by_price)
 
 
@@ -278,10 +278,12 @@ class Hop:
         if deposit_fee and deposit_fee[0] is not None:
             self.deposit_fee = deposit_fee[0]
         if withdraw_fee and withdraw_fee[0] is not None:
-            self.withdraw_fee = withdraw_fee[0]
+            rounded_fee = round_amount_by_price(withdraw_fee[0],
+                                                self.trade.buy_coin.symbol)
+            self.withdraw_fee = str_2_float(rounded_fee)
 
     def calc_trade_details(self):
-        rate = round_amount(self.trade.buy_amt / self.trade.sell_amt)
+        rate = round_amount(self.trade.sell_amt / self.trade.buy_amt)
         literal = ("{}/{} rate: {}.<br>- - -</br> {} trading fee: {}")\
             .format(self.trade.buy_coin.symbol,
                     self.trade.sell_coin.symbol,

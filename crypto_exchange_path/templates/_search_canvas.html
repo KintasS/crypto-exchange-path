@@ -6,7 +6,7 @@
 
                 <h2 class="mt-0 mt-xl-4 mb-2 font-weight-bold text-center">Cryptoasset exchange engine</h2>
 
-                <h6 class="slogan text-center font-italic mt-2">Find the cheapest way to buy or exchange cryptoassets</h6>
+                <h6 class="slogan text-center font-italic mt-2">The crypto search engine that saves you money</h6>
 
                 <div class="row no-gutters d-flex justify-content-center">
                     <div class="col-12 col-lg-10 col-xl-8">
@@ -17,7 +17,7 @@
 
                             <div class="search-box mt-3 mt-sm-4 mb-3 mb-sm-4 mb-lg-5 px-3">
 
-                                <h5 class="text-center font-italic mt-3 mb-4">CryptoFeeSaver, help me find the cheapest route to exchange...</h5>
+                                <h5 class="text-center font-italic mt-3 mb-4">CryptoFeeSaver, help me find the cheapest way to exchange...</h5>
 
                                 <!-- VISIBLE FORM ELEMENTS -->
                                 <div class="d-flex flex-wrap justify-content-center align-items-center">
@@ -51,22 +51,22 @@
                                             <span class="bar" style="width: 150px"></span>
                                             <label>Origin Coin</label>
                                     </div>
-                                    <div class="w-100 d-md-none"><!-- wrap every 2 on sm--></div>
+                                    <div class="w-100 d-md-none"><!-- break line on XS and SM screens--></div>
                                     <div class="large-font font-italic font-weight-bold mb-4 ml-0 mr-2 mr-sm-3 mx-md-4">to</div>
                                     <div id="input-dest-coin" class="large-font md-input-form mb-4 mr-2">
                                         {% if form.dest_coin.errors %}
-                                            {{ form.dest_coin(class="typeahead track-filled invalid",  style="width: 150px", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                            {{ form.dest_coin(class="typeahead track-filled responsive-align invalid",  style="width: 150px", type="text", autocomplete="off", spellcheck="false", required="true") }}
                                             <div class="form-errors">
                                                 {% for error in form.dest_coin.errors %}
                                                     <span>{{ error }}</span>
                                                 {% endfor %}
                                             </div>
                                         {% else %}
-                                            {{ form.dest_coin(class="typeahead track-filled", style="width: 150px", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                            {{ form.dest_coin(class="typeahead track-filled responsive-align", style="width: 150px", type="text", autocomplete="off", spellcheck="false", required="true") }}
                                         {% endif %}
                                             <span class="highlight" style="width: 150px"></span>
                                             <span class="bar" style="width: 150px"></span>
-                                            <label>Destination Coin</label>
+                                            <label class="responsive-align">Destination Coin</label>
                                     </div>
                                     <div class="form-group mb-4 ml-2 ml-md-4">
                                         {{ form.search_submit(id="submit-btn", class="btn btn-deep-orange m-0") }}
@@ -110,14 +110,14 @@
                                     <div class="d-flex flex-row col pl-0">
                                         <div id="input-orig-loc" class="md-input-form">
                                             {% if form.orig_loc.errors %}
-                                                {{ form.orig_loc(class="typeahead track-filled invalid",  style="width: 200px", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                                {{ form.orig_loc(class="typeahead invalid",  style="width: 200px", type="text", autocomplete="off", spellcheck="false", required="true") }}
                                                 <div class="form-errors">
                                                     {% for error in form.orig_loc.errors %}
                                                         <span class="location-error">{{ error }}</span>
                                                     {% endfor %}
                                                 </div>
                                             {% else %}
-                                                {{ form.orig_loc(class="typeahead track-filled", style="width: 200px", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                                {{ form.orig_loc(class="typeahead", style="width: 200px", type="text", autocomplete="off", spellcheck="false", required="true") }}
                                             {% endif %}
                                                 <span class="highlight" style="width: 200px"></span>
                                                 <span class="bar" style="width: 200px"></span>
@@ -126,14 +126,14 @@
 
                                         <div id="input-dest-loc" class="md-input-form ml-5">
                                             {% if form.dest_loc.errors %}
-                                                {{ form.dest_loc(class="typeahead track-filled invalid",  style="width: 200px", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                                {{ form.dest_loc(class="typeahead invalid",  style="width: 200px", type="text", autocomplete="off", spellcheck="false", required="true") }}
                                                 <div class="form-errors">
                                                     {% for error in form.dest_loc.errors %}
                                                         <span class="location-error">{{ error }}</span>
                                                     {% endfor %}
                                                 </div>
                                             {% else %}
-                                                {{ form.dest_loc(class="typeahead track-filled", style="width: 200px", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                                {{ form.dest_loc(class="typeahead", style="width: 200px", type="text", autocomplete="off", spellcheck="false", required="true") }}
                                             {% endif %}
                                                 <span class="highlight" style="width: 200px"></span>
                                                 <span class="bar" style="width: 200px"></span>

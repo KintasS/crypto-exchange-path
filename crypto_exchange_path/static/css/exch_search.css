@@ -9,15 +9,15 @@
     main {
         min-height: 88vh;
     }
-    img.img-exchange-lg {
-        width: 13px;
-        height: 13px;
+    section#results img.img-exchange-lg {
+        width: 15px;
+        height: 15px;
     }
-    img.img-exchange-sm {
+    section#results img.img-exchange-sm {
         width: 12px;
         height: 12px;
     }
-    img.img-coin {
+    section#results img.img-coin {
         width: 9px;
         height: 9px;
     }
@@ -33,15 +33,15 @@
     main {
         min-height: 86.5vh;
     }
-    img.img-exchange-lg {
+    section#results img.img-exchange-lg {
         width: 15px;
         height: 15px;
     }
-    img.img-exchange-sm {
+    section#results img.img-exchange-sm {
         width: 12px;
         height: 12px;
     }
-    img.img-coin {
+    section#results img.img-coin {
         width: 10px;
         height: 10px;
     }
@@ -57,15 +57,15 @@
     main {
         min-height: 86vh;
     }
-    img.img-exchange-lg {
+    section#results img.img-exchange-lg {
         width: 17px;
         height: 17px;
     }
-    img.img-exchange-sm {
+    section#results img.img-exchange-sm {
         width: 14px;
         height: 14px;
     }
-    img.img-coin {
+    section#results img.img-coin {
         width: 12px;
         height: 12px;
     }
@@ -81,15 +81,15 @@
     main {
         min-height: 85vh;
     }
-    img.img-exchange-lg {
+    section#results img.img-exchange-lg {
         width: 20px;
         height: 20px;
     }
-    img.img-exchange-sm {
+    section#results img.img-exchange-sm {
         width: 16px;
         height: 16px;
     }
-    img.img-coin {
+    section#results img.img-coin {
         width: 14px;
         height: 14px
     }
@@ -105,15 +105,15 @@
     main {
         min-height: 85vh;
     }
-    img.img-exchange-lg {
+    section#results img.img-exchange-lg {
         width: 20px;
         height: 20px;
     }
-    img.img-exchange-sm {
+    section#results img.img-exchange-sm {
         width: 16px;
         height: 16px;
     }
-    img.img-coin {
+    section#results img.img-coin {
         width: 14px;
         height: 14px
     }
@@ -129,15 +129,15 @@
     main {
         min-height: 85vh;
     }
-    img.img-exchange-lg {
-        width: 20px;
-        height: 20px;
+    section#results img.img-exchange-lg {
+        width: 45px;
+        height: 45px;
     }
-    img.img-exchange-sm {
+    section#results img.img-exchange-sm {
         width: 16px;
         height: 16px;
     }
-    img.img-coin {
+    section#results img.img-coin {
         width: 16px;
         height: 16px
     }
@@ -268,7 +268,7 @@ section#search-canvas .slogan {
     /* width: 100px; */
     border: none;
     border-bottom: 1px solid #e2e2e2;
-    background-color: transparent
+    background-color: transparent;
 }
 
 .align-right {
@@ -408,6 +408,12 @@ section#search-canvas .slogan {
     }
 }
 
+@media (max-width: 767.98px) {
+    .md-input-form .responsive-align {
+        text-align: center;
+    }
+}
+
 /* /////////////////////////////////////////////////////////
 ////////////  RESULTS  ////////////////////////////////////
 ///////////////////////////////////////////////////////// */
@@ -425,7 +431,6 @@ section#results {
 }
 
 section#results .exchange-format {
-    font-size: 110%;
     font-weight: 700;
 }
 
@@ -445,6 +450,7 @@ section#results .path-format {
 
 section#results .card {
     border-radius: 0.2rem;
+    border: 1px solid rgba(0, 0, 0, .2);
     border-top: 4px solid #ff7043;
 }
 
@@ -455,7 +461,25 @@ section#results .card-header {
 }
 
 section#results .card-body {
-    border-top: 1px solid rgba(255, 112, 68, 0.5)
+    border-top: 1px solid rgba(255, 112, 68, 0.25)
+}
+
+section#results .light-orange-bg {
+    background-color: #ff70432b;
+    border-radius: 0.2rem;
+    padding: .25rem 0 .25rem .5rem;
+    border-right: .25rem solid white
+}
+
+section#results .search-summary {
+    font-size: 1.25rem;
+}
+
+section#results .detail-header {
+    font-size: 0.9em;
+    font-weight: 500;
+    font-style: italic;
+    color: #6e6d6d
 }
 
 /* section#results .message {
@@ -474,15 +498,15 @@ section#results a.no-link-tooltip {
 
 #path-fee-details-collapse {
     color: #ff7043;
-    font-weight: 700;
+    font-weight: 500;
 }
 
 section#results .promo {
     border-radius: .5rem;
-    border: 1px solid #343a40;
+    border: 1px solid #979ba0;
     margin-top: 1rem;
     margin-bottom: 0.5rem;
-    padding: 0.5rem 1rem;
+    padding: 0.25rem .5rem;
 }
 
 section#results .promo-link {
@@ -494,6 +518,14 @@ section#results .border-left {
     border-left-color: #ff835d !important;
 }
 
+section#results .detail-fee-column {
+    padding-right: 0.25rem;
+}
+
+section#results .detail-dest-column {
+    padding-right: 1rem;
+}
+
 .referral-detail-link-1, .referral-detail-link-2, .referral-detail-link-3 {
     color: #212529;
 }
@@ -503,10 +535,6 @@ section#results .border-left {
 }
 
 /* Collapse font */
-
-.smaller-font {
-    font-size: 90%;
-}
 
 /* @media (max-width: 767.98px) {
     .select-btn {
@@ -546,6 +574,12 @@ section#results .connection-hide {
 
 section#results .exchange-hide {
     display: none;
+}
+
+section#results #location-selector input {
+    font-style: italic;
+    color: #212529;
+    font-weight: 500;
 }
 
 /* section#results .search-filter.dropdown .dropdown-toggle {
@@ -647,21 +681,268 @@ section#results .typeahead .active.dropdown-item .dropdown-item {
     color: white;
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 410.98px) {
+    section#results .exchange-format {
+        font-size: 1.15rem;
+    }
+    section#results img.img-exchange-lg {
+        width: 20px;
+        height: 20px;
+    }
+    section#results img.img-exchange-sm {
+        width: 12px;
+        height: 12px;
+    }
+    section#results img.img-coin {
+        width: 15px;
+        height: 15px;
+    }
     section#results .typeahead .dropdown-item {
         font-size: 1rem;
     }
-}
-
-@media (min-width: 576px) and (max-width: 767) {
-    section#results .typeahead .dropdown-item {
+    section#results .select-btn {
+        font-size: 0.8rem;
+        padding: .3rem 0.4rem;
+    }
+    section#results .result-fees {
         font-size: 0.9rem;
+    }
+    section#results .card-body .smaller-font {
+        font-size: 0.85rem;
+    }
+    section#results .detail-fee-column .detail-header {
+        padding-right: 0.5rem;
+    }
+    section#results .search-summary {
+        font-size: 1.15rem;
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 411px) and (max-width: 480.98px) {
+    section#results .exchange-format {
+        font-size: 1.15rem;
+        padding-left: 0.125rem;
+    }
+    section#results img.img-exchange-lg {
+        width: 22px;
+        height: 22px;
+    }
+    section#results img.img-exchange-sm {
+        width: 12px;
+        height: 12px;
+    }
+    section#results img.img-coin {
+        width: 16px;
+        height: 16px;
+    }
+    section#results .typeahead .dropdown-item {
+        font-size: 1rem;
+    }
+    section#results .select-btn {
+        font-size: 0.8rem;
+        padding: .3rem 0.4rem;
+    }
+    section#results .detail-fee-column .detail-header {
+        padding-right: 0.5rem;
+    }
+    section#results .result-fees {
+        font-size: 0.9rem;
+    }
+    section#results .light-orange-bg {
+        border-right: .25rem solid white;
+        font-weight: 500;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 575.98px) {
+    section#results .exchange-format {
+        font-size: 1.25rem;
+        padding-left: 0.25rem;
+    }
+    section#results img.img-exchange-lg {
+        width: 28px;
+        height: 28px;
+    }
+    section#results img.img-exchange-sm {
+        width: 14px;
+        height: 14px;
+    }
+    section#results img.img-coin {
+        width: 18px;
+        height: 18px;
+    }
+    section#results .typeahead .dropdown-item {
+        font-size: 1rem;
+    }
+    section#results .select-btn {
+        font-size: 0.9rem;
+        padding: .4rem 0.6rem;
+    }
+    section#results .result-fees {
+        font-size: 1rem;
+    }
+    section#results .detail-fee-column {
+        padding-right: 0.75rem;
+    }
+    section#results .light-orange-bg {
+        border-right: .25rem solid white;
+        font-weight: 500;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    section#results .exchange-format {
+        font-size: 1.25rem;
+        padding-left: 0.375rem;
+    }
+    section#results img.img-exchange-lg {
+        width: 35px;
+        height: 35px;
+    }
+    section#results img.img-exchange-sm {
+        width: 16px;
+        height: 16px;
+    }
+    section#results img.img-coin {
+        width: 18px;
+        height: 18px;
+    }
+    section#results .typeahead .dropdown-item {
+        font-size: 0.9rem;
+    }
+    section#results .select-btn {
+        font-size: 0.9rem;
+        padding: .4rem 0.75rem;
+    }
+    section#results .result-fees {
+        font-size: 1rem;
+    }
+    section#results .detail-fee-column {
+        padding-right: 1rem;
+    }
+    section#results .detail-dest-column {
+        padding-right: 2rem;
+    }
+    section#results .light-orange-bg {
+        border-right: .5rem solid white;
+        font-weight: 500;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    section#results .exchange-format {
+        font-size: 1.25rem;
+        padding-left: 0.375rem;
+    }
+    section#results img.img-exchange-lg {
+        width: 35px;
+        height: 35px;
+    }
+    section#results img.img-exchange-sm {
+        width: 16px;
+        height: 16px;
+    }
+    section#results img.img-coin {
+        width: 18px;
+        height: 18px;
+    }
     section#results .typeahead .dropdown-item {
         font-size: 0.85rem;
+    }
+    section#results .select-btn {
+        font-size: 0.9rem;
+        padding: .4rem 0.75rem;
+    }
+    section#results .result-fees {
+        font-size: 1rem;
+    }
+    section#results .detail-fee-column {
+        padding-right: 1.5rem;
+    }
+    section#results .detail-dest-column {
+        padding-right: 3rem;
+    }
+    section#results .light-orange-bg {
+        border-right: .75rem solid white;
+        font-weight: 500;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    section#results .exchange-format {
+        font-size: 1.25rem;
+        padding-left: 0rem;
+    }
+    section#results img.img-exchange-lg {
+        width: 50px;
+        height: 50px;
+    }
+    section#results img.img-exchange-sm {
+        width: 16px;
+        height: 16px;
+    }
+    section#results img.img-coin {
+        width: 18px;
+        height: 18px;
+    }
+    section#results .typeahead .dropdown-item {
+        font-size: 0.85rem;
+    }
+    section#results .select-btn {
+        font-size: .9rem;
+        padding: .3rem 0.75rem;
+    }
+    section#results .result-fees {
+        font-size: 1rem;
+    }
+    section#results .detail-fee-column {
+        padding-right: 1.5rem;
+    }
+    section#results .detail-dest-column {
+        padding-right: 3rem;
+    }
+    section#results .light-orange-bg {
+        border-right: .75rem solid white;
+        font-weight: 500;
+    }
+}
+
+@media (min-width: 1200px) {
+    section#results .exchange-format {
+        font-size: 1.3rem;
+        padding-left: 0rem;
+    }
+    section#results img.img-exchange-lg {
+        width: 55px;
+        height: 55px;
+    }
+    section#results img.img-exchange-sm {
+        width: 16px;
+        height: 16px;
+    }
+    section#results img.img-coin {
+        width: 18px;
+        height: 18px;
+    }
+    section#results .typeahead .dropdown-item {
+        font-size: 0.85rem;
+    }
+    section#results .select-btn {
+        font-size: 1rem;
+        padding: .3rem 0.75rem;
+    }
+    section#results .result-fees {
+        font-size: 1rem;
+    }
+    section#results .detail-fee-column {
+        padding-right: 1.5rem;
+    }
+    section#results .detail-dest-column {
+        padding-right: 3rem;
+    }
+    section#results .light-orange-bg {
+        border-right: .75rem solid white;
+        font-weight: 500;
     }
 }
 

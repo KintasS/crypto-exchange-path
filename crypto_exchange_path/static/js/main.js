@@ -311,8 +311,8 @@ $(document).ready(function() {
 
 
     // Check when page loads (in case form was prefilled!)
-    CheckLocationInput($('#orig_loc'), inputOrigExchanges);
-    CheckLocationInput($('#dest_loc'), inputDestExchanges);
+    // CheckLocationInput($('#input-orig-loc inputOrigExchangesput'), inputOrigExchanges);
+    // CheckLocationInput($('#input-dest-loc inpeut'), inputDestExchanges);
     // CheckInputFormat($('#orig_amt'));
     // CheckInputFormat($('#orig_coin'));
     // CheckInputFormat($('#orig_loc'));
@@ -363,7 +363,6 @@ $(document).ready(function() {
         }
     });
 
-    console.log(2);
 
 
 
@@ -541,45 +540,7 @@ $(document).ready(function() {
             $(this).siblings().each(function() {
                 $(this).find('th').html('')
             });
-            // Filter results
-            var connectionNum = 0;
-            var resultNum = 0;
-            var totalNum = 0;
-            $('section#results .result-card').each(function() {
-                // If connection Type <= Clicked Type --> Show result
-                if ($(this).attr('data-connection-type') <= clickedConnectionType) {
-                    $(this).removeClass("connection-hide");
-                    // Count result
-                    connectionNum += 1;
-                    if (!$(this).hasClass("exchange-hide")) {
-                        resultNum += 1;
-                    }
-                }
-                // If connection Type > Clicked Type --> Hide result
-                else {
-                    $(this).addClass("connection-hide");
-                }
-
-                totalNum += 1;
-            });
-            // Change results count and show badge
-            if (connectionNum == totalNum) {
-                // If nothing is filtered by Connections, hide count and badge
-                $filterBadgeConnections.addClass("d-none")
-                // If nothing is filtered by Connection nor Exchanges, reset counter
-                if (resultNum == totalNum) {
-                    $filterBadges.addClass("d-none");
-                    $resultsCount.html('');
-                } else {
-                    // If there are still things filter by Exchange, keep counter
-                    $resultsCount.html(resultNum + ' of ');
-                }
-            } else {
-                // If something is filtered, display count and badge
-                $resultsCount.html(resultNum + ' of ');
-                $filterBadges.removeClass("d-none")
-                $filterBadgeConnections.removeClass("d-none")
-            }
+            FilterResultsByConnection(clickedConnectionType)
             // Select input form option
             $('#connection_type option').each(function() {
                 if ($(this).attr('value') == clickedConnectionType) {
@@ -589,23 +550,61 @@ $(document).ready(function() {
         }
     });
 
+    // Checks the results and filters/displays results depending on its
+    // connection type. If anything is filtered, it adds the count and badge.
+    function FilterResultsByConnection(clickedConnectionType) {
+        // Filter results
+        var connectionNum = 0;
+        var resultNum = 0;
+        var totalNum = 0;
+        $('section#results .result-card').each(function() {
+            // If connection Type <= Clicked Type --> Show result
+            if ($(this).attr('data-connection-type') <= clickedConnectionType) {
+                $(this).removeClass("connection-hide");
+                // Count result
+                connectionNum += 1;
+                if (!$(this).hasClass("exchange-hide")) {
+                    resultNum += 1;
+                }
+            }
+            // If connection Type > Clicked Type --> Hide result
+            else {
+                $(this).addClass("connection-hide");
+            }
+
+            totalNum += 1;
+        });
+        // Change results count and show badge
+        if (connectionNum == totalNum) {
+            // If nothing is filtered by Connections, hide count and badge
+            $filterBadgeConnections.addClass("d-none")
+            // If nothing is filtered by Connection nor Exchanges, reset counter
+            if (resultNum == totalNum) {
+                $filterBadges.addClass("d-none");
+                $resultsCount.html('');
+            } else {
+                // If there are still things filter by Exchange, keep counter
+                $resultsCount.html(resultNum + ' of ');
+            }
+        } else {
+            // If something is filtered, display count and badge
+            $resultsCount.html(resultNum + ' of ');
+            $filterBadges.removeClass("d-none")
+            $filterBadgeConnections.removeClass("d-none")
+        }
+
+    }
+
+
+
+
     // When website loads, select option from input form and filter results
     var formConnectionType = $('#connection_type').val();
+    FilterResultsByConnection(formConnectionType)
     $('section#results .connection-filter').each(function() {
         // If connection Type == Type in input form --> Select
         if ($(this).attr('data-connection-type') == formConnectionType) {
             $(this).find('th').html('<i class="fas fa-check fa-lg orange-color"></i>');
-            // Filter results
-            $('section#results .result-card').each(function() {
-                // If connection Type <= Clicked Type --> Show result
-                if ($(this).attr('data-connection-type') <= formConnectionType) {
-                    $(this).removeClass("connection-hide")
-                }
-                // If connection Type > Clicked Type --> Hide result
-                else {
-                    $(this).addClass("connection-hide")
-                }
-            });
         }
     });
 
@@ -892,5 +891,6 @@ $(document).ready(function() {
     if (cond == "True") {
         $('#modalFeedbackForm').modal('show');
     }
+
 
 });

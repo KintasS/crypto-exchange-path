@@ -183,7 +183,11 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
             curr = input_form.currency.data
             orig_loc = get_exch_by_name(input_form.orig_loc.data)
             orig_coin = get_coin_by_longname(input_form.orig_coin.data)
-            orig_amt = float(input_form.orig_amt.data)
+            # Save 'orig_amt' as Float or integer depending on value
+            num = float(input_form.orig_amt.data)
+            if num % 1 == 0:
+                num = int(num)
+            orig_amt = num
             dest_loc = get_exch_by_name(input_form.dest_loc.data)
             dest_coin = get_coin_by_longname(input_form.dest_coin.data)
             connection_type = input_form.connection_type.data
