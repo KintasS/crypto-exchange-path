@@ -97,15 +97,18 @@
                                     <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="JPY" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-yen-sign mx-2"></i>JPY</b></button>
                                 {% elif curr == 'EUR' %}
                                     <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="EUR" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-euro-sign mx-2"></i>EUR</b></button>
+                                {% elif curr == 'CAD' %}
+                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="CAD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-dollar-sign mx-2"></i>CAD</b></button>
                                 {% else %}
                                     <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="USD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-dollar-sign mx-2"></i>USD</b></button>
                                 {% endif %}
                                 </button>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" data-currency="USD" href="#"><i class="fas fa-dollar-sign mx-2"></i>USD</a>
+                                    <a class="dropdown-item" data-currency="EUR" href="#"><i class="fas fa-euro-sign mx-2"></i>EUR</a>
+                                    <a class="dropdown-item" data-currency="CAD" href="#"><i class="fas fa-dollar-sign mx-2"></i>CAD</a>
                                     <a class="dropdown-item" data-currency="GBP" href="#"><i class="fas fa-pound-sign mx-2"></i>GBP</a>
                                     <a class="dropdown-item" data-currency="JPY" href="#"><i class="fas fa-yen-sign mx-2"></i>JPY</a>
-                                    <a class="dropdown-item" data-currency="EUR" href="#"><i class="fas fa-euro-sign mx-2"></i>EUR</a>
                                     <a class="dropdown-item" data-currency="KRW" href="#"><i class="fas fa-won-sign ml-2 mr-1"></i>KRW</a>
                                 </div>
                             </div>

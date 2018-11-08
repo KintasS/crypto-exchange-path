@@ -249,8 +249,9 @@ def update_prices(logger):
     next_coins_lst = []
     is_compl = False
     for index, coin in enumerate(cryptos):
-        # While list is not complete, continue generating list
-        if len(next_coins) + len(coin) + 1 < max_len:
+        # While list is not complete (or not last item), append coins
+        if ((len(next_coins) + len(coin) + 1 < max_len) or
+                (index == len(cryptos) - 1)):
             next_coins += coin + ","
             next_coins_lst.append(coin)
         else:
@@ -295,12 +296,12 @@ def update_prices(logger):
                                        .format(crypto))
                         continue
             # Flag as "Inactive" coins from which there are no prices
-            for item in next_coins_lst:
-                db_crypto = Coin.query.filter_by(symbol=item).first()
-                if db_crypto:
-                    db_crypto.status = "Inactive"
-                    logger.warning("fetch_prices: '{}' flagged as inactive as "
-                                   "no prices could be fetched".format(item))
+            # for item in next_coins_lst:
+            #     db_crypto = Coin.query.filter_by(symbol=item).first()
+            #     if db_crypto:
+            #         db_crypto.status = "Inactive"
+            #         logger.warning("fetch_prices: '{}' flagged as inactive as "
+            #                        "no prices could be fetched".format(item))
             db.session.commit()
             # Initialize variables to start the process again
             is_compl = False
@@ -335,6 +336,57 @@ def update_prices(logger):
     # Finally, update coins in JSON file
     update_coins_file("crypto_exchange_path/static/data/coins.json")
     return
+
+
+def get_bittrex_fees(logger):
+    """Fetches the fees from Bittrex API and stores them in a TXT file..
+    """
+    # File where prices will be temporaly stored
+    dest_file = generate_file_path('static/imports', 'bittrex_fees')
+    try:
+        url = Params.URL_BITTREX_FEES
+        with urlopen(url) as response:
+            source = response.read()
+        bittrex_fees = json.loads(source)
+    except Exception as e:
+        logger.error("get_bittrex_fees [1]: Error fetching Bittrex fees from "
+                     "source. URL='{}' [{}]".format(url, e))
+        return 1
+    # Check if response success returns True
+    if not bittrex_fees["success"]:
+        logger.error("get_bittrex_fees [2]: Error fetching Bittrex fees from "
+                     "source. URL='{}'".format(url))
+        return 2
+    if 'result' in bittrex_fees.keys():
+        fee_info = bittrex_fees['result']
+        with open(dest_file, "a") as f:
+            # Write header
+            header = ""
+            for item in fee_info[0].keys():
+                header += str(item) + ";"
+            f.write(header + "\n")
+            # Write info for each coin
+            for coin in fee_info:
+                currency = coin['Currency']
+                currencyLong = coin['CurrencyLong']
+                minConfirmation = coin['MinConfirmation']
+                txFee = coin['TxFee']
+                isActive = coin['IsActive']
+                isRestricted = coin['IsRestricted']
+                coinType = coin['CoinType']
+                baseAddress = coin['BaseAddress']
+                notice = coin['Notice']
+                f.write("{};{};{};{};{};{};{};{};{}\n".format(currency,
+                                                              currencyLong,
+                                                              minConfirmation,
+                                                              txFee,
+                                                              isActive,
+                                                              isRestricted,
+                                                              coinType,
+                                                              coinType,
+                                                              baseAddress,
+                                                              notice))
+    logger.info("get_bittrex_fees: Process finished!")
 
 
 def update_coins_file(file):
@@ -448,6 +500,8 @@ def import_fees(logger, file):
     for line in f_contents:
         exch, action, scope, amt, min_amt, fee_coin, type = line\
             .replace("\n", "").split("¬")
+        if amt == '':
+            amt = None
         if min_amt == '':
             min_amt = None
         fee = Fee(exchange=exch,

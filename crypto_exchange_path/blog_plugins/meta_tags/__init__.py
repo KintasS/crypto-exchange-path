@@ -54,7 +54,6 @@ def get_index_meta(app, engine, posts, meta):
 def get_page_meta(app, engine, post, meta):
     if isinstance(engine.storage, SQLAStorage):
         # Get page Title & Description
-        print(post)
         meta["blog_title"] = get_meta_tags('Blog|Page',
                                            'Title',
                                            [post['title']])

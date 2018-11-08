@@ -71,7 +71,22 @@ def feedback_notifier(topic, subject, detail, mail, logger):
         '''
         mail.send(msg)
     except Exception as e:
-        logger.error("feedback_notifier: {}".format(traceback.format_exc()))
+        logger.error("feedback_notifier: {}".format(topic))
+
+
+def warning_notifier(topic, args_dic, mail, logger):
+    # Send email
+    try:
+        msg = Message('App WARNING - {}'.format(topic),
+                      sender=Params.SENDER_EMAIL,
+                      recipients=[Params.ERROR_RECIPIENT_EMAIL])
+        message = "Warning:\n\nTopic: {}\n\n".format(topic)
+        for arg in args_dic.keys():
+            message += "{}: {}\n".format(arg, args_dic[arg])
+        msg.body = message
+        mail.send(msg)
+    except Exception as e:
+        logger.error("warning_notifier: {}".format(topic))
 
 
 def generate_file_path(relative_path, keyword):
@@ -223,7 +238,46 @@ def is_number(s):
 
 
 def round_amount_by_price(amount, coin):
-    """Returns a rounded amount depending on the valuation of the coin.
+    """Returns a rounded amount in FLOAT format that depends
+    on the valuation of the coin.
+    """
+    if amount is None:
+        return None
+    if coin in Params.FIAT_COINS:
+        try:
+            decs = Params.STEPS_DECIMAL_POS[coin]
+            return round(amount, decs)
+        except Exception as e:
+            return amount
+    else:
+        price = Price.query.filter_by(coin=coin, base_coin='USD').first()
+        if price:
+            price = price.price
+            if price > 10000:
+                decs = 7
+            elif price > 1000:
+                decs = 6
+            elif price > 100:
+                decs = 5
+            elif price > 10:
+                decs = 4
+            elif price > 1:
+                decs = 3
+            elif price > 0.1:
+                decs = 2
+            elif price > 0.01:
+                decs = 2
+            elif price > 0.001:
+                decs = 1
+            else:
+                decs = 0
+            return round(amount, decs)
+        return amount
+
+
+def round_amount_by_price_str(amount, coin):
+    """Returns a rounded amount in STRING format that depends
+    on the valuation of the coin.
     """
     if amount is None:
         return "-"

@@ -295,6 +295,12 @@ $(document).ready(function() {
             $('#' + id).val($(this).val())
             // Auto-run query if input was correct
             if (status) {
+                // Trigger GA Event
+                gtag('event', 'Location change', {
+                    'event_category': 'Click',
+                    'event_label': 'Location change: Origin - ' + String($(this).val())
+                });
+                // Trigger search
                 $('#submit-btn').trigger("click");
             }
         } else if (id == 'dest_loc') {
@@ -304,6 +310,12 @@ $(document).ready(function() {
             $('#' + id).val($(this).val())
             // Auto-run query if input was correct
             if (status) {
+                // Trigger GA Event
+                gtag('event', 'Location change', {
+                    'event_category': 'Click',
+                    'event_label': 'Location change: Destination - ' + String($(this).val())
+                });
+                // Trigger search
                 $('#submit-btn').trigger("click");
             }
         }
@@ -394,6 +406,11 @@ $(document).ready(function() {
                 $('#orig_coin').val().length > 0) {
                 $('#submit-btn').trigger("click");
             }
+            // Trigger GA Event
+            gtag('event', 'Change currency', {
+                'event_category': 'Click',
+                'event_label': 'Change currency: ' + String(selectedCurrency)
+            });
         }
     });
 
@@ -430,10 +447,12 @@ $(document).ready(function() {
         $multiOptions.each(function() {
             $(this).prop('selected', true);
         });
-        // Display all results
-        // $('section#results .result-card').each(function() {
-        //     $(this).removeClass("exchange-hide")
-        // });
+        // Trigger GA Event
+        gtag('event', 'Exchange filter', {
+            'event_category': 'Click',
+            'event_label': 'Exchange filter: [Select All Button]'
+        });
+        // Filter results
         FilterResultsByExchange()
     });
 
@@ -447,10 +466,12 @@ $(document).ready(function() {
         $multiOptions.each(function() {
             $(this).prop('selected', false);
         });
-        // Clear all results
-        // $('section#results .result-card').each(function() {
-        //     $(this).addClass("exchange-hide")
-        // });
+        // Trigger GA Event
+        gtag('event', 'Exchange filter', {
+            'event_category': 'Click',
+            'event_label': 'Exchange filter: [Clear All Button]'
+        });
+        // Filter results
         FilterResultsByExchange()
     });
 
@@ -463,6 +484,12 @@ $(document).ready(function() {
         } else {
             $option.prop('selected', false);
         }
+        // Trigger GA Event
+        gtag('event', 'Exchange filter', {
+            'event_category': 'Click',
+            'event_label': 'Exchange filter: ' + String(exch)
+        });
+        // Filter results
         FilterResultsByExchange();
     });
 
@@ -477,6 +504,7 @@ $(document).ready(function() {
             var exch1 = $(this).attr('data-exch-1');
             var exch2 = $(this).attr('data-exch-2');
             var option1 = $('#exchanges option[value=' + exch1 + ']').prop('selected');
+            console.log(String(exch1) + " | " + String(exch2) + " | " + String(option1));
             // If there is no Exchange2, set it to TRUE
             option2 = true;
             if (exch2.length > 0) {
@@ -547,6 +575,11 @@ $(document).ready(function() {
                     $(this).prop('selected', true);
                 }
             });
+            // Trigger GA Event
+            gtag('event', 'Connections filter', {
+                'event_category': 'Click',
+                'event_label': 'Connections filter: ' + String(clickedConnectionType)
+            });
         }
     });
 
@@ -616,17 +649,6 @@ $(document).ready(function() {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    /////   RESULTS OPTIONS - LOCATION
-    ///////////////////////////////////////////////////////////////////////////
-
-    // Actions if a LOCATION is selected:
-    //   - When Location dropdown closes, recalculate operation
-    $('#location-selector button').on('click', function() {
-        $('#submit-btn').trigger("click");
-    })
-
-
-    ///////////////////////////////////////////////////////////////////////////
     /////   RESULTS OPTIONS - MARKET FEE
     ///////////////////////////////////////////////////////////////////////////
 
@@ -652,6 +674,11 @@ $(document).ready(function() {
                 if ($(this).attr('value') == clickedMarketFee) {
                     $(this).prop('selected', true);
                 }
+            });
+            // Trigger GA Event
+            gtag('event', 'Market fee change', {
+                'event_category': 'Click',
+                'event_label': 'Market fee change: ' + String(clickedMarketFee)
             });
             // Trigger search
             $('#submit-btn').trigger("click");
@@ -767,11 +794,9 @@ $(document).ready(function() {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    /////   GOOGLE ANALYTICS EVENTS
+    /////   GOOGLE ANALYTICS EVENTS (Search for 'gtag' in the rest of code!)
     ///////////////////////////////////////////////////////////////////////////
 
-
-    console.log(1);
 
     // EXCHANGE SEARCHES //
 
@@ -815,6 +840,18 @@ $(document).ready(function() {
             });
         }
     });
+
+    // SEARCH RESULT EVENTS //
+    // Search for 'gtag' in other parts of this file!
+
+    // 'Open result detail' Event
+    $("section#results .collapse-animation").click(function() {
+        gtag('event', 'Open result detail', {
+            'event_category': 'Click',
+            'event_label': 'Open result detail'
+        });
+    });
+
 
     // REDIRECT EVENTS //
 
@@ -863,14 +900,6 @@ $(document).ready(function() {
         });
     });
 
-    // 'Referral Result detail link 1' Event (1 = first detail column)
-    $(".referral-detail-link-1").click(function() {
-        var exchangeName = $(this).html();
-        gtag('event', exchangeName, {
-            'event_category': 'Redirect - Exchange',
-            'event_label': 'Result Detail link (Column 1)'
-        });
-    });
     // 'Referral Result detail link 2' Event (2 = first detail column)
     $(".referral-detail-link-2").click(function() {
         var exchangeName = $(this).html();

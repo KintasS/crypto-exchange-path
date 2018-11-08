@@ -149,7 +149,7 @@ def calc_fee(action, exchange, coin, amt, logger):
     fee_query = Fee.query.filter_by(exchange=exchange,
                                     action=action,
                                     scope=coin).first()
-    if fee_query:
+    if fee_query and (fee_query.amount is not None):
         # If Type == 'Absolute', just return value
         if fee_query.type == 'Absolute':
             lit = "{} {} (fixed amount)".format(fee_query.amount,

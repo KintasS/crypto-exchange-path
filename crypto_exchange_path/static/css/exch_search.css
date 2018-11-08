@@ -526,11 +526,11 @@ section#results .detail-dest-column {
     padding-right: 1rem;
 }
 
-.referral-detail-link-1, .referral-detail-link-2, .referral-detail-link-3 {
+.referral-detail-link-2, .referral-detail-link-3 {
     color: #212529;
 }
 
-.referral-detail-link-1:hover, .referral-detail-link-2:hover, .referral-detail-link-3:hover {
+.referral-detail-link-2:hover, .referral-detail-link-3:hover {
     color: #4285F4;
 }
 

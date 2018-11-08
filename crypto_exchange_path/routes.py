@@ -10,7 +10,8 @@ from crypto_exchange_path.config import Params
 from crypto_exchange_path.forms import SearchForm, FeedbackForm
 from crypto_exchange_path.path_calculator import calc_paths
 from crypto_exchange_path.utils import (set_logger, error_notifier,
-                                        feedback_notifier, get_meta_tags)
+                                        feedback_notifier, warning_notifier,
+                                        get_meta_tags)
 from crypto_exchange_path.utils_db import (get_exch_by_name, get_exchanges,
                                            get_coin_by_longname, get_coin,
                                            fx_exchange)
@@ -225,6 +226,14 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                                logger)
                 paths = []
                 path_results = -1
+            # If no results were found, send worning email
+            args_dic = {"orig_amt": orig_amt,
+                        "orig_coin": orig_coin.id,
+                        "orig_loc": orig_loc.id,
+                        "dest_coin": dest_coin.id,
+                        "dest_loc": dest_loc.id,
+                        "currency": curr}
+            warning_notifier("Search with no results", args_dic, mail, logger)
             # Register query
             finish_time = datetime.datetime.now()
             results = len(paths)
