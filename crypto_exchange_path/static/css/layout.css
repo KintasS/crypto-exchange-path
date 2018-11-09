@@ -884,7 +884,7 @@ section.social-links i.fa-link {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 199;
+    z-index: 999;
     display: none;
 }
 
@@ -894,7 +894,7 @@ section.social-links i.fa-link {
 
 #cssload-pgloading:after {
     content: "";
-    z-index: 999;
+    z-index: 9999;
     position: fixed;
     top: 0;
     right: 0;

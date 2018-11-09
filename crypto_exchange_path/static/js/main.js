@@ -295,13 +295,13 @@ $(document).ready(function() {
             $('#' + id).val($(this).val())
             // Auto-run query if input was correct
             if (status) {
+                // Trigger search
+                $('#submit-btn').trigger("click");
                 // Trigger GA Event
                 gtag('event', 'Location change', {
                     'event_category': 'Click',
                     'event_label': 'Location change: Origin - ' + String($(this).val())
                 });
-                // Trigger search
-                $('#submit-btn').trigger("click");
             }
         } else if (id == 'dest_loc') {
             // Checks for Destination Location
@@ -310,13 +310,13 @@ $(document).ready(function() {
             $('#' + id).val($(this).val())
             // Auto-run query if input was correct
             if (status) {
+                // Trigger search
+                $('#submit-btn').trigger("click");
                 // Trigger GA Event
                 gtag('event', 'Location change', {
                     'event_category': 'Click',
                     'event_label': 'Location change: Destination - ' + String($(this).val())
                 });
-                // Trigger search
-                $('#submit-btn').trigger("click");
             }
         }
     });
@@ -340,17 +340,10 @@ $(document).ready(function() {
     ///////////////////////////////////////////////////////////////////////////
 
     // Actions when submit button is clicked:
-    //   - Hide current results being displayed
-    //   - Hide 'Connecting options'
     //   - Show processing modal (if form was filled!)
     //   - Replace ',' by '.' in origin amount
     //   - If Origin location and Destination location are emtpy, fill them
     $('#submit-btn').on('click', function() {
-        // Hide current results being displayed
-        // $('#results').fadeOut(200);
-        // $('#intro').fadeOut(200);
-        // Hide 'Connecting options'
-        $('#options-collapse').collapse('hide');
         // Show processing animation (if form was filled!)
         if ($('#dest_coin').val().length > 0 &&
             $('#orig_amt').val().length > 0 &&
@@ -373,6 +366,13 @@ $(document).ready(function() {
         if (value.length == 0) {
             $destLoc.val('(Default)');
         }
+        // Trigger GA Event
+        var formAction = $("#search-form").attr('action');
+        var searchCoins = formAction.replace('/exchanges/result/', '');
+        gtag('event', 'Exchange Engine Search', {
+            'event_category': 'Click',
+            'event_label': 'Exchange Engine Search: ' + String(searchCoins)
+        });
     });
 
 
@@ -674,13 +674,13 @@ $(document).ready(function() {
                     $(this).prop('selected', true);
                 }
             });
+            // Trigger search
+            $('#submit-btn').trigger("click");
             // Trigger GA Event
             gtag('event', 'Market fee change', {
                 'event_category': 'Click',
                 'event_label': 'Market fee change: ' + String(clickedMarketFee)
             });
-            // Trigger search
-            $('#submit-btn').trigger("click");
         }
     })
 
@@ -721,27 +721,13 @@ $(document).ready(function() {
 
 
 
-    ///////////////////////////////////////////////////////////////////////////
-    /////   AUTO-SEARCH
-    ///////////////////////////////////////////////////////////////////////////
 
-    // If auto_search='True', run search automatically
-    var cond = $('#results').attr('data-auto-search')
-    if (cond == "True") {
-        $('#submit-btn').trigger("click");
-    }
 
 
 
     ///////////////////////////////////////////////////////////////////////////
     /////   OPEN COLLAPSES AUTOMATICALLY
     ///////////////////////////////////////////////////////////////////////////
-
-    // Open 'Advanced Search' collapse in case of error in location inputs
-    var errors = $("section#search-canvas .location-error")
-    if (errors.length > 0) {
-        $('#options-collapse').collapse('show');
-    }
 
     // Open the first collapse item to show details
     $("#results .collapse").first().collapse('show')
@@ -796,17 +782,6 @@ $(document).ready(function() {
     /////   GOOGLE ANALYTICS EVENTS (Search for 'gtag' in the rest of code!)
     ///////////////////////////////////////////////////////////////////////////
 
-
-    // EXCHANGE SEARCHES //
-
-    $('#submit-btn').on('click', function() {
-        var formAction = $("#search-form").attr('action');
-        var searchCoins = formAction.replace('/exchanges/result/', '');
-        gtag('event', 'Exchange Engine Search', {
-            'event_category': 'Click',
-            'event_label': 'Exchange Engine Search: ' + String(searchCoins)
-        });
-    });
 
     // WEB ACTIONS //
 
@@ -915,6 +890,26 @@ $(document).ready(function() {
             'event_label': 'Result Detail link (Column 3)'
         });
     });
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    /////   AUTO-SEARCH
+    ///////////////////////////////////////////////////////////////////////////
+
+    // If auto_search='True', run search automatically
+    var cond = $('#results').attr('data-auto-search')
+    if (cond == "True") {
+        if ($('#dest_coin').val().length > 0 &&
+            $('#orig_amt').val().length > 0 &&
+            $('#orig_coin').val().length > 0) {
+            $('#loading-bg').fadeIn()
+            $('#cssload-pgloading').fadeIn()
+        }
+        setTimeout(function() {
+            $('#submit-btn').trigger("click");
+        }, 100);
+
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////
