@@ -8,46 +8,48 @@ from sqlalchemy import func
 def get_prev_post(sqla_storage, post):
     """ Gets the previous post.
     """
-    prev_id = post['post_id'] - 1
-    engine = sqla_storage.engine
-    with engine.begin() as conn:
-        post_table = sqla_storage.post_table
-        while prev_id > 0:
-            statement = sqla.select([post_table]) \
-                .where(post_table.c.id == prev_id)
-            result = conn.execute(statement).fetchone()
-            if result:
-                prev_post = sqla_storage.get_post_by_id(prev_id)
-                if prev_post:
-                    slug = slugify(prev_post['title'])
-                    prev_post['Slug'] = slug
-                    return prev_post
-            prev_id -= 1
+    if post:
+        prev_id = post['post_id'] - 1
+        engine = sqla_storage.engine
+        with engine.begin() as conn:
+            post_table = sqla_storage.post_table
+            while prev_id > 0:
+                statement = sqla.select([post_table]) \
+                    .where(post_table.c.id == prev_id)
+                result = conn.execute(statement).fetchone()
+                if result:
+                    prev_post = sqla_storage.get_post_by_id(prev_id)
+                    if prev_post:
+                        slug = slugify(prev_post['title'])
+                        prev_post['Slug'] = slug
+                        return prev_post
+                prev_id -= 1
     return None
 
 
 def get_next_post(sqla_storage, post):
     """ Gets the next post.
     """
-    next_id = post['post_id'] + 1
-    engine = sqla_storage.engine
-    with engine.begin() as conn:
-        post_table = sqla_storage.post_table
-        statement = sqla.select([func.max(post_table.c.id)])
-        max_post_id = conn.execute(statement).fetchone()
-        if max_post_id:
-            max_post_id = max_post_id[0]
-        while next_id <= max_post_id:
-            statement = sqla.select([post_table]) \
-                .where(post_table.c.id == next_id)
-            result = conn.execute(statement).fetchone()
-            if result:
-                next_post = sqla_storage.get_post_by_id(next_id)
-                if next_post:
-                    slug = slugify(next_post['title'])
-                    next_post['Slug'] = slug
-                    return next_post
-            next_id += 1
+    if post:
+        next_id = post['post_id'] + 1
+        engine = sqla_storage.engine
+        with engine.begin() as conn:
+            post_table = sqla_storage.post_table
+            statement = sqla.select([func.max(post_table.c.id)])
+            max_post_id = conn.execute(statement).fetchone()
+            if max_post_id:
+                max_post_id = max_post_id[0]
+            while next_id <= max_post_id:
+                statement = sqla.select([post_table]) \
+                    .where(post_table.c.id == next_id)
+                result = conn.execute(statement).fetchone()
+                if result:
+                    next_post = sqla_storage.get_post_by_id(next_id)
+                    if next_post:
+                        slug = slugify(next_post['title'])
+                        next_post['Slug'] = slug
+                        return next_post
+                next_id += 1
     return None
 
 
