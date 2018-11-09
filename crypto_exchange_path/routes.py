@@ -227,13 +227,17 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                 paths = []
                 path_results = -1
             # If no results were found, send worning email
-            args_dic = {"orig_amt": orig_amt,
-                        "orig_coin": orig_coin.id,
-                        "orig_loc": orig_loc.id,
-                        "dest_coin": dest_coin.id,
-                        "dest_loc": dest_loc.id,
-                        "currency": curr}
-            warning_notifier("Search with no results", args_dic, mail, logger)
+            if path_results == 0:
+                args_dic = {"orig_amt": orig_amt,
+                            "orig_coin": orig_coin.id,
+                            "orig_loc": orig_loc.id,
+                            "dest_coin": dest_coin.id,
+                            "dest_loc": dest_loc.id,
+                            "currency": curr}
+                warning_notifier("Search with no results",
+                                 args_dic,
+                                 mail,
+                                 logger)
             # Register query
             finish_time = datetime.datetime.now()
             results = len(paths)
