@@ -169,9 +169,9 @@ section#search-canvas .slogan {
     font-size: inherit;
 }
 
-#search-form .form-control {
+/* #search-form .form-control {
     border-radius: .1rem;
-}
+} */
 
 #submit-btn {
     font-size: 1rem;
@@ -266,6 +266,9 @@ section#search-canvas .slogan {
     padding: 10px 10px 5px 10px;
     display: block;
     /* width: 100px; */
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
     border: none;
     border-bottom: 1px solid #e2e2e2;
     background-color: transparent;

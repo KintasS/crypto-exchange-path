@@ -25,7 +25,7 @@ $(document).ready(function() {
             items: 50,
             item: '<li class="dropdown-item"><a class="dropdown-item" href="#" role="option"></a></li>',
             displayText: function(item) {
-                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/coins/16/' + item.img + '" alt="" width="16" height="16">' +
+                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/coins/64/' + item.img + '" alt="" width="16" height="16">' +
                     item.long_name + ' (' + item.name + ')</div>'
             },
             highlighter: Object,
@@ -53,7 +53,7 @@ $(document).ready(function() {
             items: 50,
             item: '<li class="dropdown-item"><a class="dropdown-item" href="#" role="option"></a></li>',
             displayText: function(item) {
-                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/coins/16/' + item.img + '" alt="" width="16" height="16">' +
+                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/coins/64/' + item.img + '" alt="" width="16" height="16">' +
                     item.long_name + ' (' + item.name + ')</div>'
             },
             highlighter: Object,
@@ -118,10 +118,10 @@ $(document).ready(function() {
         item: '<li class="dropdown-item"><a class="dropdown-item" href="#" role="option"></a></li>',
         displayText: function(item) {
             if ((item.name == 'Bank') || (item.name == 'Wallet')) {
-                return '<div class="font-weight-bold d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16">' +
+                return '<div class="font-weight-bold d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/64/' + item.img + '" alt="" width="16" height="16">' +
                     item.name + '<span class="badge badge-warning ml-2">Default</span></div>'
             } else {
-                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16">' +
+                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/64/' + item.img + '" alt="" width="16" height="16">' +
                     item.name + '</div>'
             }
         },
@@ -184,10 +184,10 @@ $(document).ready(function() {
         item: '<li class="dropdown-item"><a class="dropdown-item" href="#" role="option"></a></li>',
         displayText: function(item) {
             if ((item.name == 'Bank') || (item.name == 'Wallet')) {
-                return '<div class="font-weight-bold d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16">' +
+                return '<div class="font-weight-bold d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/64/' + item.img + '" alt="" width="16" height="16">' +
                     item.name + '<span class="badge badge-warning ml-2">Default</span></div>'
             } else {
-                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/16/' + item.img + '" alt="" width="16" height="16">' +
+                return '<div class="d-flex align-items-center"><img class="mr-2" src="/static/img/exchanges/64/' + item.img + '" alt="" width="16" height="16">' +
                     item.name + '</div>'
             }
         },
@@ -504,7 +504,6 @@ $(document).ready(function() {
             var exch1 = $(this).attr('data-exch-1');
             var exch2 = $(this).attr('data-exch-2');
             var option1 = $('#exchanges option[value=' + exch1 + ']').prop('selected');
-            console.log(String(exch1) + " | " + String(exch2) + " | " + String(option1));
             // If there is no Exchange2, set it to TRUE
             option2 = true;
             if (exch2.length > 0) {
