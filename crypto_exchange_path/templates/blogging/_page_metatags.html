@@ -3,21 +3,7 @@
 <meta name="description" content="{{ meta.blog_description }}"/>
 
 <meta name="author" content="{{ post.user_name }}">
-<meta name="keywords" content="
-    {% if config.BLOGGING_KEYWORDS %}
-        {% for keyword in config.BLOGGING_KEYWORDS -%}
-            {{ keyword }},
-        {%- endfor %}
-    {% endif %}
-    {% if post.meta.keywords %}
-        {% for keyword in post.meta.keywords -%}
-            {{ keyword }},
-        {%- endfor %}
-    {% endif%}
-    {% for tag in post.tags -%}
-        {{ tag | lower }}
-        {{ ', ' if not loop.last }}
-    {%- endfor %}">
+<meta name="keywords" content="{% if config.BLOGGING_KEYWORDS %}{% for keyword in config.BLOGGING_KEYWORDS -%}{{ keyword }},{%- endfor %}{% endif %}{% if post.meta.keywords %}{% for keyword in post.meta.keywords -%}{{ keyword }},{%- endfor %}{% endif%}{% for tag in post.tags -%}{{ tag | lower }}{{ ', ' if not loop.last }}{%- endfor %}">
 <meta property="og:type" content="article">
 <meta property="og:title" content="{{ post.title }}">
 {% if post.meta.summary %}
@@ -26,7 +12,7 @@
     <meta property="og:description" content="{{ post.title }}">
 {% endif %}
 {% for image in post.meta.images %}
-    <meta property="og:image" content="{{ image }}">
+    <meta property="og:image" content="https://www.cryptofeesaver.com{{ image }}">
 {% endfor %}
 <meta property="og:updated_time" content="{{ post.last_modified_date }}">
 <meta property="og:url" content="{{ request.url }}">
