@@ -877,24 +877,20 @@ section.social-links i.fa-link {
 ////////////  LOADING ANIMATION  //////////////////////////
 ///////////////////////////////////////////////////////// */
 
-#loading-bg {
-    background: rgba(0, 0, 0, .5) no-repeat;
+#cssload-pgloading {
+    background: rgba(0, 0, 0, .65) no-repeat;
     width: 100%;
     height: 100%;
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 999;
-    display: none;
-}
-
-#cssload-pgloading {
+    z-index: 199;
     display: none;
 }
 
 #cssload-pgloading:after {
     content: "";
-    z-index: 9999;
+    z-index: 999;
     position: fixed;
     top: 0;
     right: 0;

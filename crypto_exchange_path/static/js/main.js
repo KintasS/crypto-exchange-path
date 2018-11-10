@@ -1,6 +1,11 @@
 $(document).ready(function() {
 
 
+    // Load JQUERY DOM Elements
+    var $submitBtn = $('#submit-btn')
+    var $searchForm = $("#search-form")
+
+
     ///////////////////////////////////////////////////////////////////////////
     /////   TYPEAHEAD CODE
     ///////////////////////////////////////////////////////////////////////////
@@ -33,9 +38,9 @@ $(document).ready(function() {
                 // Change input to the selected coin's longname
                 $input_orig_coin.val(item.long_name).change();
                 // Change Search Form action (i.e. it's URL)
-                var formAction = $("#search-form").attr('action');
+                var formAction = $searchForm.attr('action');
                 var newAction = formAction.replace(/result\/.*\+/, 'result/' + item.id + '+');
-                $("#search-form").attr('action', newAction);
+                $searchForm.attr('action', newAction);
             },
             sorter: function(items) {
                 return items.sort(Comparator);
@@ -61,9 +66,9 @@ $(document).ready(function() {
                 // Change input to the selected coin's longname
                 $input_dest_coin.val(item.long_name).change();
                 // Change Search Form action (i.e. it's URL)
-                var formAction = $("#search-form").attr('action');
+                var formAction = $searchForm.attr('action');
                 var newAction = formAction.replace(/\+.*/, '+' + item.id);
-                $("#search-form").attr('action', newAction);
+                $searchForm.attr('action', newAction);
 
             },
             sorter: function(items) {
@@ -296,7 +301,7 @@ $(document).ready(function() {
             // Auto-run query if input was correct
             if (status) {
                 // Trigger search
-                $('#submit-btn').trigger("click");
+                $submitBtn.trigger("click");
                 // Trigger GA Event
                 gtag('event', 'Location change', {
                     'event_category': 'Click',
@@ -311,7 +316,7 @@ $(document).ready(function() {
             // Auto-run query if input was correct
             if (status) {
                 // Trigger search
-                $('#submit-btn').trigger("click");
+                $submitBtn.trigger("click");
                 // Trigger GA Event
                 gtag('event', 'Location change', {
                     'event_category': 'Click',
@@ -343,13 +348,12 @@ $(document).ready(function() {
     //   - Show processing modal (if form was filled!)
     //   - Replace ',' by '.' in origin amount
     //   - If Origin location and Destination location are emtpy, fill them
-    $('#submit-btn').on('click', function() {
+    $submitBtn.on('click', function() {
         // Show processing animation (if form was filled!)
         if ($('#dest_coin').val().length > 0 &&
             $('#orig_amt').val().length > 0 &&
             $('#orig_coin').val().length > 0) {
-            $('#loading-bg').fadeIn()
-            $('#cssload-pgloading').fadeIn()
+            $('#cssload-pgloading').show()
         }
         // Replace ',' by '.' in origin amount
         var $origAmt = $('#orig_amt')
@@ -367,7 +371,7 @@ $(document).ready(function() {
             $destLoc.val('(Default)');
         }
         // Trigger GA Event
-        var formAction = $("#search-form").attr('action');
+        var formAction = $searchForm.attr('action');
         var searchCoins = formAction.replace('/exchanges/result/', '');
         gtag('event', 'Exchange Engine Search', {
             'event_category': 'Click',
@@ -404,7 +408,7 @@ $(document).ready(function() {
             if ($('#dest_coin').val().length > 0 &&
                 $('#orig_amt').val().length > 0 &&
                 $('#orig_coin').val().length > 0) {
-                $('#submit-btn').trigger("click");
+                $submitBtn.trigger("click");
             }
             // Trigger GA Event
             gtag('event', 'Change currency', {
@@ -675,7 +679,7 @@ $(document).ready(function() {
                 }
             });
             // Trigger search
-            $('#submit-btn').trigger("click");
+            $submitBtn.trigger("click");
             // Trigger GA Event
             gtag('event', 'Market fee change', {
                 'event_category': 'Click',
@@ -772,7 +776,7 @@ $(document).ready(function() {
     }
 
     // When the user clicks on the button, scroll to the top of the document
-    $("#myBtn").click(function() {
+    $myBtn.click(function() {
         document.body.scrollTop = 0; // For Safari
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     });
@@ -902,12 +906,11 @@ $(document).ready(function() {
         if ($('#dest_coin').val().length > 0 &&
             $('#orig_amt').val().length > 0 &&
             $('#orig_coin').val().length > 0) {
-            $('#loading-bg').fadeIn()
-            $('#cssload-pgloading').fadeIn()
+            $('#cssload-pgloading').show()
         }
         setTimeout(function() {
-            $('#submit-btn').trigger("click");
-        }, 100);
+            $submitBtn.trigger("click");
+        }, 500);
 
     }
 
