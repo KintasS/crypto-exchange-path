@@ -75,8 +75,8 @@ img {
     color: #fff !important
 }
 
-.badge-orange {
-    background-color: #f80 !important;
+.badge-deep-orange {
+    background-color: #ff7043 !important;
     color: #fff !important
 }
 
@@ -167,60 +167,6 @@ img {
 .blockquote-footer::before {
     content: "\2014 \00A0";
 }
-
-/* @media (max-width: 410.98px) {
-    html {
-        font-size: 0.9rem;
-    }
-    .section-padding-2rem {
-        padding: 1rem 0;
-    }
-    .section-padding-4rem {
-        padding: 2rem 0;
-    }
-    .text-big {
-        font-size: 1.1em !important;
-    }
-    h1 {
-        font-size: 2rem;
-    }
-    h2, h3 {
-        font-size: 1.7rem;
-    }
-    h4 {
-        font-size: 1.25rem;
-    }
-    h5, h6 {
-        font-size: 1rem;
-    }
-}
-
-@media (min-width: 411px) and (max-width: 480.98px) {
-    html {
-        font-size: 0.9rem;
-    }
-    .section-padding-2rem {
-        padding: 1.5rem 0;
-    }
-    .section-padding-4rem {
-        padding: 2rem 0;
-    }
-    .text-big {
-        font-size: 1.1em !important;
-    }
-    h1 {
-        font-size: 2rem;
-    }
-    h2, h3 {
-        font-size: 2rem;
-    }
-    h4 {
-        font-size: 1.25rem;
-    }
-    h5, h6 {
-        font-size: 1rem;
-    }
-} */
 
 @media (max-width: 575.98px) {
     html {

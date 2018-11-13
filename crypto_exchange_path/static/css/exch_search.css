@@ -21,9 +21,6 @@
         width: 16px;
         height: 16px
     }
-    /* img.img-logo {
-        height: 22px;
-    } */
 }
 
 @media (min-width: 411px) and (max-width: 480.98px) {
@@ -45,9 +42,6 @@
         width: 16px;
         height: 16px
     }
-    /* img.img-logo {
-        height: 24px;
-    } */
 }
 
 @media (min-width: 481px) and (max-width: 575.98px) {
@@ -69,9 +63,6 @@
         width: 16px;
         height: 16px
     }
-    /* img.img-logo {
-        height: 24px;
-    } */
 }
 
 @media (min-width: 576px) and (max-width: 767.98px) {
@@ -93,9 +84,6 @@
         width: 16px;
         height: 16px
     }
-    /* img.img-logo {
-        height: 24px;
-    } */
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) {
@@ -117,9 +105,6 @@
         width: 16px;
         height: 16px
     }
-    /* img.img-logo {
-        height: 22px;
-    } */
 }
 
 @media (min-width: 992px) {
@@ -140,9 +125,6 @@
     section#results img.img-coin {
         width: 16px;
         height: 16px
-    }
-    img.img-logo {
-        height: 28px;
     }
 }
 
