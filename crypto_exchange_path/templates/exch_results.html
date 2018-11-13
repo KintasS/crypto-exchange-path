@@ -184,8 +184,8 @@
                                         <div class="col">
                                             <div class="row">
                                                 <div class="col d-flex justify-content-start my-2">
-                                                    <button id="select-all-btn" type="button" class="btn btn-deep-orange btn-sm mr-2">Select All</button>
-                                                    <button id="deselect-all-btn" type="button" class="btn btn-deep-orange btn-sm">Clear All</button>
+                                                    <button id="select-all-btn" type="button" class="btn btn-indigo-dark btn-sm mr-2">Select All</button>
+                                                    <button id="deselect-all-btn" type="button" class="btn btn-indigo-dark btn-sm">Clear All</button>
                                                 </div>
                                             </div>
                                             <div class="row" style="min-width: 20rem;">
@@ -437,11 +437,11 @@
                                         </div>
                                         <div class="d-flex justify-content-center mt-2 mt-lg-1">
                                             {% if path.hop_1.exchange.affiliate == 'Yes' %}
-                                                <a class="referral-result-btn select-btn btn btn-deep-orange m-0" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}">Select</a>
+                                                <a class="referral-result-btn select-btn btn btn-indigo-dark m-0" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}">Select</a>
                                             {% elif path.hop_2 and path.hop_2.exchange.affiliate == 'Yes' %}
-                                                <a class="referral-result-btn select-btn btn btn-deep-orange m-0" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button" data-exch="{{ path.hop_2.exchange.name }}">Select</a>
+                                                <a class="referral-result-btn select-btn btn btn-indigo-dark m-0" href="{{ path.hop_2.exchange.site_url }}" target="_blank" role="button" data-exch="{{ path.hop_2.exchange.name }}">Select</a>
                                             {% else %}
-                                                <a class="referral-result-btn select-btn btn btn-deep-orange m-0" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}">Select</a>
+                                                <a class="referral-result-btn select-btn btn btn-indigo-dark m-0" href="{{ path.hop_1.exchange.site_url }}" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}">Select</a>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -535,9 +535,9 @@
                                     {% if path.origin.exchange.id != path.hop_1.exchange.id %}
                                         <div class="row no-gutters smaller-font">
                                             <div class="col-1 d-flex align-items-center justify-content-end pr-1 pr-sm-2">
-                                                <i class="fas fa-chevron-circle-right fa-lg orange-color"></i>
+                                                <i class="fas fa-chevron-circle-right fa-lg indigo-dark-color"></i>
                                             </div>
-                                            <div class="col-11 light-orange-bg">
+                                            <div class="col-11 light-indigo-bg">
                                                 {% if path.origin.exchange.id == 'Wallet' %}
                                                     <span>Transfer your {{ path.origin.coin.symbol }} from your wallet to {{ path.hop_1.exchange.name }}</span>
                                                 {% elif path.origin.exchange.id == 'Bank' %}
@@ -602,9 +602,9 @@
                                     <!-- # 2nd Step: Trade Exch 1 -->
                                     <div class="row no-gutters smaller-font">
                                         <div class="col-1 d-flex align-items-center justify-content-end pr-1 pr-sm-2">
-                                            <i class="fas fa-chevron-circle-right fa-lg orange-color"></i>
+                                            <i class="fas fa-chevron-circle-right fa-lg indigo-dark-color"></i>
                                         </div>
-                                        <div class="col-11 light-orange-bg">
+                                        <div class="col-11 light-indigo-bg">
                                             <span>In {{ path.hop_1.exchange.name }}, trade your {{ path.hop_1.trade.sell_coin.symbol }} for {{ path.hop_1.trade.buy_coin.symbol }}</span>
                                             <a class="no-link-tooltip text-right" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_1.trade_details }}">
                                                 <i class="fas fa-info-circle"></i>
@@ -656,9 +656,9 @@
                                         {% endif %}
                                         <div class="row no-gutters smaller-font">
                                             <div class="col-1 d-flex align-items-center justify-content-end pr-1 pr-sm-2">
-                                                <i class="fas fa-chevron-circle-right fa-lg orange-color"></i>
+                                                <i class="fas fa-chevron-circle-right fa-lg indigo-dark-color"></i>
                                             </div>
-                                            <div class="col-11 light-orange-bg">
+                                            <div class="col-11 light-indigo-bg">
                                                 {% if step2b_dest.id == 'Wallet' %}
                                                     <span>Transfer your {{ path.hop_1.trade.buy_coin.symbol }} from {{ path.hop_1.exchange.name }} to your wallet</span>
                                                 {% elif step2b_dest.id == 'Bank' %}
@@ -714,9 +714,9 @@
                                     {% if path.hop_2 %}
                                         <div class="row no-gutters smaller-font">
                                             <div class="col-1 d-flex align-items-center justify-content-end pr-1 pr-sm-2">
-                                                <i class="fas fa-chevron-circle-right fa-lg orange-color"></i>
+                                                <i class="fas fa-chevron-circle-right fa-lg indigo-dark-color"></i>
                                             </div>
-                                            <div class="col-11 light-orange-bg">
+                                            <div class="col-11 light-indigo-bg">
                                                 <span>In {{ path.hop_2.exchange.name }}, trade your {{ path.hop_2.trade.sell_coin.symbol }} for {{ path.hop_2.trade.buy_coin.symbol }}</span>
                                                 <a class="no-link-tooltip text-right" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ path.hop_2.trade_details }}">
                                                     <i class="fas fa-info-circle"></i>
@@ -761,9 +761,9 @@
                                     {% if path.hop_2 and path.hop_2.exchange.id != path.destination.exchange.id %}
                                         <div class="row no-gutters smaller-font">
                                             <div class="col-1 d-flex align-items-center justify-content-end pr-1 pr-sm-2">
-                                                <i class="fas fa-chevron-circle-right fa-lg orange-color"></i>
+                                                <i class="fas fa-chevron-circle-right fa-lg indigo-dark-color"></i>
                                             </div>
-                                            <div class="col-11 light-orange-bg">
+                                            <div class="col-11 light-indigo-bg">
                                                 {% if path.destination.exchange.id == 'Wallet' %}
                                                     <span>Transfer your {{ path.hop_2.trade.buy_coin.symbol }} from {{ path.hop_2.exchange.name }} to your wallet</span>
                                                 {% elif path.destination.exchange.id == 'Bank' %}

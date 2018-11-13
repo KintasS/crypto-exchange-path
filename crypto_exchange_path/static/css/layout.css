@@ -62,21 +62,17 @@ img {
     color: #535353 !important;
 }
 
-.orange-color {
-    color: #ff7043 !important;
-}
-
-.indigo-color {
-    color: #3f51b5;
+.indigo-dark-color {
+    color: #303f9f !important;
 }
 
 .btn-deep-orange {
-    background-color: #ff7043 !important;
+    background-color: #FF7043 !important;
     color: #fff !important
 }
 
-.badge-deep-orange {
-    background-color: #ff7043 !important;
+.badge-beta {
+    background-color: #7986cb !important;
     color: #fff !important
 }
 
@@ -86,19 +82,14 @@ img {
     padding-right: 1.5rem;
 }
 
-.btn-indigo {
+/* .btn-indigo {
     background-color: #3f51b5 !important;
     color: #fff !important
-}
+} */
 
 .btn-indigo-dark {
     background-color: #303f9f !important;
     color: #fff !important
-}
-
-.btn-none-indigo {
-    font-weight: 700;
-    color: #303f9f !important;
 }
 
 .btn-grey {
@@ -118,7 +109,7 @@ img {
 }
 
 .mask-rgba-black-strong {
-    background-color: rgba(0, 0, 0, .7);
+    background-color: rgba(2, 2, 10, 0.75);
 }
 
 .light-gray-bg {
@@ -151,6 +142,10 @@ img {
 
 .open-sans-font {
     font-family: "Open Sans", sans-serif;
+}
+
+.img-logo {
+    height: 34px;
 }
 
 .blockquote {
@@ -237,7 +232,7 @@ img {
 }
 
 .navbar .navbar-nav a.nav-link.active {
-    color: #ff7043 !important;
+    color: #303f9f !important;
     font-weight: bold;
 }
 
@@ -704,8 +699,8 @@ section.latest-posts .post h4:hover {
     font-size: 1.05em;
     line-height: 1.7em;
     /* border-color: #2b90d9; */
-    border: 1px solid #ff7043;
-    border-left: 6px solid #ff7043;
+    border: 1px solid #303f9f;
+    border-left: 6px solid #303f9f;
     padding: .5rem 1.5rem;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;

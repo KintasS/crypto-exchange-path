@@ -566,7 +566,7 @@ $(document).ready(function() {
             // If another option is clicked, change filters
         } else {
             // Select clicked option
-            $(this).find('th').html('<i class="fas fa-check fa-lg orange-color"></i>');
+            $(this).find('th').html('<i class="fas fa-check fa-lg indigo-dark-color"></i>');
             // Clear previous option
             $(this).siblings().each(function() {
                 $(this).find('th').html('')
@@ -640,7 +640,7 @@ $(document).ready(function() {
     $('section#results .connection-filter').each(function() {
         // If connection Type == Type in input form --> Select
         if ($(this).attr('data-connection-type') == formConnectionType) {
-            $(this).find('th').html('<i class="fas fa-check fa-lg orange-color"></i>');
+            $(this).find('th').html('<i class="fas fa-check fa-lg indigo-dark-color"></i>');
         }
     });
 
@@ -667,7 +667,7 @@ $(document).ready(function() {
             // If another option is clicked, change filters
         } else {
             // Select clicked option
-            $(this).find('th').html('<i class="fas fa-check fa-lg orange-color"></i>');
+            $(this).find('th').html('<i class="fas fa-check fa-lg indigo-dark-color"></i>');
             // Clear previous option
             $(this).siblings().each(function() {
                 $(this).find('th').html('')
@@ -693,7 +693,7 @@ $(document).ready(function() {
     $('#market-fee-selector tr').each(function() {
         // If fee Type == Type in input form --> Select
         if ($(this).attr('data-fee-type') == formMarketFee) {
-            $(this).find('th').html('<i class="fas fa-check fa-lg orange-color"></i>');
+            $(this).find('th').html('<i class="fas fa-check fa-lg indigo-dark-color"></i>');
         }
     });
 

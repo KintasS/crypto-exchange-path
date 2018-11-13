@@ -436,7 +436,7 @@ section#results .path-format {
 section#results .card {
     border-radius: 0.2rem;
     border: 1px solid rgba(0, 0, 0, .2);
-    border-top: 4px solid #ff7043;
+    border-top: 4px solid #303f9f;
 }
 
 section#results .card-header {
@@ -449,8 +449,8 @@ section#results .card-body {
     border-top: 1px solid rgba(255, 112, 68, 0.25)
 }
 
-section#results .light-orange-bg {
-    background-color: #ff70432b;
+section#results .light-indigo-bg {
+    background-color: #e8eaf6;
     border-radius: 0.2rem;
     padding: .25rem 0 .25rem .5rem;
     border-right: .25rem solid white
@@ -482,7 +482,7 @@ section#results a.no-link-tooltip {
 }
 
 #path-fee-details-collapse {
-    color: #ff7043;
+    color: #303f9f;
     font-weight: 500;
 }
 
@@ -500,7 +500,7 @@ section#results .promo-link {
 }
 
 section#results .border-left {
-    border-left-color: #ff835d !important;
+    border-left-color: #303f9f !important;
 }
 
 section#results .detail-fee-column {
@@ -586,7 +586,7 @@ section#results a {
 section#results #filter-badges .badge {
     font-size: 0.9em;
     padding: .4em 1em;
-    background-color: #ff7043;
+    background-color: #303f9f;
     color: white;
     font-weight: 400;
 }
@@ -733,7 +733,7 @@ section#results .typeahead .active.dropdown-item .dropdown-item {
     section#results .result-fees {
         font-size: 0.9rem;
     }
-    section#results .light-orange-bg {
+    section#results .light-indigo-bg {
         border-right: .25rem solid white;
         font-weight: 500;
     }
@@ -772,7 +772,7 @@ section#results .typeahead .active.dropdown-item .dropdown-item {
     section#results .detail-fee-column {
         padding-right: 0.75rem;
     }
-    section#results .light-orange-bg {
+    section#results .light-indigo-bg {
         border-right: .25rem solid white;
         font-weight: 500;
     }
@@ -814,7 +814,7 @@ section#results .typeahead .active.dropdown-item .dropdown-item {
     section#results .detail-dest-column {
         padding-right: 2rem;
     }
-    section#results .light-orange-bg {
+    section#results .light-indigo-bg {
         border-right: .5rem solid white;
         font-weight: 500;
     }
@@ -856,7 +856,7 @@ section#results .typeahead .active.dropdown-item .dropdown-item {
     section#results .detail-dest-column {
         padding-right: 3rem;
     }
-    section#results .light-orange-bg {
+    section#results .light-indigo-bg {
         border-right: .75rem solid white;
         font-weight: 500;
     }
@@ -898,7 +898,7 @@ section#results .typeahead .active.dropdown-item .dropdown-item {
     section#results .detail-dest-column {
         padding-right: 3rem;
     }
-    section#results .light-orange-bg {
+    section#results .light-indigo-bg {
         border-right: .75rem solid white;
         font-weight: 500;
     }
@@ -940,7 +940,7 @@ section#results .typeahead .active.dropdown-item .dropdown-item {
     section#results .detail-dest-column {
         padding-right: 3rem;
     }
-    section#results .light-orange-bg {
+    section#results .light-indigo-bg {
         border-right: .75rem solid white;
         font-weight: 500;
     }
