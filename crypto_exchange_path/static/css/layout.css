@@ -783,17 +783,28 @@ section.post-content ol li p {
     font-weight: normal;
 }
 
-@media (max-width: 575px) {
-    /* section.post-content h1 {
-        font-size: 1.5rem;
-    } */
-    /* section.post-content .blog-post .post-body p {
-        font-size: 0.9rem;
-    } */
+section.post-content .img-70 {
+    max-width: 70%;
+}
+
+@media (max-width: 575.98px) {
     section.post-content ul li {
         margin-left: 0rem;
     }
+    section.post-content .img-70 {
+        max-width: 100%;
+    }
 }
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    section.post-content .img-70 {
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {}
 
 /*
 * ==========================================================
