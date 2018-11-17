@@ -21,7 +21,7 @@ from crypto_exchange_path.info_fetcher import (update_prices, import_exchanges,
                                                import_pairs)
 
 # Start logging
-logger = set_logger('Main', 'INFO')
+logger = set_logger('Main', Params.LOGGER_DETAIL)
 
 
 @app.errorhandler(404)
