@@ -246,7 +246,6 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                 exchs += exch + '|'
             exchs = exchs[:-1]
             try:
-                db.session.rollback()
                 query = QueryRegister(session_id=session_id,
                                       orig_amt=orig_amt,
                                       orig_coin=orig_coin.id,
