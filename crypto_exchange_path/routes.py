@@ -220,6 +220,7 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                 path_results = len(paths)
             # Catch generic exception just in case anything went wront in logic
             except Exception as e:
+                db.session.rollback()
                 error_notifier(type(e).__name__,
                                traceback.format_exc(),
                                mail,
