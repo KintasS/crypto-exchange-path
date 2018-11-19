@@ -13,7 +13,6 @@ from crypto_exchange_path.models import Price
 def set_logger(logger_name, level="INFO"):
     """Sets logging configuration.
     """
-    # Set-up logger in both file
     logger = logging.getLogger(logger_name)
     if level == "DEBUG":
         logger.setLevel(logging.DEBUG)
@@ -24,11 +23,12 @@ def set_logger(logger_name, level="INFO"):
     elif level == "ERROR":
         logger.setLevel(logging.ERROR)
     formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(message)s')
-    dt_str = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-    file_handler = logging.FileHandler("logs/{}_{}.log".format(logger_name,
-                                                               dt_str))
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
+    # Set-up logger in log file
+    # dt_str = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+    # file_handler = logging.FileHandler("logs/{}_{}.log".format(logger_name,
+    #                                                            dt_str))
+    # file_handler.setFormatter(formatter)
+    # logger.addHandler(file_handler)
     # Set-up looger in console
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(formatter)

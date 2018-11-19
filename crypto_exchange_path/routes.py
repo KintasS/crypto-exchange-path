@@ -239,33 +239,33 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                                  mail,
                                  logger)
             # Register query
-            finish_time = datetime.datetime.now()
-            results = len(paths)
-            exchs = ""
-            for exch in user_exchanges:
-                exchs += exch + '|'
-            exchs = exchs[:-1]
-            try:
-                query = QueryRegister(session_id=session_id,
-                                      orig_amt=orig_amt,
-                                      orig_coin=orig_coin.id,
-                                      orig_loc=orig_loc.id,
-                                      dest_coin=dest_coin.id,
-                                      dest_loc=dest_loc.id,
-                                      currency=curr,
-                                      connection_type=connection_type,
-                                      exchanges=exchs,
-                                      results=results,
-                                      start_time=start_time,
-                                      finish_time=finish_time)
-                db.session.add(query)
-                db.session.commit()
-            except Exception as e:
-                db.session.rollback()
-                error_notifier(type(e).__name__,
-                               traceback.format_exc(),
-                               mail,
-                               logger)
+            # finish_time = datetime.datetime.now()
+            # results = len(paths)
+            # exchs = ""
+            # for exch in user_exchanges:
+            #     exchs += exch + '|'
+            # exchs = exchs[:-1]
+            # try:
+            #     query = QueryRegister(session_id=session_id,
+            #                           orig_amt=orig_amt,
+            #                           orig_coin=orig_coin.id,
+            #                           orig_loc=orig_loc.id,
+            #                           dest_coin=dest_coin.id,
+            #                           dest_loc=dest_loc.id,
+            #                           currency=curr,
+            #                           connection_type=connection_type,
+            #                           exchanges=exchs,
+            #                           results=results,
+            #                           start_time=start_time,
+            #                           finish_time=finish_time)
+            #     db.session.add(query)
+            #     db.session.commit()
+            # except Exception as e:
+            #     db.session.rollback()
+            #     error_notifier(type(e).__name__,
+            #                    traceback.format_exc(),
+            #                    mail,
+            #                    logger)
             # Select all Exchanges if no partial selection was made
             if not user_exchanges:
                 user_exchanges = [exch.id for exch in exchanges]
