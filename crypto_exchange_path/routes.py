@@ -326,8 +326,16 @@ def auto_search(url_orig_coin=None, url_dest_coin=None):
     path_results = None
     open_fbck_modal = False
     # Get Meta tags
-    title = get_meta_tags('Exchanges', 'Title')
-    description = get_meta_tags('Exchanges', 'Description')
+    if url_orig_coin and url_dest_coin:
+        title = get_meta_tags('Exchanges|Results',
+                              'Title',
+                              [url_orig_coin, url_dest_coin])
+        description = get_meta_tags('Exchanges|Results',
+                                    'Description',
+                                    [url_orig_coin, url_dest_coin])
+    else:
+        title = get_meta_tags('Exchanges', 'Title')
+        description = get_meta_tags('Exchanges', 'Description')
     # 1) ACTIONS IF *NO* FORM WAS FILLED (DIRECT LINK!)
     if url_orig_coin and url_dest_coin:
         url_orig_coin = url_orig_coin.upper()
