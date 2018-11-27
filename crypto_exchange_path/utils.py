@@ -30,9 +30,9 @@ def set_logger(logger_name, level="INFO"):
     # file_handler.setFormatter(formatter)
     # logger.addHandler(file_handler)
     # Set-up looger in console
-    # stream_handler = logging.StreamHandler()
-    # stream_handler.setFormatter(formatter)
-    # logger.addHandler(stream_handler)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+    logger.addHandler(stream_handler)
     # Return logger to allow it to be called from outside
     return logger
 

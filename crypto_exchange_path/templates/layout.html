@@ -52,70 +52,62 @@
                 <div id="navlink-selector" class="d-none" data-active=""></div>
             {% endblock activepage %}
 
-            {% block navbar %}
-                <nav class="navbar navbar-expand-lg navbar-light">
-                    <div class="container">
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <a class="navbar-brand" href="{{ url_for('home') }}">
-                            <div class="d-block d-flex align-items-center">
-                                <img class="img-logo" src="/static/img/logo/cfs_new_logo_blue.png" alt="CryptoFeeSaver">
-                                <span class="badge badge-beta ml-2 mr-0 mr-md-4 mt-1">Beta</span>
-                            </div>
-                        </a>
-                        <div id="navbarToggler" class="collapse navbar-collapse">
-                            <ul class="navbar-nav mr-auto">
-                                <li class="nav-item">
-                                    <a id="nav-link-home" class="nav-link" href="{{ url_for('home') }}">Home</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a id="nav-link-exchanges" class="nav-link" href="{{ url_for('exchanges') }}">Exchanges</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a id="nav-link-dexs" class="nav-link under-construction" href="#">DEXs</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a id="nav-link-wallets" class="nav-link under-construction" href="#">Wallets</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a id="nav-link-blog" class="nav-link" href="{{ url_for('blogging.index') }}">Blog</a>
-                                </li>
-                            </ul>
-                            <!-- Navbar Right Side -->
-                            <ul class="navbar-nav ml-md-auto mr-md-3">
-                                <li class="nav-item">
-                                    <a class="open-feedback nav-item nav-link" href="#" data-toggle="modal" data-target="#modalFeedbackForm">Feedback</a>
-                                </li>
-                            </ul>
-                            <div id="currency-btn" class="btn-group">
-                                {% if curr == 'KRW' %}
-                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="WON" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-won-sign mx-2"></i>KRW</b></button>
-                                {% elif curr == 'GBP' %}
-                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="GBP" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-pound-sign mx-2"></i>GBP</b></button>
-                                {% elif curr == 'JPY' %}
-                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="JPY" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-yen-sign mx-2"></i>JPY</b></button>
-                                {% elif curr == 'EUR' %}
-                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="EUR" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-euro-sign mx-2"></i>EUR</b></button>
-                                {% elif curr == 'CAD' %}
-                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="CAD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-dollar-sign mx-2"></i>CAD</b></button>
-                                {% else %}
-                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="USD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-dollar-sign mx-2"></i>USD</b></button>
-                                {% endif %}
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" data-currency="USD" href="#"><i class="fas fa-dollar-sign mx-2"></i>USD</a>
-                                    <a class="dropdown-item" data-currency="EUR" href="#"><i class="fas fa-euro-sign mx-2"></i>EUR</a>
-                                    <a class="dropdown-item" data-currency="CAD" href="#"><i class="fas fa-dollar-sign mx-2"></i>CAD</a>
-                                    <a class="dropdown-item" data-currency="GBP" href="#"><i class="fas fa-pound-sign mx-2"></i>GBP</a>
-                                    <a class="dropdown-item" data-currency="JPY" href="#"><i class="fas fa-yen-sign mx-2"></i>JPY</a>
-                                    <a class="dropdown-item" data-currency="KRW" href="#"><i class="fas fa-won-sign ml-2 mr-1"></i>KRW</a>
-                                </div>
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <div class="container">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ url_for('home') }}">
+                        <div class="d-block d-flex align-items-center">
+                            <img class="img-logo" src="/static/img/logo/cfs_new_logo_blue.png" alt="CryptoFeeSaver">
+                            <span class="badge badge-beta ml-2 mr-0 mr-md-4 mt-1">Beta</span>
+                        </div>
+                    </a>
+                    <div id="navbarToggler" class="collapse navbar-collapse">
+                        <ul class="navbar-nav ml-auto mr-auto">
+                            <li class="nav-item mr-lg-2">
+                                <a id="nav-link-home" class="nav-link" href="{{ url_for('home') }}">Home</a>
+                            </li>
+                            <li class="nav-item mr-lg-2">
+                                <a id="nav-link-exchanges" class="nav-link" href="{{ url_for('exchanges') }}">Exchanges</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="nav-link-blog" class="nav-link" href="{{ url_for('blogging.index') }}">Blog</a>
+                            </li>
+                        </ul>
+                        <!-- Navbar Right Side -->
+                        <ul class="navbar-nav ml-md-auto mr-md-3">
+                            <li class="nav-item">
+                                <a class="open-feedback nav-item nav-link" href="#" data-toggle="modal" data-target="#modalFeedbackForm">Feedback</a>
+                            </li>
+                        </ul>
+                        <div id="currency-btn" class="btn-group">
+                            {% if curr == 'KRW' %}
+                                <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="WON" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-won-sign mx-2"></i>KRW</b></button>
+                            {% elif curr == 'GBP' %}
+                                <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="GBP" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-pound-sign mx-2"></i>GBP</b></button>
+                            {% elif curr == 'JPY' %}
+                                <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="JPY" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-yen-sign mx-2"></i>JPY</b></button>
+                            {% elif curr == 'EUR' %}
+                                <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="EUR" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-euro-sign mx-2"></i>EUR</b></button>
+                            {% elif curr == 'CAD' %}
+                                <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="CAD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-dollar-sign mx-2"></i>CAD</b></button>
+                            {% else %}
+                                <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="USD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-dollar-sign mx-2"></i>USD</b></button>
+                            {% endif %}
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" data-currency="USD" href="#"><i class="fas fa-dollar-sign mx-2"></i>USD</a>
+                                <a class="dropdown-item" data-currency="EUR" href="#"><i class="fas fa-euro-sign mx-2"></i>EUR</a>
+                                <a class="dropdown-item" data-currency="CAD" href="#"><i class="fas fa-dollar-sign mx-2"></i>CAD</a>
+                                <a class="dropdown-item" data-currency="GBP" href="#"><i class="fas fa-pound-sign mx-2"></i>GBP</a>
+                                <a class="dropdown-item" data-currency="JPY" href="#"><i class="fas fa-yen-sign mx-2"></i>JPY</a>
+                                <a class="dropdown-item" data-currency="KRW" href="#"><i class="fas fa-won-sign ml-2 mr-1"></i>KRW</a>
                             </div>
                         </div>
                     </div>
-                </nav>
-            {% endblock navbar %}
+                </div>
+            </nav>
 
         </header>
 
@@ -171,7 +163,8 @@
 
         <!-- Animation when processing -->
         <div id="cssload-pgloading">
-            <div class="cssload-loadingwrap">
+            <div class="cssload-loadingwrap loading-content">
+                <!-- <div class="mb-2 font-italic">Finding cheap routes through 21 exchanges</div> -->
                 <ul class="cssload-bokeh">
                     <li></li>
                     <li></li>
@@ -180,6 +173,17 @@
                 </ul>
             </div>
         </div>
+
+
+        <!-- <div id="loading-search">
+            <div class="loading-content">
+                <div class="mb-2 font-italic">Finding cheap routes through...</div>
+                <div class="loading-text mb-3">21 exchange sites</div>
+                <div class="fa-2x">
+                  <i class="fas fa-spinner fa-pulse"></i>
+                </div>
+            </div>
+        </div> -->
 
         {% block modals %}
         {% endblock %}

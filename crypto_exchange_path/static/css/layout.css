@@ -109,7 +109,8 @@ img {
 }
 
 .mask-rgba-black-strong {
-    background-color: rgba(2, 2, 10, 0.75);
+    background-color: rgba(2, 11, 98, 0.9);
+    min-height: inherit;
 }
 
 .light-gray-bg {
@@ -541,6 +542,9 @@ section.latest-posts .post h4:hover {
     .post:last-of-type {
         margin-bottom: 0;
     }
+    section.latest-posts header {
+        margin-bottom: 25px;
+    }
 }
 
 .blog-post .post-thumbnail img {
@@ -830,8 +834,40 @@ section.social-links i.fa-link {
 ////////////  LOADING ANIMATION  //////////////////////////
 ///////////////////////////////////////////////////////// */
 
-#cssload-pgloading {
+/* #loading-search {
     background: rgba(0, 0, 0, .5) no-repeat;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 799;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    color: white;
+    padding: 1rem;
+    display: none;
+}
+
+#loading-search .loading-content {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    z-index: 999;
+}
+
+#loading-search .loading-text {
+    font-size: 1.75rem;
+    font-weight: 700;
+} */
+
+#cssload-pgloading {
+    background: rgba(0, 0, 0, .65) no-repeat;
     width: 100%;
     height: 100%;
     position: fixed;
@@ -839,6 +875,15 @@ section.social-links i.fa-link {
     left: 0;
     z-index: 199;
     display: none;
+}
+
+#cssload-pgloading .loading-content {
+    z-index: 999;
+}
+
+#cssload-pgloading .loading-text {
+    font-size: 1.75rem;
+    font-weight: 700;
 }
 
 #cssload-pgloading:after {

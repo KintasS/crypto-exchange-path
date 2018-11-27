@@ -6,9 +6,9 @@
     html {
         /* font-size: 11px; */
     }
-    main {
+    /* main {
         min-height: 88vh;
-    }
+    } */
     section#results img.img-exchange-lg {
         width: 15px;
         height: 15px;
@@ -27,9 +27,9 @@
     html {
         /* font-size: 12px; */
     }
-    main {
+    /* main {
         min-height: 86.5vh;
-    }
+    } */
     section#results img.img-exchange-lg {
         width: 15px;
         height: 15px;
@@ -48,9 +48,9 @@
     html {
         /* font-size: 13px; */
     }
-    main {
+    /* main {
         min-height: 86vh;
-    }
+    } */
     section#results img.img-exchange-lg {
         width: 17px;
         height: 17px;
@@ -69,9 +69,9 @@
     html {
         /* font-size: 14px; */
     }
-    main {
+    /* main {
         min-height: 85vh;
-    }
+    } */
     section#results img.img-exchange-lg {
         width: 20px;
         height: 20px;
@@ -90,9 +90,9 @@
     html {
         /* font-size: 14px; */
     }
-    main {
+    /* main {
         min-height: 85vh;
-    }
+    } */
     section#results img.img-exchange-lg {
         width: 20px;
         height: 20px;
@@ -111,9 +111,9 @@
     /* html {
         font-size: 16px;
     } */
-    main {
+    /* main {
         min-height: 85vh;
-    }
+    } */
     section#results img.img-exchange-lg {
         width: 45px;
         height: 45px;
@@ -139,6 +139,7 @@
     -o-background-size: cover;
     background-size: cover;
     color: white;
+    min-height: calc(100vh - 80px);
 }
 
 section#search-canvas .search-box {
@@ -148,7 +149,25 @@ section#search-canvas .search-box {
 }
 
 section#search-canvas .slogan {
-    font-size: inherit;
+    color: #DCDCDC;
+    line-height: 1.4;
+}
+
+section#search-canvas .learn-more {
+    margin-bottom: 2rem;
+    font-size: 1.25rem;
+}
+
+section#search-canvas #input-orig-amt input, section#search-canvas #input-orig-amt span {
+    width: 90px;
+}
+
+section#search-canvas #input-orig-coin input, section#search-canvas #input-orig-coin span {
+    width: 150px;
+}
+
+section#search-canvas #input-dest-coin input, section#search-canvas #input-dest-coin span {
+    width: 150px;
 }
 
 /* #search-form .form-control {
@@ -199,12 +218,12 @@ section#search-canvas .slogan {
     #search-form .typeahead .dropdown-item {
         font-size: 0.9rem;
     }
-    section#search-canvas .slogan {
-        font-size: 0.75rem;
+    section#search-canvas .learn-more {
+        margin-bottom: 5rem;
     }
 }
 
-@media (min-width: 576px) and (max-width: 767) {
+@media (min-width: 576px) and (max-width: 767px) {
     #search-form .typeahead .dropdown-item {
         font-size: 0.9rem;
     }
@@ -241,13 +260,11 @@ section#search-canvas .slogan {
 }
 
 .md-input-form input {
-    /* font-size: 18px;*/
     font-weight: 700;
     font-style: italic;
     color: white;
     padding: 10px 10px 5px 10px;
     display: block;
-    /* width: 100px; */
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
     border-radius: 0px;
@@ -394,8 +411,173 @@ section#search-canvas .slogan {
 }
 
 @media (max-width: 767.98px) {
-    .md-input-form .responsive-align {
+    section#search-canvas .md-input-form .responsive-align {
         text-align: center;
+    }
+}
+
+/* /////////////////////////////////////////////////////////
+////////////  SEARCH CANVAS SMALL  /////////////////////////
+///////////////////////////////////////////////////////// */
+
+#search-canvas-sm {
+    background: url("/static/img/background/coins_fs_low.jpg")no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: white;
+    /* min-height: calc(100vh - 80px); */
+}
+
+section#search-canvas-sm .search-box {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+section#search-canvas-sm .slogan {
+    color: #DCDCDC;
+    line-height: 1.4;
+}
+
+section#search-canvas-sm .learn-more {
+    margin-bottom: 2rem;
+    font-size: 1.25rem;
+}
+
+@media (max-width: 394.98px) {
+    section#search-canvas-sm #input-orig-amt input, section#search-canvas-sm #input-orig-amt span {
+        width: 45px;
+    }
+    section#search-canvas-sm #input-orig-coin input, section#search-canvas-sm #input-orig-coin span {
+        width: 90px;
+    }
+    section#search-canvas-sm #input-dest-coin input, section#search-canvas-sm #input-dest-coin span {
+        width: 90px;
+    }
+    section#search-canvas-sm #submit-btn {
+        padding: .4rem .7rem;
+    }
+    section#search-canvas-sm .md-input-form label {
+        font-size: .9rem;
+    }
+    section#search-canvas-sm input {
+        font-size: 1rem;
+    }
+    section#search-canvas-sm .md-input-form input {
+        padding: 10px 2px 5px 2px;
+        text-align: center;
+    }
+}
+
+@media (min-width: 395px) and (max-width: 424.98px) {
+    section#search-canvas-sm #input-orig-amt input, section#search-canvas-sm #input-orig-amt span {
+        width: 50px;
+    }
+    section#search-canvas-sm #input-orig-coin input, section#search-canvas-sm #input-orig-coin span {
+        width: 100px;
+    }
+    section#search-canvas-sm #input-dest-coin input, section#search-canvas-sm #input-dest-coin span {
+        width: 100px;
+    }
+    section#search-canvas-sm #submit-btn {
+        padding: .4rem .7rem;
+    }
+    section#search-canvas-sm .md-input-form label {
+        font-size: .9rem;
+    }
+    section#search-canvas-sm input {
+        font-size: 1.05rem;
+    }
+    section#search-canvas-sm .md-input-form input {
+        padding: 10px 2px 5px 2px;
+        text-align: center;
+    }
+}
+
+@media (min-width: 425px) and (max-width: 464.98px) {
+    section#search-canvas-sm #input-orig-amt input, section#search-canvas-sm #input-orig-amt span {
+        width: 60px;
+    }
+    section#search-canvas-sm #input-orig-coin input, section#search-canvas-sm #input-orig-coin span {
+        width: 110px;
+    }
+    section#search-canvas-sm #input-dest-coin input, section#search-canvas-sm #input-dest-coin span {
+        width: 110px;
+    }
+    section#search-canvas-sm #submit-btn {
+        padding: .4rem .7rem;
+    }
+    section#search-canvas-sm .md-input-form label {
+        font-size: .9rem;
+    }
+    section#search-canvas-sm input {
+        font-size: 1.1rem;
+    }
+    section#search-canvas-sm .md-input-form input {
+        padding: 10px 2px 5px 10px;
+    }
+    section#search-canvas-sm #input-orig-coin label::after, section#search-canvas-sm #input-dest-coin label::after {
+        content: ' coin';
+    }
+}
+
+@media (min-width: 465px) and (max-width: 529.98px) {
+    section#search-canvas-sm #input-orig-amt input, section#search-canvas-sm #input-orig-amt span {
+        width: 70px;
+    }
+    section#search-canvas-sm #input-orig-coin input, section#search-canvas-sm #input-orig-coin span {
+        width: 120px;
+    }
+    section#search-canvas-sm #input-dest-coin input, section#search-canvas-sm #input-dest-coin span {
+        width: 120px;
+    }
+    section#search-canvas-sm #input-orig-coin label::after, section#search-canvas-sm #input-dest-coin label::after {
+        content: ' coin';
+    }
+}
+
+@media (min-width: 530px) and (max-width: 575.98px) {
+    section#search-canvas-sm #input-orig-amt input, section#search-canvas-sm #input-orig-amt span {
+        width: 80px;
+    }
+    section#search-canvas-sm #input-orig-coin input, section#search-canvas-sm #input-orig-coin span {
+        width: 140px;
+    }
+    section#search-canvas-sm #input-dest-coin input, section#search-canvas-sm #input-dest-coin span {
+        width: 140px;
+    }
+    section#search-canvas-sm #input-orig-coin label::after, section#search-canvas-sm #input-dest-coin label::after {
+        content: ' coin';
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    section#search-canvas-sm #input-orig-amt input, section#search-canvas-sm #input-orig-amt span {
+        width: 80px;
+    }
+    section#search-canvas-sm #input-orig-coin input, section#search-canvas-sm #input-orig-coin span {
+        width: 140px;
+    }
+    section#search-canvas-sm #input-dest-coin input, section#search-canvas-sm #input-dest-coin span {
+        width: 140px;
+    }
+    section#search-canvas-sm #input-orig-coin label::after, section#search-canvas-sm #input-dest-coin label::after {
+        content: ' coin';
+    }
+}
+
+@media (min-width: 768px) {
+    section#search-canvas-sm #input-orig-amt input, section#search-canvas-sm #input-orig-amt span {
+        width: 90px;
+    }
+    section#search-canvas-sm #input-orig-coin input, section#search-canvas-sm #input-orig-coin span {
+        width: 150px;
+    }
+    section#search-canvas-sm #input-dest-coin input, section#search-canvas-sm #input-dest-coin span {
+        width: 150px;
+    }
+    section#search-canvas-sm #input-orig-coin label::after, section#search-canvas-sm #input-dest-coin label::after {
+        content: ' coin';
     }
 }
 
@@ -405,7 +587,7 @@ section#search-canvas .slogan {
 
 section#results {
     background-color: #f6f4f4;
-    min-height: 45vh;
+    min-height: calc(100vh - 320px);
 }
 
 @media (max-width: 410px) {
@@ -483,7 +665,7 @@ section#results a.no-link-tooltip {
 
 #path-fee-details-collapse {
     color: #303f9f;
-    font-weight: 500;
+    font-weight: 400;
 }
 
 section#results .promo {

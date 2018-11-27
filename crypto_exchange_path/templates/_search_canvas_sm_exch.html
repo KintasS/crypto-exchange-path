@@ -1,82 +1,71 @@
     <!--Section: Search Canvas-->
-    <section id="search-canvas">
-        <div class="mask-rgba-black-strong d-flex flex-column">
-            <div class="d-flex flex-grow-1 align-items-center">
+    <section id="search-canvas-sm">
+        <div class="mask-rgba-black-strong">
+            <div class="search-box">
 
                 <div class="container">
 
-                    <h1 class="font-weight-bold text-center px-2 pb-md-4">Find the cheapest sites to buy or exchange cryptocurrencies</h1>
+                    <h3 class="font-weight-bold text-center pt-3 mb-0">Find the cheapest sites to buy or exchange cryptocurrencies</h3>
 
-                    <h5 class="slogan text-center mt-4 mb-4 mb-md-2">Start saving money by choosing the best Crypto Exchanges to perform each operation<span class="d-none d-md-inline">.</span></h5>
-                    <h5 class="slogan text-center mt-1 mb-5 d-none d-md-block">Our Crypto Search Engine does all the magic for you</h5>
-
-                    <div class="row no-gutters d-flex justify-content-center">
+                    <div class="row no-gutters d-flex justify-content-center pt-4">
                         <div class="col-12 col-lg-10 col-xl-8">
 
                             <form id="search-form" method="POST" action="{{ url_for('exch_results', url_orig_coin=url_orig_coin, url_dest_coin=url_dest_coin) }}">
                                 {{ form.hidden_tag() }}
 
-
-                                <div class="search-box mt-4 mb-4 px-3 pt-4 pb-3">
-
-                                    <h4 class="text-center font-italic mt-0 mb-4">Find the cheapest route to exchange:</h4>
-
-                                    <!-- VISIBLE FORM ELEMENTS -->
-                                    <div class="d-flex flex-wrap justify-content-center align-items-center">
-                                        <div id="input-orig-amt" class="large-font group md-input-form mb-4 mr-2">
-                                            {% if form.orig_amt.errors %}
-                                                {{ form.orig_amt(class="align-right typeahead track-filled invalid", autocomplete="off", spellcheck="false", required="true") }}
-                                                <div class="form-errors">
-                                                    {% for error in form.orig_amt.errors %}
-                                                        <span>{{ error }}</span>
-                                                    {% endfor %}
-                                                </div>
-                                            {% else %}
-                                                {{ form.orig_amt(class="align-right typeahead track-filled", autocomplete="off", spellcheck="false", required="true") }}
-                                            {% endif %}
-                                                <span class="highlight"></span>
-                                                <span class="bar"></span>
-                                                <label class="align-right">Amount</label>
-                                        </div>
-                                        <div id="input-orig-coin" class="large-font md-input-form mb-4">
-                                            {% if form.orig_coin.errors %}
-                                                {{ form.orig_coin(class="typeahead track-filled invalid", type="text", autocomplete="off", spellcheck="false", required="true") }}
-                                                <div class="form-errors">
-                                                    {% for error in form.orig_coin.errors %}
-                                                        <span>{{ error }}</span>
-                                                    {% endfor %}
-                                                </div>
-                                            {% else %}
-                                                {{ form.orig_coin(class="typeahead track-filled", type="text", autocomplete="off", spellcheck="false", required="true") }}
-                                            {% endif %}
-                                                <span class="highlight"></span>
-                                                <span class="bar"></span>
-                                                <label>Origin Coin</label>
-                                        </div>
-                                        <div class="w-100 d-md-none"><!-- break line on XS and SM screens--></div>
-                                        <div class="large-font font-italic font-weight-bold mb-4 ml-0 mr-2 mr-sm-3 mx-md-4">to</div>
-                                        <div id="input-dest-coin" class="large-font md-input-form mb-4 mr-2">
-                                            {% if form.dest_coin.errors %}
-                                                {{ form.dest_coin(class="typeahead track-filled responsive-align invalid", style="width: 150px", type="text", autocomplete="off", spellcheck="false", required="true") }}
-                                                <div class="form-errors">
-                                                    {% for error in form.dest_coin.errors %}
-                                                        <span>{{ error }}</span>
-                                                    {% endfor %}
-                                                </div>
-                                            {% else %}
-                                                {{ form.dest_coin(class="typeahead track-filled responsive-align", type="text", autocomplete="off", spellcheck="false", required="true") }}
-                                            {% endif %}
-                                                <span class="highlight"></span>
-                                                <span class="bar"></span>
-                                                <label class="responsive-align">Destination Coin</label>
-                                        </div>
-                                        <div class="form-group mb-4 ml-2 ml-md-4">
-                                            {{ form.search_submit(id="submit-btn", class="btn btn-deep-orange m-0") }}
-                                        </div>
+                                <!-- VISIBLE FORM ELEMENTS -->
+                                <div class="d-flex flex-wrap justify-content-center align-items-center">
+                                    <div id="input-orig-amt" class="large-font group md-input-form mb-4 mr-2">
+                                        {% if form.orig_amt.errors %}
+                                            {{ form.orig_amt(class="align-right typeahead track-filled invalid", autocomplete="off", spellcheck="false", required="true") }}
+                                            <div class="form-errors">
+                                                {% for error in form.orig_amt.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ form.orig_amt(class="align-right typeahead track-filled", autocomplete="off", spellcheck="false", required="true") }}
+                                        {% endif %}
+                                            <span class="highlight"></span>
+                                            <span class="bar"></span>
+                                            <label class="align-right">Amount</label>
                                     </div>
-                                    <div class="d-flex flex-row justify-content-center align-items-center">
+                                    <div id="input-orig-coin" class="large-font md-input-form mb-4">
+                                        {% if form.orig_coin.errors %}
+                                            {{ form.orig_coin(class="typeahead track-filled invalid", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                            <div class="form-errors">
+                                                {% for error in form.orig_coin.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ form.orig_coin(class="typeahead track-filled", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                        {% endif %}
+                                            <span class="highlight"></span>
+                                            <span class="bar"></span>
+                                            <label>Origin</label>
                                     </div>
-
+                                    <div class="large-font font-italic font-weight-bold mb-4 mx-2 mx-sm-3 mx-md-4">to</div>
+                                    <div id="input-dest-coin" class="large-font md-input-form mb-4 mr-2">
+                                        {% if form.dest_coin.errors %}
+                                            {{ form.dest_coin(class="typeahead track-filled responsive-align invalid", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                            <div class="form-errors">
+                                                {% for error in form.dest_coin.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ form.dest_coin(class="typeahead track-filled responsive-align", type="text", autocomplete="off", spellcheck="false", required="true") }}
+                                        {% endif %}
+                                            <span class="highlight"></span>
+                                            <span class="bar"></span>
+                                            <label class="responsive-align">Destination</label>
+                                    </div>
+                                    <div class="form-group mb-4 ml-1 ml-sm-2 ml-md-4">
+                                        {{ form.search_submit(id="submit-btn", class="btn btn-deep-orange m-0") }}
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row justify-content-center align-items-center">
                                 </div>
 
                                 <!-- HIDDEN FORM ELEMENTS -->
@@ -85,8 +74,6 @@
                                         {{ form.currency(class="form-control", type="text", placeholder="Location", autocomplete="off") }}
                                     </div>
                                 </div>
-
-
 
 
 
@@ -228,9 +215,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="container learn-more text-center">
-                <span>Learn more<i class="fas fa-arrow-down ml-3"></i></span>
             </div>
         </div>
     </section>

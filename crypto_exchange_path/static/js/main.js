@@ -2,9 +2,8 @@ $(document).ready(function() {
 
 
     // Load JQUERY DOM Elements
-    var $submitBtn = $('#submit-btn')
-    var $searchForm = $("#search-form")
-
+    var $submitBtn = $('#submit-btn');
+    var $searchForm = $("#search-form");
 
     ///////////////////////////////////////////////////////////////////////////
     /////   TYPEAHEAD CODE
@@ -344,6 +343,30 @@ $(document).ready(function() {
     /////   SUBMIT BUTTON ACTIONS
     ///////////////////////////////////////////////////////////////////////////
 
+    // var $loadingText = $("#loading-search .loading-text");
+
+    // Makes a text blink at 'interval' speed
+    // function blink_text(loadingText, interval) {
+    //     $loadingText.fadeOut(interval);
+    //     $loadingText.fadeIn(interval);
+    // }
+
+    // Changes the text of the Loading Animation
+    // function ChangeLoadingText() {
+    //     currentLoadingText = $loadingText.html();
+    //     if (currentLoadingText == '21 exchange sites') {
+    //         $loadingText.html("838 cryptoassets");
+    //     } else if (currentLoadingText == '838 cryptoassets') {
+    //         $loadingText.html("3435 market pairs");
+    //     } else {
+    //         $loadingText.html("21 exchange sites");
+    //     }
+    // }
+    // blink_text($loadingText, 1000)
+    // setInterval(blink_text, 2500, $loadingText, 1000);
+    // setInterval(ChangeLoadingText, 10000);
+
+
     // Actions when submit button is clicked:
     //   - Show processing modal (if form was filled!)
     //   - Replace ',' by '.' in origin amount
@@ -353,7 +376,8 @@ $(document).ready(function() {
         if ($('#dest_coin').val().length > 0 &&
             $('#orig_amt').val().length > 0 &&
             $('#orig_coin').val().length > 0) {
-            $('#cssload-pgloading').show()
+            // $('#loading-search').show();
+            $('#cssload-pgloading').show();
         }
         // Replace ',' by '.' in origin amount
         var $origAmt = $('#orig_amt')
@@ -733,9 +757,14 @@ $(document).ready(function() {
     /////   OPEN COLLAPSES AUTOMATICALLY
     ///////////////////////////////////////////////////////////////////////////
 
-    // Open the first collapse item to show details
-    $("#results .collapse").first().collapse('show')
-    $("#results .collapse-animation").first().find("i:first").toggleClass("rotateimg180");
+    viewPortWidth = $(window).outerWidth();
+    if (viewPortWidth >= 575.98) {
+        // Open the first collapse item to show details
+        $("#results .collapse").first().collapse('show')
+        $("#results .collapse-animation").first().find("i:first").toggleClass("rotateimg180");
+
+    }
+
 
 
 
@@ -906,7 +935,8 @@ $(document).ready(function() {
         if ($('#dest_coin').val().length > 0 &&
             $('#orig_amt').val().length > 0 &&
             $('#orig_coin').val().length > 0) {
-            $('#cssload-pgloading').show()
+            // $('#loading-search').show();
+            $('#cssload-pgloading').show();
         }
         setTimeout(function() {
             $submitBtn.trigger("click");
@@ -927,6 +957,10 @@ $(document).ready(function() {
     if (cond == "True") {
         $('#modalFeedbackForm').modal('show');
     }
+
+
+
+
 
 
 });

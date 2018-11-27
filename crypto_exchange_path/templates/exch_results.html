@@ -14,7 +14,7 @@
 
 {% block main %}
 
-    {% include '_search_canvas.html' %}
+    {% include '_search_canvas_sm.html' %}
 
     <!-- Variable to store promotions that have been displayed and must not to be displayed again. -->
     {% set promotions_displayed = [] %}
@@ -31,7 +31,7 @@
 
 
                         <!-- SEARCH SUMMARY -->
-                        <div class="search-summary d-inline-block d-flex align-items-start justify-content-center mb-3 mb-lg-4">
+                        <!-- <div class="search-summary d-inline-block d-flex align-items-start justify-content-center mb-3 mb-lg-4">
                             <div id="remove-dec" class="font-weight-bold">{{ paths[0].origin.amount }}</div>
                             <div class="d-sm-none d-flex flex-column align-items-center ml-2">
                                 <div class="font-weight-bold text-center">{{ paths[0].origin.coin.long_name }}</div>
@@ -50,7 +50,7 @@
                                 <span class="font-weight-bold">{{ paths[0].destination.coin.long_name }}</span>
                                 <span class="grey-color smaller-font font-italic">({{ paths[0].destination.exchange.name }})</span>
                             </div>
-                        </div>
+                        </div> -->
 
 
 
@@ -72,10 +72,12 @@
 
                             <!-- Location dropdown -->
                             <div id="location-selector" class="search-filter dropdown">
-                                <a id="LocationDropdown" class="btn btn-dark dropdown-toggle mr-1 mb-1 mb-1" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Location
+                                <a id="LocationDropdown" class="btn btn-secondary dropdown-toggle mr-1 mb-1 mb-1" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="d-sm-none"><i class="fas fa-location-arrow mr-1"></i></span>
+                                    <span class="d-none d-sm-inline">Location</span>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="LocationDropdown">
+                                    <div class="d-sm-none h5 font-weight-bold pl-3 mb-1 mt-1">Location</div>
                                     <form class="px-3 py-2">
                                         <div id="input-orig-loc" class="form-group">
                                             <label class="mb-1" for="orig_loc">Origin location</label>
@@ -114,10 +116,12 @@
 
                             <!-- Market fee Dropdown -->
                             <div id="market-fee-selector" class="search-filter dropdown">
-                                <a class="btn btn-dark dropdown-toggle mr-sm-1 mb-1" href="#" role="button" id="MarketFeeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Market fee
+                                <a class="btn btn-secondary dropdown-toggle mr-1 mb-1" href="#" role="button" id="MarketFeeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="d-sm-none"><i class="fas fa-coins mr-1"></i></span>
+                                    <span class="d-none d-sm-inline">Market fee</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="MarketFeeDropdown">
+                                    <div class="d-sm-none h5 font-weight-bold pl-3 mb-1 mt-1">Market fee</div>
                                     <table class="table table-borderless table-hover">
                                         <tbody>
                                             <tr data-fee-type="(Taker)">
@@ -142,14 +146,14 @@
                                 </div>
                             </div>
 
-                            <div class="w-100 d-sm-none"><!-- break line on XS screens--></div>
-
                             <!-- Connections Dropdown -->
                             <div class="search-filter dropdown">
-                                <a class="btn btn-dark dropdown-toggle mr-1" href="#" role="button" id="ConnectionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Connections
+                                <a class="btn btn-secondary dropdown-toggle mr-1" href="#" role="button" id="ConnectionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="d-sm-none"><i class="fas fa-plane mr-1"></i></span>
+                                    <span class="d-none d-sm-inline">Connections</span>
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="ConnectionsDropdown">
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="ConnectionsDropdown">
+                                    <div class="d-sm-none h5 font-weight-bold pl-3 mb-1 mt-1">Connections</div>
                                     <table class="table table-borderless table-hover">
                                         <tbody>
                                             <tr class="connection-filter" data-connection-type="0">
@@ -175,20 +179,15 @@
                             </div>
                             <!-- Exchanges Dropdown -->
                             <div id="exchange-selector" class="search-filter dropdown">
-                                <a class="btn btn-dark dropdown-toggle" href="#" role="button" id="ExchangesDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Exchanges
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="ExchangesDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="d-sm-none"><i class="fas fa-funnel-dollar mr-1"></i></span>
+                                    <span class="d-none d-sm-inline">Exchanges</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right pb-3" aria-labelledby="ExchangesDropdown">
                                     <form>
-                                        <div class="h5 font-weight-bold pl-3 mb-1 mt-1" for="orig_loc">Preferred exchanges</div>
+                                        <div class="h5 font-weight-bold pl-3 mb-1 mt-1">Exchange filter</div>
                                         <div class="col">
-                                            <div class="row">
-                                                <div class="col d-flex justify-content-start my-2">
-                                                    <button id="select-all-btn" type="button" class="btn btn-indigo-dark btn-sm mr-2">Select All</button>
-                                                    <button id="deselect-all-btn" type="button" class="btn btn-indigo-dark btn-sm">Clear All</button>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="min-width: 20rem;">
+                                            <div class="row py-2" style="min-width: 20rem;">
                                                 {% for exch in exchanges %}
                                                     <div class="col-6">
                                                         <div class="form-check">
@@ -201,6 +200,12 @@
                                                         </div>
                                                     </div>
                                                 {% endfor %}
+                                            </div>
+                                            <div class="row">
+                                                <div class="col d-flex justify-content-start my-1">
+                                                    <button id="select-all-btn" type="button" class="btn btn-indigo-dark btn-sm mr-2">Select All</button>
+                                                    <button id="deselect-all-btn" type="button" class="btn btn-indigo-dark btn-sm">Clear All</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </form>
@@ -476,12 +481,7 @@
                                 <!-- Collapse animation section -->
                                 <div class="d-block d-flex align-items-center justify-content-between">
                                     <div class="pl-3 pl-lg-4 mt-2 pb-2">
-                                        <!-- If it is the first iteration, open detail. Else leave it closed -->
-                                        {% if loop.index == 1 %}
                                         <a id="path-fee-details-collapse" class="collapse-animation" data-toggle="collapse" href="#{{ path.id }}" role="button" aria-expanded="false" aria-controls="{{ path.id }}">
-                                        {% else %}
-                                        <a id="path-fee-details-collapse" class="collapse-animation" data-toggle="collapse" href="#{{ path.id }}" role="button" aria-expanded="false" aria-controls="{{ path.id }}">
-                                        {% endif %}
                                             <div class="d-block d-flex align-items-center">
                                                 <span>Path & fee details</span>
                                                 <i class="fas fa-chevron-down ml-2"></i>
@@ -503,12 +503,7 @@
 
 
                             <!-- COLLAPSED INFORMATION -->
-                            <!-- If it is the first iteration, open detail. Otherwise, leave it closed -->
-                            {% if loop.index == 1 %}
                             <div id="{{ path.id }}" class="collapse">
-                            {% else %}
-                            <div id="{{ path.id }}" class="collapse">
-                            {% endif %}
                                 <div class="card-body px-0 pt-2 pb-0">
 
                                     <!-- Detail Header -->

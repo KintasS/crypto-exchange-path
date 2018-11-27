@@ -34,9 +34,9 @@
 
             {% for post in posts %}
                 {% if (title == 'Home' or title == 'Exchanges') and loop.index > 3 %}
-                    <div class="post col-sm-6 col-xl-4 mb-5 d-xl-none">
+                    <div class="post col-sm-6 col-xl-4 mb-4 mb-md-5 d-xl-none">
                 {% else %}
-                    <div class="post col-sm-6 col-xl-4 mb-5">
+                    <div class="post col-sm-6 col-xl-4 mb-4 mb-md-5">
                 {% endif %}
                     <div class="post-thumbnail">
                         <a href="{{ post.url }}">
