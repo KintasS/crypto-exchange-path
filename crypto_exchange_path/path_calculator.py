@@ -70,6 +70,13 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                                       trade_1.buy_amt, logger)
             if withdraw_fee_1 and withdraw_fee_1[0] is not None:
                 dest_amt -= withdraw_fee_1[0]
+                if dest_amt < 0:
+                    logger.warning("Main: Destination amount "
+                                   "lower than 0 for {} [{}]. "
+                                   " Path skipped."
+                                   .format(exch,
+                                           trade_1.buy_coin.id))
+                    continue
             else:
                 logger.warning("Main: Withdraw Fee not found for {} [{}]. "
                                "Path skipped.".format(exch,
@@ -333,6 +340,14 @@ def calc_paths(orig_loc, orig_coin, orig_amt, dest_loc, dest_coin,
                             if (withdraw_fee_2 and
                                     withdraw_fee_2[0] is not None):
                                 dest_amt -= withdraw_fee_2[0]
+                                if dest_amt < 0:
+                                    logger.warning("Main: Destination amount "
+                                                   "lower than 0 for {} [{}]."
+                                                   " Path skipped."
+                                                   .format(exch_B.exchange.id,
+                                                           trade_2
+                                                           .buy_coin.id))
+                                    continue
                             else:
                                 logger.warning("Main: Withdraw Fee not found "
                                                "for {} [{}]. Path skipped."

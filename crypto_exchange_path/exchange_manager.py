@@ -141,6 +141,15 @@ class ExchangeManager(object):
                                         sell_coin.id,
                                         buy_coin.id))
             return None
+        elif buy_amt <= 0:
+            self.logger.warning("perform_trade [3]: Trade performed with negative outcome '{}[{} {} --> {} {}]'. "
+                                "Skipping trade calculation."
+                                .format(self.exchange.id,
+                                        sell_amt,
+                                        sell_coin.id,
+                                        buy_amt,
+                                        buy_coin.id))
+            return None
         # Fees calculated by default in 'sell_coin'
         fee_amt = fee_amt_perc / 100 * sell_amt
         # If 'FeeCoin' has a value, calculate fees in 'FeeCoin'
