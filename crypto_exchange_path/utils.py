@@ -360,3 +360,23 @@ def get_meta_tags(page, tag, args=[]):
         return tag.format(*args)
     else:
         return tag
+
+
+def generate_sitemap_url(logger, coins_file):
+    url = "https://www.cryptofeesaver.com/exchanges/search/"
+    # Read file
+    try:
+        with open(coins_file, "r", encoding='utf-8') as f:
+            f_contents = f.readlines()
+    except Exception as e:
+        logger.error("update_prices: Could not read '{}'".format(coins_file))
+        return 1
+    # Store prices in DB
+    for coinA in f_contents:
+        for coinB in f_contents:
+            if coinA == coinB:
+                continue
+            print("{}{}-to-{}".format(url,
+                                      coinA.replace("\n", ""),
+                                      coinB.replace("\n", "")))
+    return
