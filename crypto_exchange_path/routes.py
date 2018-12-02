@@ -305,6 +305,12 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
     return resp
 
 
+@app.route("/google9decbea4213e8e09.html")
+def google_verif():
+    """ Route for Google verification of site (without www)"""
+    return render_template('google/google9decbea4213e8e09.html')
+
+
 @app.route("/update/prices_slfjh23hk353mh4567df")
 def update_prcs():
     try:
