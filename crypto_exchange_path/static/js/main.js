@@ -38,7 +38,7 @@ $(document).ready(function() {
                 $input_orig_coin.val(item.long_name).change();
                 // Change Search Form action (i.e. it's URL)
                 var formAction = $searchForm.attr('action');
-                var newAction = formAction.replace(/result\/.*\+/, 'result/' + item.id + '+');
+                var newAction = formAction.replace(/search\/.*\-to-/, 'search/' + item.id + '-to-');
                 $searchForm.attr('action', newAction);
             },
             sorter: function(items) {
@@ -66,7 +66,7 @@ $(document).ready(function() {
                 $input_dest_coin.val(item.long_name).change();
                 // Change Search Form action (i.e. it's URL)
                 var formAction = $searchForm.attr('action');
-                var newAction = formAction.replace(/\+.*/, '+' + item.id);
+                var newAction = formAction.replace(/\-to-.*/, '-to-' + item.id);
                 $searchForm.attr('action', newAction);
 
             },
@@ -396,7 +396,7 @@ $(document).ready(function() {
         }
         // Trigger GA Event
         var formAction = $searchForm.attr('action');
-        var searchCoins = formAction.replace('/exchanges/result/', '');
+        var searchCoins = formAction.replace('/exchanges/search/', '');
         gtag('event', 'Exchange Engine Search', {
             'event_category': 'Click',
             'event_label': 'Exchange Engine Search: ' + String(searchCoins)

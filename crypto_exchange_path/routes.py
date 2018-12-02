@@ -146,7 +146,7 @@ def exchanges():
     return resp
 
 
-@app.route("/exchanges/result/<url_orig_coin>+<url_dest_coin>",
+@app.route("/exchanges/search/<url_orig_coin>-to-<url_dest_coin>",
            methods=['GET', 'POST'])
 def exch_results(url_orig_coin=None, url_dest_coin=None):
     """There are two ways of landing in this page:
@@ -196,7 +196,6 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
             orig_amt = num
             dest_loc = get_exch_by_name(input_form.dest_loc.data)
             dest_coin = get_coin_by_longname(input_form.dest_coin.data)
-            connection_type = input_form.connection_type.data
             user_exchanges = input_form.exchanges.data
             # Get Meta tags (again, if form was filled)
             title = get_meta_tags('Exchanges|Results',
@@ -275,71 +274,6 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
             sorted_paths = sorted_paths[0:Params.MAX_PATHS]
     # 2) ACTIONS IF *NO* FORM WAS FILLED (DIRECT LINK!)
     else:
-        return redirect(url_for('auto_search',
-                                url_orig_coin=url_orig_coin,
-                                url_dest_coin=url_dest_coin))
-    resp = make_response(render_template('exch_results.html', form=input_form,
-                                         curr=curr, exchanges=exchanges,
-                                         user_exchanges=user_exchanges,
-                                         paths=sorted_paths,
-                                         path_results=path_results,
-                                         auto_search=auto_search,
-                                         feedback_form=feedback_form,
-                                         title=title,
-                                         description=description,
-                                         open_feedback_modal=open_fbck_modal,
-                                         url_orig_coin=url_orig_coin,
-                                         url_dest_coin=url_dest_coin))
-    # Store session ID & Currency in cookie if there are not already stored
-    if not session_id:
-        resp.set_cookie('session', new_session_id)
-    if currency != curr:
-        resp.set_cookie('calc_currency', curr)
-    return resp
-
-
-@app.route("/exchanges/search/", methods=['GET', 'POST'])
-@app.route("/exchanges/search/<url_orig_coin>+<url_dest_coin>",
-           methods=['GET', 'POST'])
-def auto_search(url_orig_coin=None, url_dest_coin=None):
-    """Page that automatically performs a search based on the
-    arguments provided.
-    The feedback for may also get here as well.
-    """
-    session_id = request.cookies.get('session')
-    if not session_id:
-        new_session_id = token_hex(8)
-    sorted_paths = []
-    input_form = SearchForm()
-    # Choose currency: 1) Form 2) Cookie 3) Default
-    currency = request.cookies.get('calc_currency')
-    if input_form.currency.data != 'Empty':
-        curr = input_form.currency.data
-    elif currency:
-        curr = currency
-        input_form.currency.data = curr
-    else:
-        curr = Params.DEFAULT_CURRENCY
-        input_form.currency.data = curr
-    auto_search = False
-    feedback_form = FeedbackForm()
-    exchanges = get_exchanges(['Exchange'])
-    user_exchanges = [exch.id for exch in exchanges]
-    path_results = None
-    open_fbck_modal = False
-    # Get Meta tags
-    if url_orig_coin and url_dest_coin:
-        title = get_meta_tags('Exchanges|Results',
-                              'Title',
-                              [url_orig_coin, url_dest_coin])
-        description = get_meta_tags('Exchanges|Results',
-                                    'Description',
-                                    [url_orig_coin, url_dest_coin])
-    else:
-        title = get_meta_tags('Exchanges', 'Title')
-        description = get_meta_tags('Exchanges', 'Description')
-    # 1) ACTIONS IF *NO* FORM WAS FILLED (DIRECT LINK!)
-    if url_orig_coin and url_dest_coin:
         url_orig_coin = url_orig_coin.upper()
         url_dest_coin = url_dest_coin.upper()
         orig_coin = get_coin(url_orig_coin)
@@ -351,9 +285,6 @@ def auto_search(url_orig_coin=None, url_dest_coin=None):
         if dest_coin:
             input_form.dest_coin.data = dest_coin.long_name
         auto_search = True
-    else:
-        url_orig_coin = 'empty'
-        url_dest_coin = 'empty'
     resp = make_response(render_template('exch_results.html', form=input_form,
                                          curr=curr, exchanges=exchanges,
                                          user_exchanges=user_exchanges,
