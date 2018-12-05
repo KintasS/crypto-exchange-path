@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+
+{% block style %}
+{% endblock style %}
+
+
+{% block activepage %}
+    <div id="navlink-selector" class="d-none" data-active="nav-link-exchanges"></div>
+{% endblock activepage %}
+
+{% block main %}
+
+    <section class="exchange-fees-hero">
+        <div class="mask-rgba-black-strong">
+
+            <!-- Heading -->
+            <h1 class="font-weight-bold text-center py-4 px-3 my-0">Fee Explorer<br><small>Browse fees by exchange</small></h1>
+
+        </div>
+
+    </section>
+
+    <!--Section: Explore Exchange fees-->
+    <section class="exchange-fees section-padding-4rem">
+
+        <!-- <h2 class="px-3 mb-4 text-center font-weight-bold">Exchange fees<br><small>by site</small></h2> -->
+
+        <div class="container">
+
+            <div class="row px-2 pb-3">
+                {% for exch in exchanges %}
+                <!-- Row for Buy -->
+                    <div class="col-6 col-md-4 col-lg-3 pb-3 px-2 px-lg-3 pb-lg-4">
+                        <a class="card-link" href="{{ url_for('exchange_fees_by_exch', exch_id=exch.id) }}" role="button" data-click="#">
+                            <div class="card exchange-card">
+                                <div class="card-body text-center">
+                                    <div class="d-inline-block d-flex justify-content-center align-items-center">
+                                        <img class="img-exch mr-2 mr-sm-3" src="/static/img/exchanges/64/{{ exch.img_fn }}" alt="{{ exch.name }} logo">
+                                        <span>{{ exch.name }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+
+            </div>
+
+            <a class="no-link-format" href="{{ url_for('exchange_fees_coin') }}">
+                <div class="lead text-center font-weight-bold indigo-color">Alternatively, check fees by Crypto</div>
+            </a>
+        </div>
+
+    </section>
+
+
+{% endblock main %}
+
+
+
+
+
+
+
+
+
+{% block js %}
+    <!-- typeahead -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap3-typeahead.min.js') }}"></script>
+    <!-- Site styles -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- Tests -->
+    <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/tests.js') }}"></script> -->
+{% endblock %}

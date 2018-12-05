@@ -3,21 +3,33 @@ import math
 import traceback
 from secrets import token_hex
 from flask import (render_template, url_for, redirect, request, make_response,
-                   current_app)
+                   current_app, Markup)
 from flask_blogging.views import _get_blogging_engine
 from crypto_exchange_path import app, db, mail
 from crypto_exchange_path.config import Params
 from crypto_exchange_path.forms import SearchForm, FeedbackForm
 from crypto_exchange_path.path_calculator import calc_paths
-from crypto_exchange_path.utils import (set_logger, error_notifier,
-                                        feedback_notifier, warning_notifier,
-                                        get_meta_tags)
-from crypto_exchange_path.utils_db import (get_exch_by_name, get_exchanges,
-                                           get_coin_by_longname, get_coin,
-                                           fx_exchange)
-from crypto_exchange_path.models import Feedback, QueryRegister
-from crypto_exchange_path.info_fetcher import (update_prices, import_exchanges,
-                                               import_fees, import_coins,
+from crypto_exchange_path.utils import (set_logger,
+                                        error_notifier,
+                                        feedback_notifier,
+                                        warning_notifier,
+                                        get_meta_tags,
+                                        get_exch_text)
+from crypto_exchange_path.utils_db import (get_exch_by_name,
+                                           get_exchanges,
+                                           get_coin_by_longname,
+                                           get_coin,
+                                           get_exchange,
+                                           fx_exchange,
+                                           get_trading_fees_by_exch,
+                                           get_dep_with_fees_by_exch,
+                                           get_coin_fees,
+                                           get_coins)
+from crypto_exchange_path.models import Feedback
+from crypto_exchange_path.info_fetcher import (update_prices,
+                                               import_exchanges,
+                                               import_fees,
+                                               import_coins,
                                                import_pairs)
 
 # Start logging
@@ -152,8 +164,9 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
     """There are two ways of landing in this page:
          - Search form was filled: performs search and returns results
          - Direct external link (no form was filled!): in this case,
-         the user is redirected to a temporal website where the search form
-         is filled and automatically executed.
+         a page with no results is shown, and then from the page a proper
+         calculation is triggered. It is done like this to let the user
+         load the page as soon as possible.
     """
     session_id = request.cookies.get('session')
     if not session_id:
@@ -285,8 +298,10 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
         if dest_coin:
             input_form.dest_coin.data = dest_coin.long_name
         auto_search = True
-    resp = make_response(render_template('exch_results.html', form=input_form,
-                                         curr=curr, exchanges=exchanges,
+    resp = make_response(render_template('exch_results.html',
+                                         form=input_form,
+                                         curr=curr,
+                                         exchanges=exchanges,
                                          user_exchanges=user_exchanges,
                                          paths=sorted_paths,
                                          path_results=path_results,
@@ -303,6 +318,145 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
     if currency != curr:
         resp.set_cookie('calc_currency', curr)
     return resp
+
+
+@app.route("/exchanges/fees", methods=['GET', 'POST'])
+def exchange_fees_exch():
+    """Fee explorer main page.
+    """
+    # If 'calc_currency' exists in cockie, use it
+    currency = request.cookies.get('calc_currency')
+    if currency:
+        curr = currency
+    else:
+        curr = Params.DEFAULT_CURRENCY
+    feedback_form = FeedbackForm()
+    # Get exchanges
+    exchanges = get_exchanges(['Exchange'])
+    # Get Meta tags
+    title = get_meta_tags('Exchanges|Fees|Exch',
+                          'Title')
+    description = get_meta_tags('Exchanges|Fees|Exch',
+                                'Description')
+    return render_template('exchange_fees_exch.html',
+                           curr=curr,
+                           title=title,
+                           description=description,
+                           feedback_form=feedback_form,
+                           exchanges=exchanges)
+
+
+@app.route("/exchanges/fees/coin", methods=['GET', 'POST'])
+def exchange_fees_coin():
+    """Fee explorer main site.
+    """
+    # If 'calc_currency' exists in cockie, use it
+    currency = request.cookies.get('calc_currency')
+    if currency:
+        curr = currency
+    else:
+        curr = Params.DEFAULT_CURRENCY
+    feedback_form = FeedbackForm()
+    # Get exchanges
+    coins = get_coins(Params.BROWSE_FEE_COINS)
+    # Get Meta tags
+    title = get_meta_tags('Exchanges|Fees|Coin',
+                          'Title')
+    description = get_meta_tags('Exchanges|Fees|Coin',
+                                'Description')
+    # Load page
+    return render_template('exchange_fees_coin.html',
+                           curr=curr,
+                           title=title,
+                           description=description,
+                           feedback_form=feedback_form,
+                           coins=coins)
+
+
+@app.route("/exchanges/fees/<exch_id>-fees", methods=['GET'])
+def exchange_fees_by_exch(exch_id):
+    """Displays the fees of the exchange given as argument.
+    """
+    exchange = get_exchange(exch_id)
+    # If exchange not recognnized, redirect
+    if not exchange:
+        return redirect(url_for('home'))
+    trading_fees = get_trading_fees_by_exch(exch_id)
+    dep_with_fees = get_dep_with_fees_by_exch(exch_id)
+    # If 'calc_currency' exists in cockie, use it
+    currency = request.cookies.get('calc_currency')
+    if currency:
+        curr = currency
+    else:
+        curr = Params.DEFAULT_CURRENCY
+    feedback_form = FeedbackForm()
+    # Get Meta tags
+    title = get_meta_tags('Exchanges|Fees|Exch|Exch',
+                          'Title',
+                          [exchange.name])
+    description = get_meta_tags('Exchanges|Fees|Exch|Exch',
+                                'Description',
+                                [exchange.name])
+    # Get Texts
+    trading_text = Markup(get_exch_text(exch_id, 'Trade'))
+    withdrawal_text = Markup(get_exch_text(exch_id, 'Withdrawal'))
+    return render_template('exchange_fees_by_exch.html',
+                           exchange=exch_id,
+                           curr=curr,
+                           title=title,
+                           description=description,
+                           feedback_form=feedback_form,
+                           trading_text=trading_text,
+                           withdrawal_text=withdrawal_text,
+                           trading_fees=trading_fees,
+                           dep_with_fees=dep_with_fees)
+
+
+@app.route("/exchanges/fees/coin/<coin_id>-fees", methods=['GET'])
+def exchange_fees_by_coin(coin_id):
+    """Displays the fees for the coin given as as argument.
+    """
+    coin = get_coin(coin_id)
+    # If exchange not recognnized, redirect
+    if not coin:
+        return redirect(url_for('home'))
+    # Get coin fees
+    coin_fees = get_coin_fees(coin_id)
+    # If 'calc_currency' exists in cockie, use it
+    currency = request.cookies.get('calc_currency')
+    if currency:
+        curr = currency
+    else:
+        curr = Params.DEFAULT_CURRENCY
+    feedback_form = FeedbackForm()
+    # Get Meta tags
+    title = get_meta_tags('Exchanges|Fees|Coin|Coin',
+                          'Title',
+                          [coin.long_name, coin.symbol])
+    description = get_meta_tags('Exchanges|Fees|Coin|Coin',
+                                'Description',
+                                [coin.long_name, coin.symbol])
+    # Get search coins
+    quick_search_coins = Params.QUICK_SEARCH_COINS
+    search_coins = []
+    search_count = 0
+    for item in quick_search_coins:
+        if item != coin_id:
+            coinA = get_coin(item)
+            search_coins.append({"coinA": coinA, "coinB": coin})
+            search_count += 1
+        # If for items have been gathered, exit loop
+        if search_count == 4:
+            break
+    # Load page
+    return render_template('exchange_fees_by_coin.html',
+                           coin=coin,
+                           curr=curr,
+                           title=title,
+                           description=description,
+                           feedback_form=feedback_form,
+                           coin_fees=coin_fees,
+                           search_coins=search_coins)
 
 
 @app.route("/update/prices_slfjh23hk353mh4567df")

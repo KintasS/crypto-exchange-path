@@ -1,6 +1,7 @@
 from crypto_exchange_path.models import Coin, TradePair, Fee, Price, Exchange
 from crypto_exchange_path import db
 from crypto_exchange_path.config import Params
+from crypto_exchange_path.utils import is_number, float_to_str
 
 
 def get_active_coins(type=None, price_id=False):
@@ -20,6 +21,27 @@ def get_active_coins(type=None, price_id=False):
         for coin in coin_in_db:
             coin_list.append(coin.id)
     return coin_list
+
+
+def get_coins(pos_limit=9999, type=None):
+    """Returns the active coins available in 'Coin' table.
+    If type is given, only those coins are retrieved (Cryptos o Fiat)
+    If a position limit is given, only coins ranked below that figure are
+    retrieved.
+    """
+    if type:
+        # coin_in_db = Coin.query.filter_by(type=type, status="Active").all()
+        coin_in_db = db.session.query(Coin)\
+            .filter((Coin.type == type) &
+                    (Coin.ranking <= pos_limit) &
+                    (Coin.status == "Active")).all()
+    else:
+        # coin_in_db = Coin.query.filter_by(status="Active").all()
+        coin_in_db = db.session.query(Coin)\
+            .filter((Coin.ranking <= pos_limit) &
+                    (Coin.status == "Active")).all()
+    coin_in_db = sorted(coin_in_db, key=lambda x: x.ranking)
+    return coin_in_db
 
 
 def get_coin(id):
@@ -140,6 +162,151 @@ def get_exch_by_coin(coin):
     if exchs:
         return set([item[0] for item in exchs])
     return set()
+
+
+def get_trading_fees_by_exch(exchange):
+    """Gets all the trading fees for 'exchange'.
+    Returns a list of dics: [{"order": x, "scope": y, "amount": z}]
+    """
+    return_list = list()
+    fee_query = Fee.query.filter_by(exchange=exchange,
+                                    action='Trade').all()
+    for fee in fee_query:
+        if fee.scope == '(Maker)':
+            return_list.append({"order": 1,
+                                "scope": 'Market Maker',
+                                "amount": str(fee.amount) + '%'})
+        elif fee.scope == '(Taker)':
+            return_list.append({"order": 2,
+                                "scope": 'Market Taker',
+                                "amount": str(fee.amount) + '%'})
+        elif fee.scope == '(BIX)':
+            return_list.append({"order": 99,
+                                "scope": 'If paying with BIX',
+                                "amount": str(fee.amount) + '%'})
+        elif fee.scope == '(BNB)':
+            return_list.append({"order": 99,
+                                "scope": 'Paying with BNB',
+                                "amount": str(fee.amount) + '%'})
+        else:
+            return_list.append({"order": 9,
+                                "scope": fee.scope,
+                                "amount": str(fee.amount) + '%'})
+    return_list = sorted(return_list, key=lambda x: x["order"])
+    return return_list
+
+
+def generate_fee_info(fee):
+    """Aux function for 'dep_get_with_fees_by_exch(exchange)' and
+    'get_coin_fees(coin_id)'.
+    Generates the formated content to be provided.
+    """
+    # If Fee Amount == None, return n/a
+    if not is_number(fee.amount):
+        return {"amount": 'n/a', "comments": None}
+    # Generate fee string
+    fee_str = fee.amount
+    # Calculate fee info
+    if fee.type == 'Percentage':
+        fee_str = "{}%".format(fee.amount)
+    else:
+        fee_str = "{} {}".format(float_to_str(fee.amount),
+                                 fee.scope)
+    if fee.min_amount and is_number(fee.min_amount):
+        try:
+            symbol = Params.CURRENCY_SYMBOLS[fee.scope]
+        except Exception as e:
+            symbol = " {}".format(fee.scope)
+        if symbol == '$':
+            fee_str = "{}\n(Min: {}{})".format(fee_str,
+                                               symbol,
+                                               fee.min_amount)
+        else:
+            fee_str = "{}\n(Min: {}{})".format(fee_str,
+                                               fee.min_amount,
+                                               symbol)
+    # Generate comments
+    comments = None
+    if fee.type == 'IfLess1kUSD':
+        comments = 'Fee applied on deposits of less than a 1,000 USD'\
+            ' equivalent'
+    return {"amount": fee_str, "comments": comments}
+
+
+def get_dep_with_fees_by_exch(exchange):
+    """Gets all the deposit and withdrawal fees for 'exchange'.
+    Returns a list of dics: [{"coin": x,
+                              "deposit": {"amount": y,
+                                          "comments": z},
+                              "withdrawal": {"amount": y,
+                                             "comments": z}]
+    """
+    return_list = list()
+    with_query = Fee.query.filter_by(exchange=exchange,
+                                     action='Withdrawal').all()
+    dep_query = Fee.query.filter_by(exchange=exchange,
+                                    action='Deposit').all()
+    for fee in with_query:
+        coin_id = fee.scope
+        coin = get_coin(coin_id)
+        deposit_info = {"amount": '-', "comments": None}
+        if coin:
+            for item in dep_query:
+                if item.scope == coin_id:
+                    deposit_info = generate_fee_info(item)
+                    break
+            withdrawal_info = generate_fee_info(fee)
+            return_list.append({"coin": coin,
+                                "deposit": deposit_info,
+                                "withdrawal": withdrawal_info})
+    return_list = sorted(return_list, key=lambda x: x["coin"].ranking)
+    return return_list
+
+
+def get_coin_fees(coin_id):
+    """Gets all the fees for the coin given as argument.
+    Returns a list of dics: [{"exchange": x,
+                              "deposit": {"amount": y,
+                                          "comments": z},
+                              "trade": {"amount": y,
+                                        "comments": z},
+                              "withdrawal": {"amount": y,
+                                             "comments": z}]
+    """
+    return_list = list()
+    with_query = Fee.query.filter_by(scope=coin_id,
+                                     action='Withdrawal').all()
+    dep_query = Fee.query.filter_by(scope=coin_id,
+                                    action='Deposit').all()
+    for fee in with_query:
+        exch_id = fee.exchange
+        exch = get_exchange(exch_id)
+        deposit_info = {"amount": '-', "comments": None}
+        if exch:
+            for item in dep_query:
+                if item.exchange == exch_id:
+                    deposit_info = generate_fee_info(item)
+                    break
+            withdrawal_info = generate_fee_info(fee)
+            # Get Trading fees
+            maker_fee = Fee.query.filter_by(exchange=exch_id,
+                                            action='Trade',
+                                            scope='(Maker)').first()
+            taker_fee = Fee.query.filter_by(exchange=exch_id,
+                                            action='Trade',
+                                            scope='(Taker)').first()
+            if maker_fee.amount == taker_fee.amount:
+                trade_fee = "{}%".format(maker_fee.amount)
+            else:
+                trade_fee = "{}% / {}%".format(maker_fee.amount, taker_fee.amount)
+            trade_info = {"amount": trade_fee, "comments": None}
+            # Generate return item
+            return_list.append({"exchange": exch,
+                                "deposit": deposit_info,
+                                "trade": trade_info,
+                                "withdrawal": withdrawal_info})
+    return_list = sorted(return_list, key=lambda x: x["exchange"].name)
+    return return_list
 
 
 def calc_fee(action, exchange, coin, amt, logger):

@@ -1,0 +1,196 @@
+{% extends "layout.html" %}
+
+
+{% block style %}
+{% endblock style %}
+
+
+{% block activepage %}
+    <div id="navlink-selector" class="d-none" data-active="nav-link-exchanges"></div>
+{% endblock activepage %}
+
+
+{% block main %}
+
+    <section class="exchange-fees-hero">
+        <div class="mask-rgba-black-strong">
+
+            <!-- Heading -->
+            <h1 class="font-weight-bold text-center py-4 px-3 my-0">{{ coin.long_name }} ({{ coin.symbol}})<br><small>Deposit, Trading & Withdrawal fees</small></h1>
+
+        </div>
+
+    </section>
+
+    <!--Section: Coin Fees-->
+    <section class="exchange-fees">
+
+        <h2 class="pt-4 px-3 mb-4 text-center font-weight-bold">{{ coin.long_name }} fees<br><small>by exchange site</small></h2>
+
+        <div class="container">
+
+            <div class="row d-flex justify-content-center pb-4">
+
+                <div class="col-12 col-lg-10 col-xl-9">
+
+                    <table class="table table-hover asset-table">
+                        <thead class="">
+                            <tr>
+                                <th scope="col"></th>
+                                <th class="align-right" scope="col">
+                                    <span class="d-sm-none">Dep.</span>
+                                    <span class="d-none d-sm-inline">Deposit fees</span>
+                                </th>
+                                <th class="align-right" scope="col">
+                                    <span class="d-sm-none">Trade</span>
+                                    <span class="d-none d-sm-inline">Trading fees</span>
+                                    <a class="d-none d-sm-inline no-link-tooltip text-right" data-toggle="tooltip" data-html="true" data-placement="top" title="When two figures are given, the former is the Market Maker fee and the latter the Market Taker fee">
+                                        <i class="fas fa-info-circle grey-color ml-1"></i>
+                                    </a>
+                                </th>
+                                <th class="align-right" scope="col">
+                                    <span class="d-sm-none">Withdraw</span>
+                                    <span class="d-none d-sm-inline">Withdrawal fees</span>
+                                </th>
+                                <th class="align-right" scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for fee in coin_fees %}
+                                <tr>
+                                    <th scope="row" class="align-middle">
+                                        <div class="d-flex align-items-center">
+                                            <img class="d-none d-sm-inline img-exch mr-3" src="/static/img/exchanges/64/{{ fee['exchange'].img_fn }}" alt="{{ fee['exchange'].name }} logo">
+                                            <a class="no-link-format" href="{{ url_for('exchange_fees_by_exch', exch_id=fee['exchange'].id) }}">{{ fee['exchange'].name }}</a>
+                                        </div>
+                                    </th>
+                                    <td class="align-middle align-right">
+                                            {{ fee["deposit"]["amount"] }}
+                                            {% if fee["deposit"]["comments"] %}
+                                                <a class="no-link-tooltip text-right" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ fee['deposit']['comments'] }}">
+                                                    <i class="fas fa-info-circle grey-color"></i>
+                                                </a>
+                                            {% endif %}
+                                    </td>
+                                    <td class="align-middle align-right">
+                                        {{ fee["trade"]["amount"] }}
+                                        {% if fee["trade"]["comments"] %}
+                                            <a class="no-link-tooltip text-right" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ fee['trade']['comments'] }}">
+                                                <i class="fas fa-info-circle grey-color"></i>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                    <td class="align-middle align-right">
+                                        {{ fee["withdrawal"]["amount"] }}
+                                        {% if fee["withdrawal"]["comments"] %}
+                                            <a class="no-link-tooltip text-right" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ fee['withdrawal']['comments'] }}">
+                                                <i class="fas fa-info-circle grey-color"></i>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                    <td class="align-middle">
+                                        <a class="indigo-color text-nowrap" href="{{ fee['exchange'].site_url }}" target="_blank" role="button" data-exch="fee['exchange'].name">
+                                            <span class="d-none d-md-inline ml-3">Sign up</span>
+                                            <small><i class="fas fa-external-link-alt ml-1"></i></small>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <a class="no-link-format" href="{{ url_for('exchange_fees_coin') }}">
+                        <div class="lead text-center font-weight-bold indigo-color">Check fees for another crypto</div>
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+    <!--Section: Buy-Sell Coin-->
+    <section class="exchange-fees section-padding-2rem">
+
+        <h2 class="mb-3 text-center font-weight-bold">Cheapest sites for {{ coin.long_name }}</h2>
+
+        <div class="container">
+
+            <div class="row d-flex justify-content-center mb-4">
+                <div class="col-12 col-md-10 col-lg-9 col-xl-8 text-center">
+                    <p class="lead mb-0 mb-lg-3">Use our Crypto Search Engine to find out which are the cheapest sites to buy or exchange {{ coin.long_name }} ({{ coin.symbol }})</p>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <!-- Row for Buy -->
+                {% for search_coin in search_coins %}
+                    <div class="col-6 col-md-4 col-lg-3 pb-3 px-2 px-sm-3 pb-sm-4">
+                        <a class="card-link" href="{{ url_for('exch_results', url_orig_coin=search_coin['coinA'].symbol, url_dest_coin=search_coin['coinB'].symbol) }}" role="button" data-click="{{ search_coin['coinA'].symbol }}+{{ search_coin['coinB'].symbol }}">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <div class="d-inline-block d-flex justify-content-center align-items-center">
+                                        <img class="img-buy-coin mr-2" src="/static/img/coins/64/{{ search_coin['coinA'].local_fn }}" alt="search_coin['coinA'].long_name logo">
+                                        <span>{{ search_coin['coinA'].symbol }}</span>
+                                        <i class="fas fa-arrow-right px-2 px-xl-3" aria-hidden="true"></i>
+                                        <img class="img-buy-coin mr-2" src="/static/img/coins/64/{{ search_coin['coinB'].local_fn }}" alt="{{ search_coin['coinB'].long_name}} logo">
+                                        <span>{{ search_coin['coinB'].symbol }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+
+                <!-- Row for Sell -->
+                {% for search_coin in search_coins %}
+                    <div class="col-6 col-md-4 col-lg-3 pb-3 px-2 px-sm-3 pb-sm-4">
+                        <a class="card-link" href="{{ url_for('exch_results', url_orig_coin=search_coin['coinB'].symbol, url_dest_coin=search_coin['coinA'].symbol) }}" role="button" data-click="{{ search_coin['coinB'].symbol }}+{{ search_coin['coinA'].symbol }}">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <div class="d-inline-block d-flex justify-content-center align-items-center">
+                                        <img class="img-buy-coin mr-2" src="/static/img/coins/64/{{ search_coin['coinB'].local_fn }}" alt="search_coin['coinB'].long_name logo">
+                                        <span>{{ search_coin['coinB'].symbol }}</span>
+                                        <i class="fas fa-arrow-right px-2 px-xl-3" aria-hidden="true"></i>
+                                        <img class="img-buy-coin mr-2" src="/static/img/coins/64/{{ search_coin['coinA'].local_fn }}" alt="{{ search_coin['coinA'].long_name}} logo">
+                                        <span>{{ search_coin['coinA'].symbol }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Back to top button -->
+    <section id="back-to-top-btn">
+        <a id="myBtn" class="" href="#">
+            <i class="fas fa-chevron-circle-up fa-3x"></i>
+        </a>
+    </section>
+
+
+{% endblock main %}
+
+
+
+
+
+
+
+
+
+{% block js %}
+    <!-- typeahead -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap3-typeahead.min.js') }}"></script>
+    <!-- Site styles -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- Tests -->
+    <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/tests.js') }}"></script> -->
+{% endblock %}

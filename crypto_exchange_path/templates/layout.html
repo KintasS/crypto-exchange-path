@@ -14,8 +14,6 @@
         {% endif %}
     {% endblock meta %}
 
-    <!-- Google verification -->
-    <meta name="google-site-verification" content="XuHHGDCd9lsTbC13HjJaO8ewpxteR77Z2rHkwcIkQPg" />
     <!-- Site icon -->
     <link rel="icon" href="{{ url_for('static', filename='img/logo/cfs_inon_nobg_2_sm.png') }}">
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -62,23 +60,32 @@
                     <a class="navbar-brand" href="{{ url_for('home') }}">
                         <div class="d-block d-flex align-items-center">
                             <img class="img-logo" src="/static/img/logo/cfs_new_logo_blue.png" alt="CryptoFeeSaver">
-                            <span class="badge badge-beta ml-2 mr-0 mr-md-4 mt-1">Beta</span>
+                            <!-- <span class="badge badge-beta ml-2 mr-0 mr-md-4 mt-1">Beta</span> -->
                         </div>
                     </a>
                     <div id="navbarToggler" class="collapse navbar-collapse">
                         <ul class="navbar-nav ml-auto mr-auto">
-                            <li class="nav-item mr-lg-2">
+                            <li class="nav-item mr-lg-1 mr-xl-3">
                                 <a id="nav-link-home" class="nav-link" href="{{ url_for('home') }}">Home</a>
                             </li>
-                            <li class="nav-item mr-lg-2">
-                                <a id="nav-link-exchanges" class="nav-link" href="{{ url_for('exchanges') }}">Exchanges</a>
+                            <li class="nav-item mr-lg-1 mr-xl-3">
+                                <a id="nav-link-exchanges" class="nav-link" href="{{ url_for('exchanges') }}">Search Engine</a>
+                            </li>
+                            <li class="nav-item dropdown mr-lg-1 mr-xl-3">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Fee Explorer
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ url_for('exchange_fees_exch') }}">Fees by Exchange</a>
+                                    <a class="dropdown-item" href="{{ url_for('exchange_fees_coin') }}">Fees by Crypto</a>
+                                </div>
                             </li>
                             <li class="nav-item">
                                 <a id="nav-link-blog" class="nav-link" href="{{ url_for('blogging.index') }}">Blog</a>
                             </li>
                         </ul>
                         <!-- Navbar Right Side -->
-                        <ul class="navbar-nav ml-md-auto mr-md-3">
+                        <ul class="navbar-nav ml-md-auto mr-md-1 mr-xl-3">
                             <li class="nav-item">
                                 <a class="open-feedback nav-item nav-link" href="#" data-toggle="modal" data-target="#modalFeedbackForm">Feedback</a>
                             </li>

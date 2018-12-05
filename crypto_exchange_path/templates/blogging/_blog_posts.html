@@ -18,10 +18,12 @@
                 {% endif %}
             <!-- Titles for pages outside the Blog section -->
             {% else %}
-                {% if title == 'Home' %}
+                <!-- Identify Home -->
+                {% if title == 'CryptoFeeSaver | Find the cheapest place to buy or exchange cryptocurrencies' %}
                     <a class="no-link-format" href="/blog"><h2 class="font-weight-bold">Latest from the blog</h2></a>
                     <p class="lead">Latest posts from our team and blog collaborators.</p>
-                {% elif title == 'Exchanges' %}
+                <!-- Identify Search Engine -->
+                {% elif title == 'Find the cheapest Crypto Exchanges | Crypto Exchange Search Engine  | CryptoFeeSaver' %}
                     <a class="no-link-format" href="/blog"><h2 class="font-weight-bold">Latest from our blog about Exchanges</h2></a>
                     <p class="lead">Latest posts from our team and blog collaborators.</p>
                 {% else %}

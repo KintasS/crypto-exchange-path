@@ -579,6 +579,6 @@ def import_pairs(logger, file):
                          base_coin=base_coin,
                          volume=volume)
         db.session.add(pair)
-    db.session.commit()
+        db.session.commit()
     logger.info("import_pairs: {} rows inserted".format(len(f_contents)))
     return
