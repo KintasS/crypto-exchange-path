@@ -920,6 +920,10 @@ section.exchange-fees .card-link {
     color: inherit;
 }
 
+section.exchange-fees .card-link:hover {
+    color: #3f51b5 !important;
+}
+
 @media (max-width: 400px) {
     section.exchange-fees .asset-table td, section.exchange-fees .asset-table th {
         font-size: 0.9em;
