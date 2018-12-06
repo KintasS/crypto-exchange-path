@@ -227,7 +227,7 @@ def generate_fee_info(fee):
                                                symbol)
     # Generate comments
     comments = None
-    if fee.type == 'IfLess1kUSD':
+    if fee.type == 'Less1kUSD':
         comments = 'Fee applied on deposits of less than a 1,000 USD'\
             ' equivalent'
     return {"amount": fee_str, "comments": comments}
@@ -334,8 +334,8 @@ def calc_fee(action, exchange, coin, amt, logger):
             else:
                 lit = "{}%".format(fee_query.amount)
                 return [wd_fee, lit]
-        # If Type == 'IfLess1kUSD', get amount in USD and check if less than 1k
-        elif fee_query.type == 'IfLess1kUSD':
+        # If Type == 'Less1kUSD', get amount in USD and check if less than 1k
+        elif fee_query.type == 'Less1kUSD':
             amount_usd = fx_exchange(coin, 'USD', amt, logger)
             if amount_usd < 1000:
                 lit = "{} {} (fixed amount for deposits of less than $1000)"\
