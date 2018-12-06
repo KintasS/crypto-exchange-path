@@ -91,11 +91,12 @@
                                         </div>
                                     </th>
                                     <td class="align-middle align-right">
-                                        {{ fee["deposit"]["amount"] }}
                                         {% if fee["deposit"]["comments"] %}
                                             <a class="no-link-tooltip text-right" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ fee['deposit']['comments'] }}">
-                                                <i class="fas fa-info-circle grey-color"></i>
+                                                <span class="dotted-underline">{{ fee["deposit"]["amount"] }}</span>
                                             </a>
+                                        {% else %}
+                                            {{ fee["deposit"]["amount"] }}
                                         {% endif %}
                                     </td>
                                     <td class="align-middle align-right">
@@ -113,6 +114,10 @@
 
                     <a class="no-link-format" href="{{ url_for('exchange_fees_exch') }}">
                         <div class="lead text-center font-weight-bold indigo-color">Check fees for another Exchange</div>
+                    </a>
+
+                    <a class="no-link-format" href="{{ url_for('exchange_fees_coin') }}">
+                        <div class="text-center font-weight-bold indigo-color pt-2">Check fees by Crypto</div>
                     </a>
 
                 </div>

@@ -172,6 +172,11 @@ img {
     text-align: right;
 }
 
+.dotted-underline {
+    border-bottom: 1px dotted black;
+    border-color: #c4c4c4
+}
+
 @media (max-width: 575.98px) {
     html {
         font-size: 0.9rem;
