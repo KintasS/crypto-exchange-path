@@ -13,7 +13,7 @@
                     <div class="row no-gutters d-flex justify-content-center">
                         <div class="col-12 col-lg-10 col-xl-8">
 
-                            <form id="search-form" method="POST" action="{{ url_for('exch_results', url_orig_coin=url_orig_coin, url_dest_coin=url_dest_coin) }}">
+                            <form id="search-form" method="POST" action="{{ url_for('exch_results', url_orig_coin=url_orig_coin, url_dest_coin=url_dest_coin, _external=True) }}">
                                 {{ form.hidden_tag() }}
 
 

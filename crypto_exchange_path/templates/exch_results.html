@@ -3,7 +3,7 @@
 
 {% block style %}
     <!-- Your custom styles -->
-    <link href="{{ url_for('static', filename='css/exch_search.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/exch_search.css', _external=True) }}" rel="stylesheet">
 {% endblock style %}
 
 
@@ -844,9 +844,9 @@
 
 {% block js %}
     <!-- typeahead -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap3-typeahead.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap3-typeahead.min.js', _external=True) }}"></script>
     <!-- Site styles -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js', _external=True) }}"></script>
     <!-- Tests -->
     <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/tests.js') }}"></script> -->
 {% endblock %}

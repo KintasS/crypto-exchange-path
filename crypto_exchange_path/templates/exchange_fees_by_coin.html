@@ -61,7 +61,7 @@
                                     <th scope="row" class="align-middle pr-0">
                                         <div class="d-flex align-items-center">
                                             <img class="d-none d-sm-inline img-exch mr-3" src="/static/img/exchanges/64/{{ fee['exchange'].img_fn }}" alt="{{ fee['exchange'].name }} logo">
-                                            <a class="no-link-format" href="{{ url_for('exchange_fees_by_exch', exch_id=fee['exchange'].id) }}">{{ fee['exchange'].name }}</a>
+                                            <a class="no-link-format" href="{{ url_for('exchange_fees_by_exch', exch_id=fee['exchange'].id, _external=True) }}">{{ fee['exchange'].name }}</a>
                                         </div>
                                     </th>
                                     <td class="align-middle align-right">
@@ -102,11 +102,11 @@
                         </tbody>
                     </table>
 
-                    <a class="no-link-format" href="{{ url_for('exchange_fees_coin') }}">
+                    <a class="no-link-format" href="{{ url_for('exchange_fees_coin', _external=True) }}">
                         <div class="lead text-center font-weight-bold indigo-color">Check fees for another crypto</div>
                     </a>
 
-                    <a class="no-link-format" href="{{ url_for('exchange_fees_exch') }}">
+                    <a class="no-link-format" href="{{ url_for('exchange_fees_exch', _external=True) }}">
                         <div class="text-center font-weight-bold indigo-color pt-2">Check fees by Exchange</div>
                     </a>
 
@@ -135,7 +135,7 @@
                 <!-- Row for Buy -->
                 {% for search_coin in search_coins %}
                     <div class="col-6 col-md-4 col-lg-3 pb-3 px-2 px-sm-3 pb-sm-4">
-                        <a class="card-link" href="{{ url_for('exch_results', url_orig_coin=search_coin['coinA'].symbol, url_dest_coin=search_coin['coinB'].symbol) }}" role="button" data-click="{{ search_coin['coinA'].symbol }}+{{ search_coin['coinB'].symbol }}">
+                        <a class="card-link" href="{{ url_for('exch_results', url_orig_coin=search_coin['coinA'].symbol, url_dest_coin=search_coin['coinB'].symbol, _external=True) }}" role="button" data-click="{{ search_coin['coinA'].symbol }}+{{ search_coin['coinB'].symbol }}">
                             <div class="card">
                                 <div class="card-body text-center">
                                     <div class="d-inline-block d-flex justify-content-center align-items-center">
@@ -154,7 +154,7 @@
                 <!-- Row for Sell -->
                 {% for search_coin in search_coins %}
                     <div class="col-6 col-md-4 col-lg-3 pb-3 px-2 px-sm-3 pb-sm-4">
-                        <a class="card-link" href="{{ url_for('exch_results', url_orig_coin=search_coin['coinB'].symbol, url_dest_coin=search_coin['coinA'].symbol) }}" role="button" data-click="{{ search_coin['coinB'].symbol }}+{{ search_coin['coinA'].symbol }}">
+                        <a class="card-link" href="{{ url_for('exch_results', url_orig_coin=search_coin['coinB'].symbol, url_dest_coin=search_coin['coinA'].symbol, _external=True) }}" role="button" data-click="{{ search_coin['coinB'].symbol }}+{{ search_coin['coinA'].symbol }}">
                             <div class="card">
                                 <div class="card-body text-center">
                                     <div class="d-inline-block d-flex justify-content-center align-items-center">
@@ -195,9 +195,7 @@
 
 {% block js %}
     <!-- typeahead -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap3-typeahead.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap3-typeahead.min.js', _external=True) }}"></script>
     <!-- Site styles -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <!-- Tests -->
-    <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/tests.js') }}"></script> -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js', _external=True) }}"></script>
 {% endblock %}

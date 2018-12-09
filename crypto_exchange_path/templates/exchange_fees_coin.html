@@ -39,7 +39,7 @@
             <div class="row px-2">
                 {% for coin in coins %}
                     <div class="asset-col col-6 col-md-4 col-lg-3 pb-3 px-2 px-lg-3" data-coin-id="{{ coin.id }}" data-coin-name="{{ coin.long_name }}">
-                        <a class="card-link" href="{{ url_for('exchange_fees_by_coin', coin_id=coin.id) }}" role="button" data-click="#">
+                        <a class="card-link" href="{{ url_for('exchange_fees_by_coin', coin_id=coin.id, _external=True) }}" role="button" data-click="#">
                             <div class="card asset-card">
                                 <div class="card-body text-center">
                                     <div class="d-inline-block d-flex justify-content-center align-items-center">
@@ -55,7 +55,7 @@
             </div>
         </div>
 
-        <a class="no-link-format" href="{{ url_for('exchange_fees_exch') }}">
+        <a class="no-link-format" href="{{ url_for('exchange_fees_exch', _external=True) }}">
             <div class="lead text-center font-weight-bold indigo-color pt-2">Alternatively, check fees by Exchange</div>
         </a>
 
@@ -80,10 +80,8 @@
 
 {% block js %}
     <!-- typeahead -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap3-typeahead.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap3-typeahead.min.js', _external=True) }}"></script>
     <!-- Site styles -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/fee_explorer.js') }}"></script>
-    <!-- Tests -->
-    <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/tests.js') }}"></script> -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js', _external=True) }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/fee_explorer.js', _external=True) }}"></script>
 {% endblock %}

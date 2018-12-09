@@ -61,7 +61,7 @@
                         <h5 class="font-weight-bold pt-2 pt-sm-3 m-0">US Dollar to Bitcoin</h5>
                     </div>
                     <div class="card-footer">
-                        <a class="trending-searches-btn select-btn btn btn-indigo-dark btn-rounded" href="{{ url_for('exch_results', url_orig_coin='USD', url_dest_coin='BTC') }}" role="button" data-click="USD+BTC">Search</a>
+                        <a class="trending-searches-btn select-btn btn btn-indigo-dark btn-rounded" href="{{ url_for('exch_results', url_orig_coin='USD', url_dest_coin='BTC', _external=True) }}" role="button" data-click="USD+BTC">Search</a>
                     </div>
                 </div>
                 <div class="card">
@@ -88,7 +88,7 @@
                         <h5 class="font-weight-bold pt-2 pt-sm-3 m-0">Ethereum to Monero</h5>
                     </div>
                     <div class="card-footer">
-                        <a class="trending-searches-btn select-btn btn btn-indigo-dark btn-rounded" href="{{ url_for('exch_results', url_orig_coin='ETH', url_dest_coin='XMR') }}" role="button" data-click="ETH+XMR">Search</a>
+                        <a class="trending-searches-btn select-btn btn btn-indigo-dark btn-rounded" href="{{ url_for('exch_results', url_orig_coin='ETH', url_dest_coin='XMR', _external=True) }}" role="button" data-click="ETH+XMR">Search</a>
                     </div>
                 </div>
                 <div class="card">
@@ -101,7 +101,7 @@
                         <h5 class="font-weight-bold pt-2 pt-sm-3 m-0">Bitcoin to Euro</h5>
                     </div>
                     <div class="card-footer">
-                        <a class="trending-searches-btn select-btn btn btn-indigo-dark btn-rounded" href="{{ url_for('exch_results', url_orig_coin='BTC', url_dest_coin='EUR') }}" role="button" data-click="BTC+EUR">Search</a>
+                        <a class="trending-searches-btn select-btn btn btn-indigo-dark btn-rounded" href="{{ url_for('exch_results', url_orig_coin='BTC', url_dest_coin='EUR', _external=True) }}" role="button" data-click="BTC+EUR">Search</a>
                     </div>
                 </div>
             </div>
@@ -192,9 +192,9 @@
 
 {% block js %}
     <!-- typeahead -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap3-typeahead.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap3-typeahead.min.js', _external=True) }}"></script>
     <!-- Site styles -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js', _external=True) }}"></script>
     <!-- Tests -->
     <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/tests.js') }}"></script> -->
 {% endblock %}
