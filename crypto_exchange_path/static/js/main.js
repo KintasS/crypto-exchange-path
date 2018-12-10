@@ -38,7 +38,7 @@ $(document).ready(function() {
                 $input_orig_coin.val(item.long_name).change();
                 // Change Search Form action (i.e. it's URL)
                 var formAction = $searchForm.attr('action');
-                var newAction = formAction.replace(/search\/.*\-to-/, 'search/' + item.id + '-to-');
+                var newAction = formAction.replace(/search\/.*\-to-/, 'search/' + item.id.toLowerCase() + '-to-');
                 $searchForm.attr('action', newAction);
             },
             sorter: function(items) {
@@ -66,7 +66,7 @@ $(document).ready(function() {
                 $input_dest_coin.val(item.long_name).change();
                 // Change Search Form action (i.e. it's URL)
                 var formAction = $searchForm.attr('action');
-                var newAction = formAction.replace(/\-to-.*/, '-to-' + item.id);
+                var newAction = formAction.replace(/\-to-.*/, '-to-' + item.id.toLowerCase());
                 $searchForm.attr('action', newAction);
 
             },
@@ -245,12 +245,15 @@ $(document).ready(function() {
     // Returns 'True' if a valid input was given
     function CheckLocationInput($input, exchList) {
         var value = $input.val();
-        // Change Coinbase to look by ID
-        if (value == 'Coinbase PRO') {
-            value = 'Coinbase';
-        }
         // Check if there is any input
         if (value.length > 0) {
+            // Convert exchange description to ID
+            if (value == 'Coinbase PRO') {
+                value = 'coinbase-pro';
+            } else {
+                value = value.toLowerCase();
+            }
+            // Check if exists
             if (exchList.indexOf(value) >= 0) {
                 $input.css({
                     'font-style': 'italic',

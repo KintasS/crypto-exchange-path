@@ -24,7 +24,8 @@ from crypto_exchange_path.utils_db import (get_exch_by_name,
                                            get_trading_fees_by_exch,
                                            get_dep_with_fees_by_exch,
                                            get_coin_fees,
-                                           get_coins)
+                                           get_coins,
+                                           get_coin_by_urlname)
 from crypto_exchange_path.models import Feedback
 from crypto_exchange_path.info_fetcher import (update_prices,
                                                import_exchanges,
@@ -286,10 +287,8 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
             sorted_paths = sorted_paths[0:Params.MAX_PATHS]
     # 2) ACTIONS IF *NO* FORM WAS FILLED (DIRECT LINK!)
     else:
-        url_orig_coin = url_orig_coin.upper()
-        url_dest_coin = url_dest_coin.upper()
-        orig_coin = get_coin(url_orig_coin)
-        dest_coin = get_coin(url_dest_coin)
+        orig_coin = get_coin(url_orig_coin.upper())
+        dest_coin = get_coin(url_dest_coin.upper())
         if orig_coin:
             input_form.orig_coin.data = orig_coin.long_name
             amt = fx_exchange("USD", orig_coin.id, 3000, logger)
@@ -372,14 +371,14 @@ def exchange_fees_coin():
                            coins=coins)
 
 
-@app.route("/exchanges/fees/<exch_id>-fees", methods=['GET'])
+@app.route("/exchanges/fees/<exch_id>", methods=['GET'])
 def exchange_fees_by_exch(exch_id):
     """Displays the fees of the exchange given as argument.
     """
     exchange = get_exchange(exch_id)
     # If exchange not recognnized, redirect
     if not exchange:
-        return redirect(url_for('home'))
+        return redirect(url_for('exchange_fees_exch'))
     trading_fees = get_trading_fees_by_exch(exch_id)
     dep_with_fees = get_dep_with_fees_by_exch(exch_id)
     # If 'calc_currency' exists in cockie, use it
@@ -411,16 +410,16 @@ def exchange_fees_by_exch(exch_id):
                            dep_with_fees=dep_with_fees)
 
 
-@app.route("/exchanges/fees/coin/<coin_id>-fees", methods=['GET'])
-def exchange_fees_by_coin(coin_id):
+@app.route("/exchanges/fees/coins/<coin_url_name>", methods=['GET'])
+def exchange_fees_by_coin(coin_url_name):
     """Displays the fees for the coin given as as argument.
     """
-    coin = get_coin(coin_id)
+    coin = get_coin_by_urlname(coin_url_name)
     # If exchange not recognnized, redirect
     if not coin:
-        return redirect(url_for('home'))
+        return redirect(url_for('exchange_fees_coin'))
     # Get coin fees
-    coin_fees = get_coin_fees(coin_id)
+    coin_fees = get_coin_fees(coin.id)
     # If 'calc_currency' exists in cockie, use it
     currency = request.cookies.get('calc_currency')
     if currency:
@@ -436,11 +435,14 @@ def exchange_fees_by_coin(coin_id):
                                 'Description',
                                 [coin.long_name, coin.symbol])
     # Get search coins
-    quick_search_coins = Params.QUICK_SEARCH_COINS
+    if (coin.type == 'Crypto'):
+        quick_search_coins = Params.QUICK_SEARCH_COINS['Crypto']
+    else:
+        quick_search_coins = Params.QUICK_SEARCH_COINS['Fiat']
     search_coins = []
     search_count = 0
     for item in quick_search_coins:
-        if item != coin_id:
+        if item != coin.id:
             coinA = get_coin(item)
             search_coins.append({"coinA": coinA, "coinB": coin})
             search_count += 1

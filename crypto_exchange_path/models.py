@@ -63,6 +63,7 @@ class Coin(db.Model):
     id = db.Column(db.String(10), primary_key=True, nullable=False)
     symbol = db.Column(db.String(10), unique=True, nullable=False)
     long_name = db.Column(db.String(50), unique=True, nullable=False)
+    url_name = db.Column(db.String(50), unique=True, nullable=False)
     price_id = db.Column(db.String(10), unique=True, nullable=False)
     ranking = db.Column(db.Float)
     image_url = db.Column(db.String(100))

@@ -87,7 +87,7 @@
                                     <th scope="row" class="align-middle">
                                         <div class="d-flex align-items-center">
                                             <img class=" mr-3 img-coin" src="/static/img/coins/64/{{ fee['coin'].local_fn }}" alt="{{ fee['coin'].long_name }} logo">
-                                            <a class="no-link-format" href="{{ url_for('exchange_fees_by_coin', coin_id=fee['coin'].id, _external=True) }}">{{ fee["coin"].long_name }}</a>
+                                            <a class="no-link-format" href="{{ url_for('exchange_fees_by_coin', coin_url_name=fee['coin'].url_name, _external=True) }}">{{ fee["coin"].long_name }}</a>
                                         </div>
                                     </th>
                                     <td class="align-middle align-right">

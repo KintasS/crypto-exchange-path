@@ -536,11 +536,12 @@ def import_coins(logger, file):
                        " '{}' Vs '{}'.".format(len(f_contents), len(db_coin)))
     # Loop for each line
     for line in f_contents:
-        id, symbol, ln, prc_id, rank, url, loc_fn, type, stat = line\
+        id, symbol, ln, url_ln, prc_id, rank, url, loc_fn, type, stat = line\
             .replace("\n", "").split("¬")
         coin = Coin(id=id,
                     symbol=symbol,
                     long_name=ln,
+                    url_name=url_ln,
                     price_id=prc_id,
                     ranking=rank,
                     image_url=url,

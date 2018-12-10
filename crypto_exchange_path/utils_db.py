@@ -58,6 +58,13 @@ def get_coin_by_longname(longname):
     return coin
 
 
+def get_coin_by_urlname(url_name):
+    """Returns a Coin object given its url name.
+    """
+    coin = Coin.query.filter_by(url_name=url_name).first()
+    return coin
+
+
 def get_coin_by_price_id(price_id):
     """Returns a Coin object given its 'price_id'.
     """

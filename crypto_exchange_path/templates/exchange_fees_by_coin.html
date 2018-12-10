@@ -135,7 +135,7 @@
                 <!-- Row for Buy -->
                 {% for search_coin in search_coins %}
                     <div class="col-6 col-md-4 col-lg-3 pb-3 px-2 px-sm-3 pb-sm-4">
-                        <a class="card-link" href="{{ url_for('exch_results', url_orig_coin=search_coin['coinA'].symbol, url_dest_coin=search_coin['coinB'].symbol, _external=True) }}" role="button" data-click="{{ search_coin['coinA'].symbol }}+{{ search_coin['coinB'].symbol }}">
+                        <a class="card-link" href="{{ url_for('exch_results', url_orig_coin=search_coin['coinA'].symbol.lower(), url_dest_coin=search_coin['coinB'].symbol.lower(), _external=True) }}" role="button" data-click="{{ search_coin['coinA'].symbol }}+{{ search_coin['coinB'].symbol }}">
                             <div class="card">
                                 <div class="card-body text-center">
                                     <div class="d-inline-block d-flex justify-content-center align-items-center">
@@ -154,7 +154,7 @@
                 <!-- Row for Sell -->
                 {% for search_coin in search_coins %}
                     <div class="col-6 col-md-4 col-lg-3 pb-3 px-2 px-sm-3 pb-sm-4">
-                        <a class="card-link" href="{{ url_for('exch_results', url_orig_coin=search_coin['coinB'].symbol, url_dest_coin=search_coin['coinA'].symbol, _external=True) }}" role="button" data-click="{{ search_coin['coinB'].symbol }}+{{ search_coin['coinA'].symbol }}">
+                        <a class="card-link" href="{{ url_for('exch_results', url_orig_coin=search_coin['coinB'].symbol.lower(), url_dest_coin=search_coin['coinA'].symbol.lower(), _external=True) }}" role="button" data-click="{{ search_coin['coinB'].symbol }}+{{ search_coin['coinA'].symbol }}">
                             <div class="card">
                                 <div class="card-body text-center">
                                     <div class="d-inline-block d-flex justify-content-center align-items-center">
