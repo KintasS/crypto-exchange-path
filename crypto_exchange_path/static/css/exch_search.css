@@ -599,6 +599,11 @@ section#results {
 
 section#results .exchange-format {
     font-weight: 700;
+    color: #212529;
+}
+
+section#results .exchange-format:hover {
+    text-decoration: underline;
 }
 
 section#results .orig-dest-format {

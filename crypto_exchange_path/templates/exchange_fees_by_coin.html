@@ -92,7 +92,7 @@
                                         {% endif %}
                                     </td>
                                     <td class="align-middle pr-0">
-                                        <a class="indigo-color text-nowrap" href="{{ fee['exchange'].site_url }}" target="_blank" role="button" data-exch="fee['exchange'].name">
+                                        <a class="referral-exchfees-exch indigo-color text-nowrap" href="{{ fee['exchange'].site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ fee['exchange'].name }}">
                                             <span class="d-none d-md-inline ml-3">Sign up</span>
                                             <small><i class="fas fa-external-link-alt ml-1"></i></small>
                                         </a>
@@ -198,4 +198,5 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap3-typeahead.min.js', _external=True) }}"></script>
     <!-- Site styles -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/main.js', _external=True) }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/exchange_fees.js', _external=True) }}"></script>
 {% endblock %}

@@ -29,7 +29,21 @@ $(document).ready(function() {
 
     });
 
+    ///////////////////////////////////////////////////////////////////////////
+    /////   GOOGLE ANALYTICS EVENTS (Search for 'gtag' in the rest of code!)
+    ///////////////////////////////////////////////////////////////////////////
 
+
+    // REDIRECT EVENTS //
+
+    // 'Referral Popular Exchanges Button' Event
+    $(".referral-exchfees-exch").click(function() {
+        var exchangeName = $(this).attr("data-exch");
+        gtag('event', exchangeName, {
+            'event_category': 'Redirect - Exchange',
+            'event_label': 'Exchange Fees'
+        });
+    });
 
 
 });

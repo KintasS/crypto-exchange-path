@@ -734,21 +734,21 @@ $(document).ready(function() {
 
     // Show URL on Mouse Hover
     // Open in new window
-    $(".referral-summary-link").click(function() {
-        window.open($(this).find("a:first").attr("href"));
-        return false;
-    });
-    $(".referral-summary-link").hover(function() {
-        $(this).find("a:first").css({
-            color: '#4285F4'
-        });
-        return false;
-    }, function() {
-        $(this).find("a:first").css({
-            color: '#212529'
-        });
-        return false;
-    });
+    // $(".referral-summary-link").click(function() {
+    //     window.open($(this).find("a:first").attr("href"));
+    //     return false;
+    // });
+    // $(".referral-summary-link").hover(function() {
+    //     $(this).find("a:first").css({
+    //         color: '#4285F4'
+    //     });
+    //     return false;
+    // }, function() {
+    //     $(this).find("a:first").css({
+    //         color: '#212529'
+    //     });
+    //     return false;
+    // });
 
 
 
