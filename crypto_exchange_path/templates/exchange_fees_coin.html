@@ -6,7 +6,7 @@
 
 
 {% block activepage %}
-    <div id="navlink-selector" class="d-none" data-active="nav-link-feeexplorer"></div>
+    <div id="navlink-selector" class="d-none" data-active="nav-link-exchangefees"></div>
 {% endblock activepage %}
 
 {% block main %}
@@ -15,7 +15,7 @@
         <div class="mask-rgba-black-strong">
 
             <!-- Heading -->
-            <h1 class="font-weight-bold text-center py-4 px-3 my-0">Fee Explorer<br><small>Browse fees by cryptocurrency</small></h1>
+            <h1 class="font-weight-bold text-center py-4 px-3 my-0">Exchange Fees<br><small>Browse fees by cryptocurrency</small></h1>
 
         </div>
 
@@ -56,7 +56,7 @@
         </div>
 
         <a class="no-link-format" href="{{ url_for('exchange_fees_exch', _external=True) }}">
-            <div class="lead text-center font-weight-bold indigo-color pt-2">Alternatively, check fees by Exchange</div>
+            <div class="lead text-center font-weight-bold indigo-color pt-2">Alternatively, browse fees by Exchange</div>
         </a>
 
     </section>
@@ -83,5 +83,5 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap3-typeahead.min.js', _external=True) }}"></script>
     <!-- Site styles -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/main.js', _external=True) }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/fee_explorer.js', _external=True) }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/exchange_fees.js', _external=True) }}"></script>
 {% endblock %}

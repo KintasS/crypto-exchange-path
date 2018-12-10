@@ -6,7 +6,7 @@
 
 
 {% block activepage %}
-    <div id="navlink-selector" class="d-none" data-active="nav-link-feeexplorer"></div>
+    <div id="navlink-selector" class="d-none" data-active="nav-link-exchangefees"></div>
 {% endblock activepage %}
 
 {% block main %}
@@ -15,7 +15,7 @@
         <div class="mask-rgba-black-strong">
 
             <!-- Heading -->
-            <h1 class="font-weight-bold text-center py-4 px-3 my-0">Fee Explorer<br><small>Browse fees by exchange</small></h1>
+            <h1 class="font-weight-bold text-center py-4 px-3 my-0">Exchange Fees<br><small>Browse fees by exchange</small></h1>
 
         </div>
 
@@ -48,7 +48,7 @@
             </div>
 
             <a class="no-link-format" href="{{ url_for('exchange_fees_coin', _external=True) }}">
-                <div class="lead text-center font-weight-bold indigo-color">Alternatively, check fees by Crypto</div>
+                <div class="lead text-center font-weight-bold indigo-color">Alternatively, browse fees by Crypto</div>
             </a>
         </div>
 

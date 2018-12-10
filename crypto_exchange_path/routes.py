@@ -69,7 +69,6 @@ def get_latest_posts(tag=None, count=3):
     return posts
 
 
-@app.route("/home", methods=['GET', 'POST'])
 @app.route("/", methods=['GET', 'POST'])
 def home():
     url_orig_coin = 'empty'
@@ -322,7 +321,7 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
 
 @app.route("/exchanges/fees", methods=['GET', 'POST'])
 def exchange_fees_exch():
-    """Fee explorer main page.
+    """'Exchange fees by exchange' page.
     """
     # If 'calc_currency' exists in cockie, use it
     currency = request.cookies.get('calc_currency')
@@ -348,7 +347,7 @@ def exchange_fees_exch():
 
 @app.route("/exchanges/fees/coin", methods=['GET', 'POST'])
 def exchange_fees_coin():
-    """Fee explorer main site.
+    """'Exchange fees by cryptocurrency' page.
     """
     # If 'calc_currency' exists in cockie, use it
     currency = request.cookies.get('calc_currency')
