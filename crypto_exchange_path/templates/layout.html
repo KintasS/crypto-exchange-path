@@ -18,13 +18,14 @@
         <meta property="og:url" content="{{ request.url }}" />
         <meta property="og:description" content="{{ description }}">
         <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@SaverFee" />
+        <meta name="twitter:creator" content="@SaverFee" />
         {% block og_image %}
         <meta property="og:image" content="https://www.cryptofeesaver.com/static/img/blog/tags/cfs_landing_square.jpg">
         <meta name="twitter:image" content="https://www.cryptofeesaver.com/static/img/blog/tags/cfs_landing_landscape.jpg">
         {% endblock og_image %}
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:site" content="@SaverFee" />
-        <meta name="twitter:creator" content="@SaverFee" />
+
     {% endif %}
 
     <!-- Site icon -->
