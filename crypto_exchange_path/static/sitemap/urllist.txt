@@ -1,7 +1,7 @@
 https://www.cryptofeesaver.com/
 https://www.cryptofeesaver.com/exchanges
 https://www.cryptofeesaver.com/exchanges/fees
-https://www.cryptofeesaver.com/exchanges/fees/coin
+https://www.cryptofeesaver.com/exchanges/fees/coins
 https://www.cryptofeesaver.com/blog/
 https://www.cryptofeesaver.com/blog/page/3/cryptofeesaver-builds-the-first-exchange-search-engine-for-the-crypto-community/
 https://www.cryptofeesaver.com/blog/page/4/how-our-exchange-search-engine-works/
