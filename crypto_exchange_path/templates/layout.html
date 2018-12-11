@@ -6,13 +6,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- Metadata info for blog -->
     {% block meta %}
-        <!-- TITLE & METADATA -->
-        <!-- Info for regular pages (for blog pages it is loaded in their templates) -->
-        {% if not meta %}
-            {% include '_metatags.html' %}
-        {% endif %}
     {% endblock meta %}
+    <!-- Metadata info for regular pages (for blog pages it is loaded in their templates) -->
+    {% if not meta %}
+        <title>{{ title }}</title>
+        <meta name="description" content="{{ description }}"/>
+
+        <meta property="og:title" content="{{ title }}" />
+        <meta property="og:url" content="{{ request.url }}" />
+        <meta property="og:description" content="{{ description }}">
+        <meta property="og:type" content="website" />
+        {% block og_image %}
+        <meta property="og:image" content="https://www.cryptofeesaver.com/static/img/blog/tags/cfs_landing_square.jpg">
+        <meta name="twitter:image" content="https://www.cryptofeesaver.com/static/img/blog/tags/cfs_landing_landscape.jpg">
+        {% endblock og_image %}
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@SaverFee" />
+        <meta name="twitter:creator" content="@SaverFee" />
+    {% endif %}
 
     <!-- Site icon -->
     <link rel="icon" href="{{ url_for('static', filename='img/logo/cfs_inon_nobg_2_sm.png', _external=True) }}">

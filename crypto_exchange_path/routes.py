@@ -344,7 +344,7 @@ def exchange_fees_exch():
                            exchanges=exchanges)
 
 
-@app.route("/exchanges/fees/coin", methods=['GET', 'POST'])
+@app.route("/exchanges/fees/coins", methods=['GET', 'POST'])
 def exchange_fees_coin():
     """'Exchange fees by cryptocurrency' page.
     """
@@ -399,7 +399,7 @@ def exchange_fees_by_exch(exch_id):
     trading_text = Markup(get_exch_text(exch_id, 'Trade'))
     withdrawal_text = Markup(get_exch_text(exch_id, 'Withdrawal'))
     return render_template('exchange_fees_by_exch.html',
-                           exchange=exch_id,
+                           exchange=exchange,
                            curr=curr,
                            title=title,
                            description=description,

@@ -9,6 +9,11 @@
     <div id="navlink-selector" class="d-none" data-active="nav-link-exchangefees"></div>
 {% endblock activepage %}
 
+{% block og_image %}
+<meta property="og:image" content="https://www.cryptofeesaver.com/static/img/blog/tags/cfs_fees_exchange.jpg">
+<meta name="twitter:image" content="https://www.cryptofeesaver.com/static/img/blog/tags/cfs_fees_exchange_landscape.jpg">
+{% endblock og_image %}
+
 
 {% block main %}
 
@@ -16,7 +21,7 @@
         <div class="mask-rgba-black-strong">
 
             <!-- Heading -->
-            <h1 class="font-weight-bold text-center py-4 mx-3 my-0">{{ exchange }}<br><small>Deposit, Trading & Withdrawal fees</small></h1>
+            <h1 class="font-weight-bold text-center py-4 mx-3 my-0">{{ exchange.name }}<br><small>Deposit, Trading & Withdrawal fees</small></h1>
 
         </div>
 
@@ -39,7 +44,7 @@
     <!--Section: Trading Fees-->
     <section class="exchange-fees">
 
-        <h2 class="pt-5 pt-md-0 mb-4 px-3 text-center font-weight-bold">{{ exchange }} Trading fees</h2>
+        <h2 class="pt-5 pt-md-0 mb-4 px-3 text-center font-weight-bold">{{ exchange.name }} Trading fees</h2>
 
         <div class="container">
 
@@ -65,7 +70,7 @@
     <!--Section: Deposit & Withdrawal Fees-->
     <section class="exchange-fees section-padding-2rem">
 
-        <h2 class="px-3 mb-4 text-center font-weight-bold">{{ exchange }} Deposit & Withdrawal fees</h2>
+        <h2 class="px-3 mb-4 text-center font-weight-bold">{{ exchange.name }} Deposit & Withdrawal fees</h2>
 
         <div class="container">
 
