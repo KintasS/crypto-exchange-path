@@ -399,7 +399,8 @@ $(document).ready(function() {
         }
         // Trigger GA Event
         var formAction = $searchForm.attr('action');
-        var searchCoins = formAction.replace('/exchanges/search/', '');
+        var searchCoins = formAction.replace('https://www.cryptofeesaver.com/exchanges/search/', '');
+        searchCoins = searchCoins.replace('-to-', ' -> ');
         gtag('event', 'Exchange Engine Search', {
             'event_category': 'Click',
             'event_label': 'Exchange Engine Search: ' + String(searchCoins)
