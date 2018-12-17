@@ -818,9 +818,11 @@
             </div>
 
 
-            <a class="no-link-format" href="{{ url_for('exchanges', _external=True) }}">
-                <div class="lead text-center font-weight-bold indigo-color pb-4">Perform another search</div>
-            </a>
+            {% if paths %}
+                <a class="no-link-format" href="{{ url_for('exchanges', _external=True) }}">
+                    <div class="lead text-center font-weight-bold indigo-color pb-4">Perform another search</div>
+                </a>
+            {% endif %}
 
         </div>
 
