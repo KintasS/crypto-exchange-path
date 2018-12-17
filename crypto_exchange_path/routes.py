@@ -192,10 +192,10 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
     # Get Meta tags (in case form was not filled)
     title = get_meta_tags('Exchanges|Results',
                           'Title',
-                          [url_orig_coin, url_dest_coin])
+                          [url_orig_coin.upper(), url_dest_coin.upper()])
     description = get_meta_tags('Exchanges|Results',
                                 'Description',
-                                [url_orig_coin, url_dest_coin])
+                                [url_orig_coin.upper(), url_dest_coin.upper()])
     # 1) ACTIONS IF *SEARCH* FORM WAS FILLED
     if input_form.search_submit.data:
         if input_form.validate():
@@ -316,6 +316,26 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
     if currency != curr:
         resp.set_cookie('calc_currency', curr)
     return resp
+
+
+@app.route("/exchanges/search/<url_orig_coin>+<url_dest_coin>",
+           methods=['GET', 'POST'])
+def exch_results_old_1(url_orig_coin=None, url_dest_coin=None):
+    """Redirect for Old format results (1)
+    """
+    return redirect(url_for('exch_results',
+                            url_orig_coin=url_orig_coin.lower(),
+                            url_dest_coin=url_dest_coin.lower()))
+
+
+@app.route("/exchanges/search/<url_orig_coin>/<url_dest_coin>",
+           methods=['GET', 'POST'])
+def exch_results_old_2(url_orig_coin=None, url_dest_coin=None):
+    """Redirect for Old format results (2)
+    """
+    return redirect(url_for('exch_results',
+                            url_orig_coin=url_orig_coin.lower(),
+                            url_dest_coin=url_dest_coin.lower()))
 
 
 @app.route("/exchanges/fees", methods=['GET', 'POST'])
