@@ -14,7 +14,9 @@ from crypto_exchange_path.utils import (set_logger,
                                         feedback_notifier,
                                         warning_notifier,
                                         get_meta_tags,
-                                        get_exch_text)
+                                        get_exch_text,
+                                        load_json_file,
+                                        get_coin_data)
 from crypto_exchange_path.utils_db import (get_exch_by_name,
                                            get_exchanges,
                                            get_coin_by_longname,
@@ -31,10 +33,18 @@ from crypto_exchange_path.info_fetcher import (update_prices,
                                                import_exchanges,
                                                import_fees,
                                                import_coins,
-                                               import_pairs)
+                                               import_pairs,
+                                               update_coins_info,
+                                               update_people_info,
+                                               update_tags_info)
 
 # Start logging
 logger = set_logger('Main', Params.LOGGER_DETAIL)
+
+# Load information files
+coin_info_file = load_json_file(Params.COIN_INFO_FILE, logger)
+people_info_file = load_json_file(Params.PEOPLE_INFO_FILE, logger)
+tag_info_file = load_json_file(Params.TAG_INFO_FILE, logger)
 
 
 @app.errorhandler(404)
@@ -75,7 +85,7 @@ def home():
     url_orig_coin = 'empty'
     url_dest_coin = 'empty'
     input_form = SearchForm()
-    # If 'calc_currency' exists in cockie, use it
+    # If 'calc_currency' exists in cookie, use it
     currency = request.cookies.get('calc_currency')
     if currency:
         curr = currency
@@ -124,7 +134,7 @@ def exchanges():
     url_orig_coin = 'empty'
     url_dest_coin = 'empty'
     input_form = SearchForm()
-    # If 'calc_currency' exists in cockie, use it
+    # If 'calc_currency' exists in cookie, use it
     currency = request.cookies.get('calc_currency')
     if currency:
         curr = currency
@@ -342,7 +352,7 @@ def exch_results_old_2(url_orig_coin=None, url_dest_coin=None):
 def exchange_fees_exch():
     """'Exchange fees by exchange' page.
     """
-    # If 'calc_currency' exists in cockie, use it
+    # If 'calc_currency' exists in cookie, use it
     currency = request.cookies.get('calc_currency')
     if currency:
         curr = currency
@@ -368,7 +378,7 @@ def exchange_fees_exch():
 def exchange_fees_coin():
     """'Exchange fees by cryptocurrency' page.
     """
-    # If 'calc_currency' exists in cockie, use it
+    # If 'calc_currency' exists in cookie, use it
     currency = request.cookies.get('calc_currency')
     if currency:
         curr = currency
@@ -401,7 +411,7 @@ def exchange_fees_by_exch(exch_id):
         return redirect(url_for('exchange_fees_exch'))
     trading_fees = get_trading_fees_by_exch(exch_id)
     dep_with_fees = get_dep_with_fees_by_exch(exch_id)
-    # If 'calc_currency' exists in cockie, use it
+    # If 'calc_currency' exists in cookie, use it
     currency = request.cookies.get('calc_currency')
     if currency:
         curr = currency
@@ -434,44 +444,65 @@ def exchange_fees_by_exch(exch_id):
 def exchange_fees_by_coin(coin_url_name):
     """Displays the fees for the coin given as as argument.
     """
-    coin = get_coin_by_urlname(coin_url_name)
-    # If exchange not recognnized, redirect
-    if not coin:
+    try:
+        coin = get_coin_by_urlname(coin_url_name)
+        # If coin not recognized, redirect
+        if not coin:
+            return redirect(url_for('exchange_fees_coin'))
+        # Get coin fees
+        coin_fees = get_coin_fees(coin.id)
+        # Get coin data
+        print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        print("{} --> {} items".format("coin_info_file", len(coin_info_file)))
+        print("{} --> {} items".format("people_info_file", len(people_info_file)))
+        print("{} --> {} items".format("tag_info_file", len(tag_info_file)))
+        # print("{} -------> {} items".format("people_info_file", people_info_file["sergey-sholom"]))
+        print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        coin_data = get_coin_data(coin.paprika_id,
+                                  coin_info_file,
+                                  people_info_file,
+                                  tag_info_file,
+                                  logger)
+        # If 'calc_currency' exists in cookie, use it
+        currency = request.cookies.get('calc_currency')
+        if currency:
+            curr = currency
+        else:
+            curr = Params.DEFAULT_CURRENCY
+        feedback_form = FeedbackForm()
+        # Get Meta tags
+        title = get_meta_tags('Exchanges|Fees|Coin|Coin',
+                              'Title',
+                              [coin.long_name, coin.symbol])
+        description = get_meta_tags('Exchanges|Fees|Coin|Coin',
+                                    'Description',
+                                    [coin.long_name, coin.symbol])
+        # Get search coins
+        if (coin.type == 'Crypto'):
+            quick_search_coins = Params.QUICK_SEARCH_COINS['Crypto']
+        else:
+            quick_search_coins = Params.QUICK_SEARCH_COINS['Fiat']
+        search_coins = []
+        search_count = 0
+        for item in quick_search_coins:
+            if item != coin.id:
+                coinA = get_coin(item)
+                search_coins.append({"coinA": coinA, "coinB": coin})
+                search_count += 1
+            # If for items have been gathered, exit loop
+            if search_count == 4:
+                break
+    # Catch generic exception just in case anything went wront
+    except Exception as e:
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
         return redirect(url_for('exchange_fees_coin'))
-    # Get coin fees
-    coin_fees = get_coin_fees(coin.id)
-    # If 'calc_currency' exists in cockie, use it
-    currency = request.cookies.get('calc_currency')
-    if currency:
-        curr = currency
-    else:
-        curr = Params.DEFAULT_CURRENCY
-    feedback_form = FeedbackForm()
-    # Get Meta tags
-    title = get_meta_tags('Exchanges|Fees|Coin|Coin',
-                          'Title',
-                          [coin.long_name, coin.symbol])
-    description = get_meta_tags('Exchanges|Fees|Coin|Coin',
-                                'Description',
-                                [coin.long_name, coin.symbol])
-    # Get search coins
-    if (coin.type == 'Crypto'):
-        quick_search_coins = Params.QUICK_SEARCH_COINS['Crypto']
-    else:
-        quick_search_coins = Params.QUICK_SEARCH_COINS['Fiat']
-    search_coins = []
-    search_count = 0
-    for item in quick_search_coins:
-        if item != coin.id:
-            coinA = get_coin(item)
-            search_coins.append({"coinA": coinA, "coinB": coin})
-            search_count += 1
-        # If for items have been gathered, exit loop
-        if search_count == 4:
-            break
     # Load page
     return render_template('exchange_fees_by_coin.html',
                            coin=coin,
+                           coin_data=coin_data,
                            curr=curr,
                            title=title,
                            description=description,
@@ -486,6 +517,10 @@ def update_prcs():
         update_prices(logger)
         return "ok"
     except Exception as e:
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
         return traceback.format_exc()
 
 
@@ -495,6 +530,10 @@ def update_exchanges():
         import_exchanges(logger, Params.EXCHANGES_PATH)
         return "ok"
     except Exception as e:
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
         return traceback.format_exc()
 
 
@@ -504,6 +543,10 @@ def update_fees():
         import_fees(logger, Params.FEES_PATH)
         return "ok"
     except Exception as e:
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
         return traceback.format_exc()
 
 
@@ -513,6 +556,10 @@ def update_coins():
         import_coins(logger, Params.COINS_PATH)
         return "ok"
     except Exception as e:
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
         return traceback.format_exc()
 
 
@@ -522,4 +569,53 @@ def update_pairs():
         import_pairs(logger, Params.PAIRS_PATH)
         return "ok"
     except Exception as e:
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return traceback.format_exc()
+
+
+@app.route("/get/coin_info_dfaadsfbdsabyqbedzc")
+def get_coin_info():
+    global coin_info_file
+    try:
+        exit_code = update_coins_info(logger)
+        coin_info_file = load_json_file(Params.COIN_INFO_FILE, logger)
+        return str(exit_code)
+    except Exception as e:
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return traceback.format_exc()
+
+
+@app.route("/get/people_info_vzcadsgjgqeuureed")
+def get_people_info():
+    global people_info_file
+    try:
+        exit_code = update_people_info(logger)
+        people_info_file = load_json_file(Params.PEOPLE_INFO_FILE, logger)
+        return str(exit_code)
+    except Exception as e:
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return traceback.format_exc()
+
+
+@app.route("/get/tag_info_uoruyrweqryqzmcxvnds")
+def get_tag_info():
+    global tag_info_file
+    try:
+        exit_code = update_tags_info(logger)
+        tag_info_file = load_json_file(Params.TAG_INFO_FILE, logger)
+        return str(exit_code)
+    except Exception as e:
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
         return traceback.format_exc()

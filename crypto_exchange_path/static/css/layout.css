@@ -140,6 +140,10 @@ img {
     color: #333333 !important;
 }
 
+.bigger-text {
+    font-size: 1.1em;
+}
+
 .promo-link {
     color: inherit;
     text-decoration: underline;
@@ -174,7 +178,11 @@ img {
 
 .dotted-underline {
     border-bottom: 1px dotted black;
-    border-color: #c4c4c4
+    border-color: #c4c4c4;
+}
+
+.grey-border-bottom {
+    border-bottom: 1px solid #e8e8e8;
 }
 
 @media (max-width: 575.98px) {

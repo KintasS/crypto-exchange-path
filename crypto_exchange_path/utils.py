@@ -1,4 +1,5 @@
 import os
+import json
 import logging
 import datetime
 import traceback
@@ -413,3 +414,163 @@ def generate_sitemap_url(logger, coins_file):
                                       coinA.replace("\n", ""),
                                       coinB.replace("\n", "")))
     return
+
+
+def load_json_file(file, logger):
+    file_info = {}
+    try:
+        with open(file) as f:
+            file_info = json.load(f)
+    except Exception as e:
+        logger.error("routes: Could not read '{}'".format(file))
+    return file_info
+
+
+def get_coin_data(paprika_id,
+                  coin_info_file,
+                  people_info_file,
+                  tag_info_file,
+                  logger):
+    """Gets, mixes and cleans the coin information retrieved from Coinpaprika
+    for the coin with 'paprika_id'.
+    """
+    coin_data = None
+    if paprika_id:
+        try:
+            coin_data = coin_info_file[paprika_id]
+        except KeyError as e:
+            logger.warning("routes: No coin info found for '{}'"
+                           "".format(paprika_id))
+    if coin_data:
+        # For each team member, add its description and links
+        try:
+            # Check if 'team' is a list
+            if not isinstance(coin_data["team"], list):
+                coin_data["team"] = []
+            # Loop for each person in the list
+            for index, person in enumerate(coin_data["team"]):
+                person_id = person["id"]
+                # Fetch info from people
+                person_descr = None
+                person_links = {}
+                try:
+                    person_links = people_info_file[person_id]["links"]
+                    person_descr = people_info_file[person_id]["description"]
+                except KeyError as e:
+                    logger.debug("routes: Could not fetch info"
+                                 " for person_id='{}'".format(person_id))
+                coin_data["team"][index]["description"] = person_descr
+                coin_data["team"][index]["links"] = person_links
+        except KeyError as e:
+            logger.warning("routes: NCould not gather team for coin '{}'"
+                           "".format(coin_data["symbol"]))
+        # For each tag, add its description
+        try:
+            # Check if 'tags' is a list
+            if not isinstance(coin_data["tags"], list):
+                coin_data["tags"] = []
+            # Loop for each tag in the list
+            for index, tag in enumerate(coin_data["tags"]):
+                tag_id = tag["id"]
+                # Fetch info from people
+                tag_descr = None
+                try:
+                    tag_descr = tag_info_file[tag_id]["description"]
+                except KeyError as e:
+                    logger.info("routes: Could not fetch info"
+                                " for tag_id='{}'".format(tag_id))
+                coin_data["tags"][index]["description"] = tag_descr
+        except KeyError as e:
+            logger.warning("routes: NCould not gather tags for coin '{}'"
+                           "".format(coin_data["symbol"]))
+        # Format date ('started_at')
+        if 'started_at' in coin_data:
+            raw_date = coin_data['started_at']
+            if raw_date:
+                formated_date = raw_date.replace("T00:00:00Z", "")
+                coin_data['started_at'] = formated_date
+            else:
+                coin_data['started_at'] = 'n/a'
+        else:
+            coin_data['started_at'] = 'n/a'
+        # Format Development status
+        if 'development_status' not in coin_data:
+            coin_data['development_status'] = 'n/a'
+        # Format Whitepaper status
+        if 'whitepaper' not in coin_data:
+            coin_data['whitepaper']['link'] = 'n/a'
+        # Format Org.structure status
+        if 'org_structure' not in coin_data:
+            coin_data['org_structure'] = 'n/a'
+        # Format Open Source status
+        if 'open_source' in coin_data:
+            if coin_data['open_source'] is True:
+                coin_data['open_source'] = 'Yes'
+            else:
+                coin_data['open_source'] = 'No'
+        else:
+            coin_data['open_source'] = 'n/a'
+        # Format HD Wallet status
+        if 'hardware_wallet' in coin_data:
+            if coin_data['hardware_wallet'] is True:
+                coin_data['hardware_wallet'] = 'Yes'
+            else:
+                coin_data['hardware_wallet'] = 'No'
+        else:
+            coin_data['hardware_wallet'] = 'n/a'
+        # Format Consensus Type status
+        if 'proof_type' not in coin_data:
+            coin_data['proof_type'] = 'n/a'
+        # Format Hash Algo status
+        if 'hash_algorithm' not in coin_data:
+            coin_data['hash_algorithm'] = 'n/a'
+        # Format Links
+        if 'links' not in coin_data:
+            coin_data['links'] = None
+        else:
+            counter = 0
+            links = coin_data['links']
+            if 'explorer' not in links:
+                coin_data['links']['explorer'] = None
+                counter += 1
+            if 'reddit' not in links:
+                coin_data['links']['reddit'] = None
+                counter += 1
+            if 'source_code' not in links:
+                coin_data['links']['source_code'] = None
+                counter += 1
+            if 'website' not in links:
+                coin_data['links']['website'] = None
+                counter += 1
+            if 'facebook' not in links:
+                coin_data['links']['facebook'] = None
+                counter += 1
+            if 'youtube' not in links:
+                coin_data['links']['youtube'] = None
+                counter += 1
+            else:
+                # Format youtube link to embed it
+                if isinstance(coin_data['links']['youtube'], list):
+                    init_link = coin_data['links']['youtube'][0]
+                    # If not embed format, create it
+                    if init_link.find("embed") == -1:
+                        # If Youtube short format, add 'v='
+                        if init_link.find(".be/") > -1:
+                            init_link = init_link.replace(".be/", ".be/v=")
+                        # Find video ID delimited by 'v=' and '&'
+                        init_pos = init_link.find("v=")
+                        if init_pos > -1:
+                            video_id = init_link[init_pos+2:]
+                            end_pos = video_id.find("&")
+                            if end_pos > -1:
+                                video_id = video_id[:end_pos]
+                            new_link = "https://www.youtube.com/embed/" + video_id
+                            coin_data['links']['youtube'][0] = new_link
+                        else:
+                            coin_data['links']['youtube'] = None
+                else:
+                    coin_data['links']['youtube'] = None
+            # If no links, change no None object
+            if counter == 6:
+                coin_data['links'] = None
+    return coin_data

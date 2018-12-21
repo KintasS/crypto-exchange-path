@@ -30,9 +30,9 @@
     <!--Section: Coin Fees-->
     <section class="exchange-fees">
 
-        <h2 class="pt-4 px-3 mb-4 text-center font-weight-bold">{{ coin.long_name }} fees<br><small>by exchange site</small></h2>
-
         <div class="container">
+
+            <h2 class="pt-4 px-3 mb-4 text-center font-weight-bold">{{ coin.long_name }} fees<br><small>by exchange site</small></h2>
 
             <div class="row d-flex justify-content-center pb-4">
 
@@ -177,6 +177,264 @@
 
             </div>
         </div>
+
+    </section>
+
+    <!--Section: Buy-Sell Coin-->
+    <section class="coin-detail section-padding-2rem">
+
+        {% if coin_data %}
+
+            <div class="container">
+
+                <h2 class="mb-3 text-center font-weight-bold">What is {{ coin.long_name }}?</h2>
+
+                <!-- Coin description and tags -->
+                <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-lg-11 col-xl-10 text-center">
+                        <p class="lead mb-2">{{ coin_data["description"] }}</p>
+                        <p class="lead mb-0 mb-lg-3">
+                            {% for tag in coin_data["tags"] %}
+                                <span class="badge badge-warning">{{ tag["name"] }}</span>
+                            {% endfor %}
+                        </p>
+                    </div>
+                </div>
+
+                <script type="text/javascript" src="https://unpkg.com/@coinpaprika/widget-currency/dist/widget.min.js"></script>
+                <div class="mt-4 coinpaprika-currency-widget" data-primary-currency="USD" data-currency="{{ coin_data["id"] }}" data-modules='["market_details"]' data-update-active="false"></div>
+
+
+                <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-lg-10 col-xl-9 px-2">
+
+                        <!-- COIN INFORMATION TABLE -->
+                        <div class="row no-gutters my-4">
+                            <div class="col-6 col-md-3 mt-4 pb-md-3 pl-3 pl-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom">Launch date</span>
+                                    <span class="text-center bigger-text font-weight-bold">{{ coin_data["started_at"] }}</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mt-4 pb-md-3 pr-3 pr-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom">Development status</span>
+                                    <span class="text-center bigger-text font-weight-bold">{{ coin_data["development_status"] }}</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mt-4 pb-md-3 pl-3 pl-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom">Whitepaper</span>
+                                    {% if coin_data['whitepaper']['link'] %}
+                                        <a class="text-center bigger-text font-weight-bold" href="{{ coin_data['whitepaper']['link'] }}" rel="nofollow" target="_blank">Link<i class="fas fa-link ml-2"></i></a>
+                                    {% else %}
+                                        <span class="text-center bigger-text font-weight-bold">n/a</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mt-4 pb-md-3 pr-3 pr-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom">Org. Structure</span>
+                                    <span class="text-center bigger-text font-weight-bold">{{ coin_data["org_structure"] }}</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mt-4 pl-3 pl-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom">Open source</span>
+                                    <span class="text-center bigger-text font-weight-bold">{{ coin_data["open_source"] }}</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mt-4 pr-3 pr-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom">HD Wallet</span>
+                                    <span class="text-center bigger-text font-weight-bold">{{ coin_data["hardware_wallet"] }}</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mt-4 pl-3 pl-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom">Consensus type</span>
+                                    <span class="text-center bigger-text font-weight-bold mx-2">{{ coin_data["proof_type"] }}</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mt-4 pr-3 pr-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom">Hash algorithm</span>
+                                    <span class="text-center bigger-text font-weight-bold mx-2">{{ coin_data["hash_algorithm"] }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- SITES TABLE -->
+                        {% if coin_data["links"] %}
+                            <h4 class="mt-5 mb-0 font-weight-bold ml-1">{{ coin.long_name }} sites</h4>
+                            <div class="row no-gutters ml-1">
+                                <div class="col-12 col-md-6">
+
+                                    {% if coin_data["links"]["explorer"] %}
+                                        <div class="font-weight-bold mt-3"><i class="fab fa-searchengin mr-1"></i> Explorer</div>
+                                        <div class="">
+                                            {% for item in coin_data["links"]["explorer"] %}
+                                                {% if item|length > 50 %}
+                                                    <div><a class="" href="{{ item }}" rel="nofollow" target="_blank">{{ item[0:40] }}...</a></div>
+                                                {% else %}
+                                                    <div><a class="" href="{{ item }}" rel="nofollow" target="_blank">{{ item }}</a></div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if coin_data["links"]["source_code"] %}
+                                        <div class="font-weight-bold mt-3"><i class="fas fa-code mr-1"></i> Source code</div>
+                                        <div class="">
+                                            {% for item in coin_data["links"]["source_code"] %}
+                                                {% if item|length > 50 %}
+                                                    <div><a class="" href="{{ item }}" rel="nofollow" target="_blank">{{ item[0:40] }}...</a></div>
+                                                {% else %}
+                                                    <div><a class="" href="{{ item }}" rel="nofollow" target="_blank">{{ item }}</a></div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+                                <div class="col-12 col-md-6">
+
+                                    {% if coin_data["links"]["website"] %}
+                                        <div class="font-weight-bold mt-3"><i class="fas fa-globe-americas mr-1"></i> Website</div>
+                                        <div class="">
+                                            {% for item in coin_data["links"]["website"] %}
+                                                <div><a class="" href="{{ item }}" rel="nofollow" target="_blank">{{ item }}</a></div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if coin_data["links"]["reddit"] %}
+                                        <div class="font-weight-bold mt-3"><i class="fab fa-reddit mr-1"></i> Reddit</div>
+                                        <div class="">
+                                            {% for item in coin_data["links"]["reddit"] %}
+                                                <div><a class="" href="{{ item }}" rel="nofollow" target="_blank">{{ item }}</a></div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if coin_data["links"]["facebook"] %}
+                                        <div class="font-weight-bold mt-3"><i class="fab fa-facebook-square mr-1"></i> Facebook</div>
+                                        <div class="">
+                                            {% for item in coin_data["links"]["facebook"] %}
+                                                <div><a class="" href="{{ item }}" rel="nofollow" target="_blank">{{ item }}</a></div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- YOUTUBE VIDEO -->
+                            {% if coin_data["links"]["youtube"] %}
+                                <div class="mt-5 embed-responsive embed-responsive-16by9">
+                                  <iframe class="embed-responsive-item" src="{{ coin_data['links']['youtube'][0] }}" allowfullscreen></iframe>
+                                </div>
+                                <!-- <div class="mt-5 embed-responsive embed-responsive-16by9">
+                                  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+                                </div> -->
+                            {% endif %}
+
+                        {% endif %}
+
+                        <!-- COIN CATEGORIES TABLE -->
+                        {% if 'tags' in coin_data and coin_data['tags'] %}
+                            <h4 class="mt-5 mb-3 font-weight-bold ml-1">Coin categories</h4>
+                            {% for tag in coin_data["tags"] %}
+                                <div class="row no-gutters mt-3 ml-1">
+                                    <div class="col-12 col-lg-4"><span class="badge badge-warning" style="font-size: 100%;">{{ tag["name"] }}</span></div>
+                                    <div class="col mt-1 mt-lg-0">{{ tag["description"] }}</div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+
+                        <!-- TEAM MEMBERS TABLE -->
+                        {% if 'team' in coin_data and coin_data['team'] %}
+                            <h4 class="mt-5 mb-3 font-weight-bold ml-1">Team members</h4>
+                            <table class="table table-hover ml-1">
+                                <thead class="">
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Position</th>
+                                        <th scope="col">Links</th>
+                                        <th scope="col" class="d-none d-md-table-cell"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for person in coin_data["team"] %}
+                                        <tr>
+                                            <th scope="row" class="align-middle">{{ person["name"] }}</th>
+                                            <td class="align-middle">{{ person["position"] }}</td>
+                                            <td class="align-middle">
+                                                <!-- Twitter -->
+                                                {% if 'twitter' in person["links"] %}
+                                                    {% for link in person["links"]["twitter"] %}
+                                                        <a class="tw-ic" href="{{ link['url'] }}" rel="nofollow" target="_blank">
+                                                             <i class="fab fa-twitter-square fa-2x mr-1 mr-sm-2" style="color: #1DA1F2;"></i>
+                                                        </a>
+                                                    {% endfor %}
+                                                {% endif %}
+                                                <!-- LinkedIn -->
+                                                {% if 'linkedin' in person["links"] %}
+                                                    {% for link in person["links"]["linkedin"] %}
+                                                        <a class="tw-ic" href="{{ link['url'] }}" rel="nofollow" target="_blank">
+                                                            <i class="fab fa-linkedin fa-2x mr-1 mr-sm-2" style="color: #0077B5;"></i>
+                                                        </a>
+                                                    {% endfor %}
+                                                {% endif %}
+                                                <!-- Medium -->
+                                                {% if 'medium' in person["links"] %}
+                                                    {% for link in person["links"]["medium"] %}
+                                                        <a class="tw-ic" href="{{ link['url'] }}" rel="nofollow" target="_blank">
+                                                            <i class="fab fa-medium fa-2x mr-1 mr-sm-2" style="color: #00ab6c;"></i>
+                                                        </a>
+                                                    {% endfor %}
+                                                {% endif %}
+                                                <!-- GitHub -->
+                                                {% if 'github' in person["links"] %}
+                                                    {% for link in person["links"]["github"] %}
+                                                        <a class="tw-ic" href="{{ link['url'] }}" rel="nofollow" target="_blank">
+                                                            <i class="fab fa-github-square fa-2x mr-1 mr-sm-2" style="color: #333;"></i>
+                                                        </a>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </td>
+                                            <td class="align-middle d-none d-md-table-cell"">
+                                                {% if person["description"] %}
+                                                    <a class="no-link-tooltip text-right" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ person["description"] }}">
+                                                        <span class="dotted-underline">More info</span>
+                                                    </a>
+                                                {% endif %}
+                                            </td>
+
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <a class="no-link-format" href="{{ url_for('exchange_fees_coin', _external=True) }}">
+                <div class="lead text-center font-weight-bold indigo-color">Check fees for another crypto</div>
+            </a>
+
+            <a class="no-link-format" href="{{ url_for('exchange_fees_exch', _external=True) }}">
+                <div class="text-center font-weight-bold indigo-color pt-2">Check fees by Exchange</div>
+            </a>
+
+
+        {% endif %}
 
     </section>
 

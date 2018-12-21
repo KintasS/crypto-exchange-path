@@ -1,12 +1,18 @@
 import json
+import traceback
 import urllib.request
 from urllib.request import urlopen
-from crypto_exchange_path import db
+from crypto_exchange_path import db, mail
 from crypto_exchange_path.models import Coin, TradePair, Exchange, Price, Fee
 from crypto_exchange_path.config import Params
-from crypto_exchange_path.utils_db import (get_active_coins, get_exch_by_coin,
-                                           get_coin_by_price_id, get_exchanges)
-from crypto_exchange_path.utils import generate_file_path, resize_image
+from crypto_exchange_path.utils_db import (get_active_coins,
+                                           get_exch_by_coin,
+                                           get_coin_by_price_id,
+                                           get_exchanges,
+                                           get_coins)
+from crypto_exchange_path.utils import (generate_file_path,
+                                        resize_image,
+                                        error_notifier)
 
 
 def update_coins(logger):
@@ -23,21 +29,35 @@ def update_coins(logger):
         # If Provider responds successfully, process data:
         if coins["Response"] != 'Success':
             error = coins["Response"]
-            logger.error("update_coins: Provider error: '{}'"
-                         .format(error))
-            return
+            error_desc = ("update_coins: Provider error: '{}'"
+                          .format(error))
+            logger.error(error_desc)
+            error_notifier("update_coins",
+                           error_desc,
+                           mail,
+                           logger)
+            return error_desc
     except Exception as e:
         logger.error("update_coins: Error fetching coins from "
                      "source. URL='{}' [{}]".format(url, e))
-        return 1
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return traceback.format_exc()
     # Compare size of query with coins currently in DB
     cryptos_in_db = Coin.query.filter_by(type="Crypto").all()
     coins = coins["Data"]
     if len(coins) < len(cryptos_in_db) * 0.8:
-        logger.error("update_coins(): Did not update coins because there are "
-                     "much less coins than currently in DB: {} Vs {}."
-                     .format(len(coins), len(cryptos_in_db)))
-        return 1
+        error_desc = ("update_coins(): Did not update coins because there are "
+                      "much less coins than currently in DB: {} Vs {}."
+                      "".format(len(coins), len(cryptos_in_db)))
+        logger.error(error_desc)
+        error_notifier("update_coins",
+                       error_desc,
+                       mail,
+                       logger)
+        return error_desc
     else:
         # Delete table contents
         Coin.query.filter_by(type="Crypto").delete()
@@ -122,114 +142,6 @@ def store_coin_images(logger):
     logger.info("store_coin_images: Process finished!")
 
 
-def update_pairs(logger):
-    """
-    *** DEPRECATED. WILL BE UPDATED MANUALLY ***
-    Gets the pairs available in each exchange from Provider.
-    """
-    # Get information from the source
-    logger.info("get_pair_info(): Starting process...")
-    try:
-        url = Params.URL_PAIRS
-        with urlopen(url) as response:
-            source = response.read()
-        exchange_pairs = json.loads(source)
-        logger.info("update_pairs: PAIRS info downloaded from source")
-    except Exception as e:
-        logger.error("update_pairs: Error fetching pairs from "
-                     "source. URL='{}' [{}]".format(url, e))
-        return 1
-    # Get Exchanges in DB
-    db_exchanges = Exchange.query.all()
-    db_exchanges = [item.id for item in db_exchanges]
-    # Delete PAIRS table contents
-    TradePair.query.delete()
-    # Get all the coins currently in the DB:
-    coin_list = get_active_coins()
-    # Insert new information in the table
-    for exchange in exchange_pairs:
-        if exchange not in db_exchanges:
-            continue
-        for coin in exchange_pairs[exchange]:
-            # If coin is not in the DB, skip coin
-            if coin not in coin_list:
-                logger.info("update_pairs_table: Coin '{}' skipped. It does "
-                            "not exist in the DB.".format(coin))
-                continue
-            for base_coin in exchange_pairs[exchange][coin]:
-                # If baseCoin is not in the DB, skip coin:
-                if base_coin not in coin_list:
-                    logger.info("update_pairs_table: BaseCoin '{}' skipped. It"
-                                " does not exist in the DB.".format(base_coin))
-                    continue
-                # If Coin==BaseCoin, skip pair:
-                elif coin == base_coin:
-                    logger.debug("update_pairs_table: Coin and BaseCoin are "
-                                 "the same coin: '{}'. Pair skipped."
-                                 .format(base_coin))
-                    continue
-                # Insert row:
-                pair = TradePair(exchange=exchange,
-                                 coin=coin,
-                                 base_coin=base_coin,
-                                 volume=-1)
-                db.session.add(pair)
-    db.session.commit()
-    logger.info("update_pairs_table: PAIRS table updated")
-    return 0
-
-
-def update_trading_vol(logger):
-    """Updates the trading volume of table 'TradePair' for all the pairs.
-    *** DEPRECATED. WILL BE UPDATED MANUALLY ***
-    """
-    # Get pairs in DB
-    pairs = db.session.query(TradePair.coin, TradePair.base_coin)\
-                      .filter_by(volume=-1)\
-                      .distinct(TradePair.coin, TradePair.base_coin).all()
-    # Loop for each pair in DB:
-    for pair in pairs:
-        logger.info("STARTING FOR {}".format(pair))
-        coin = pair[0]
-        base_coin = pair[1]
-        try:
-            with urlopen(Params.URL_PAIR_VOL
-                         .format(coin, base_coin)) as response:
-                source = response.read()
-            vol_data = json.loads(source)
-        except Exception as e:
-            logger.error("update_trading_vol: {} [coin={}, base_coin={}]"
-                         .format(e, coin, base_coin))
-            continue
-        # If Provider responded successfully, process data:
-        if vol_data["Response"] == 'Success':
-            for exch in vol_data["Data"]:
-                try:
-                    exchange = exch["exchange"]
-                    vol = exch["volume24h"]
-                    # Find row and update
-                    db_pair = TradePair.query.filter_by(exchange=exchange,
-                                                        coin=coin,
-                                                        base_coin=base_coin)\
-                        .first()
-                    if db_pair:
-                        db_pair.volume = vol
-                except KeyError as e:
-                    logger.warning("update_trading_vol: No JSON keys found"
-                                   " for '{}-{}-{}'"
-                                   .format(exchange, coin, base_coin))
-                    continue
-            db.session.commit()
-            logger.debug("update_trading_vol: volumes updated for {}-{}"
-                         .format(coin, base_coin))
-        # If Provider responds with an error, handle it:
-        elif vol_data["Response"] == 'Error':
-            error = vol_data["Message"]
-            logger.error("Provider error: '{}'".format(error))
-            return 1
-    logger.debug("update_trading_vol: volumes updated")
-
-
 def update_prices(logger):
     """Fetches the prices of all the cryptos in database.
     If no price is found for any of them, they are flagged as 'Inactive'.
@@ -269,7 +181,11 @@ def update_prices(logger):
             except Exception as e:
                 logger.error("update_prices: Error fetching prices from "
                              "source. URL='{}' [{}]".format(url, e))
-                return 1
+                error_notifier(type(e).__name__,
+                               traceback.format_exc(),
+                               mail,
+                               logger)
+                return traceback.format_exc()
             # Store data in file
             with open(dest_file, "a") as f:
                 for crypto in prices:
@@ -313,14 +229,23 @@ def update_prices(logger):
             f_contents = f.readlines()
     except Exception as e:
         logger.error("update_prices: Could not read '{}'".format(dest_file))
-        return 1
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return traceback.format_exc()
     # Compare sizes
     db_prices = Price.query.all()
     if len(f_contents) < len(db_prices) * 0.8:
-        logger.error("update_prices: Fetched much less prices that previous "
-                     "time ('{}' Vs '{}'). Not stored in DB."
-                     .format(len(f_contents), len(db_prices)))
-        return 1
+        error_desc = ("update_prices: Fetched much less prices that previous "
+                      "time ('{}' Vs '{}'). Not stored in DB."
+                      .format(len(f_contents), len(db_prices)))
+        logger.error(error_desc)
+        error_notifier("update_prices",
+                       error_desc,
+                       mail,
+                       logger)
+        return error_desc
     # Delete prices from DB
     Price.query.delete()
     # Store prices in DB
@@ -335,7 +260,256 @@ def update_prices(logger):
                 .format(len(f_contents)))
     # Finally, update coins in JSON file
     update_coins_file("crypto_exchange_path/static/data/coins.json")
-    return
+    return "ok"
+
+
+def update_tags_info(logger):
+    """Gets the tag info from Coinpaprika.
+    """
+    # Fetch JSON file from site
+    try:
+        with urlopen("https://api.coinpaprika.com/v1/tags") as response:
+            source = response.read()
+        tags_data = json.loads(source)
+    except Exception as e:
+        logger.error("update_tags_info: Could not fetch json")
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return traceback.format_exc()
+    # Check if JSON is a list. Throw error otherwise
+    if not isinstance(tags_data, list):
+        error_desc = "update_tags_info: The JSON is not a list"
+        logger.error(error_desc)
+        error_notifier("update_tags_info",
+                       error_desc,
+                       mail,
+                       logger)
+        return error_desc
+    # Create return dictionary
+    tags_dict = {}
+    # Read JSON file
+    for index, tag in enumerate(tags_data):
+        try:
+            id = tag["id"]
+        except KeyError as e:
+            logger.warning("update_tags_info: No key found for {}".format(tag))
+            continue
+        tags_dict[id] = tag
+        print("New tag added: {} ({})".format(id, index+1))
+    # Repleace data in JSON with merged data and save to file:
+    file = Params.TAG_INFO_FILE
+    with open(file, "w") as f:
+        json.dump(tags_dict, f)
+    logger.debug("update_tags_info: Tags updated")
+    return "ok"
+
+
+def update_coins_info(logger):
+    """Gets the coin info from Coinpaprika.
+    """
+    # Get coins
+    coins = get_coins(type="Crypto")
+    # Create return dictionary
+    coins_dict = {}
+    # Loop for each coin
+    for index, coin in enumerate(coins):
+        # Fetch JSON file from site
+        try:
+            coin_id = coin.paprika_id
+            if not coin_id:
+                continue
+            with urlopen("https://api.coinpaprika.com/v1/coins/{}"
+                         "".format(coin_id)) as response:
+                source = response.read()
+            coin_data = json.loads(source)
+        except Exception as e:
+            logger.error("update_coins_info: Could not fetch json for"
+                         " {} [{}]".format(coin.symbol, coin.paprika_id))
+            error_notifier(type(e).__name__,
+                           traceback.format_exc(),
+                           mail,
+                           logger)
+            return traceback.format_exc()
+        # Check if JSON is a list. Throw error otherwise
+        if not isinstance(coin_data, dict):
+            error_desc = ("update_coins_info: The JSON for coin '{} [{}]'"
+                          " is not a list".format(coin.symbol,
+                                                  coin.paprika_id))
+            logger.error(error_desc)
+            error_notifier("update_coins_info",
+                           error_desc,
+                           mail,
+                           logger)
+            return error_desc
+        # Read JSON file
+        try:
+            id = coin_data["id"]
+        except KeyError as e:
+            logger.warning("update_coins_info: No key found for {}"
+                           "".format(coin.symbol))
+            break
+        except Exception as e:
+            logger.error("update_coins_info: Error reading '{}': {}"
+                         "".format(coin.id, coin_data))
+            error_notifier(type(e).__name__,
+                           traceback.format_exc(),
+                           mail,
+                           logger)
+            return traceback.format_exc()
+        coins_dict[id] = coin_data
+        logger.debug("New coin added: {} ({})".format(coin.symbol, index+1))
+        print("New coin added: {} ({})".format(coin.symbol, index+1))
+    # Repleace data in JSON with merged data and save to file:
+    file = Params.COIN_INFO_FILE
+    with open(file, "w") as f:
+        json.dump(coins_dict, f)
+    logger.debug("update_coins_info: Tags updated")
+    return "ok"
+
+
+def update_people_info(logger):
+    """Gets the people info from Coinpaprika.
+    """
+    # Read coins file
+    coin_info_file = Params.COIN_INFO_FILE
+    try:
+        with open(coin_info_file) as f:
+            coin_info = json.load(f)
+    except Exception as e:
+        logger.error("update_prices: Could not read '{}'"
+                     "".format(coin_info_file))
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return traceback.format_exc()
+    coins = coin_info.keys()
+    # Create return dictionary
+    people_dict = {}
+    # Loop for each coin
+    for coin in coins:
+        # Fetch JSON file from site
+        try:
+            team = coin_info[coin]["team"]
+            # Check if 'team' is a list
+            if not isinstance(team, list):
+                logger.info("update_people_info: No team list found for "
+                            "coin '{} []'".format(coin_info[coin]["symbol"],
+                                                  coin_info[coin]["id"]))
+                continue
+            # Loop for each person in the list
+            for person in team:
+                person_id = person["id"]
+                # Fetch info from people
+                try:
+                    with urlopen("https://api.coinpaprika.com/v1/people/{}"
+                                 "".format(person_id)) as response:
+                        source = response.read()
+                    person_data = json.loads(source)
+                except Exception as e:
+                    logger.warning("update_people_info: Could not fetch json"
+                                   " for person_id='{}''".format(person_id))
+                    continue
+                # Check if JSON is a list. Throw error otherwise
+                if not isinstance(person_data, dict):
+                    error_desc = "update_people_info: The JSON is not a list"
+                    logger.error(error_desc)
+                    error_notifier("update_people_info",
+                                   error_desc,
+                                   mail,
+                                   logger)
+                    return error_desc
+                # Read JSON file
+                try:
+                    id = person_data["id"]
+                except KeyError as e:
+                    logger.warning("update_people_info: No ID found for {}"
+                                   "[{}]-{}".format(coin_info[coin]["symbol"],
+                                                    coin_info[coin]["id"],
+                                                    person_id))
+                    continue
+                except Exception as e:
+                    logger.error("update_people_info: Error reading {}[{}]-{}"
+                                 "".format(coin_info[coin]["symbol"],
+                                           coin_info[coin]["id"],
+                                           person_id))
+                    error_notifier(type(e).__name__,
+                                   traceback.format_exc(),
+                                   mail,
+                                   logger)
+                    return traceback.format_exc()
+                if person_id not in people_dict:
+                    people_dict[person_id] = person_data
+                    logger.debug("New person added: {}".format(person_id))
+                    print("New person added: {}".format(person_id))
+        except KeyError as e:
+            logger.warning("update_people_info: No key found for {}"
+                           "".format(coin_info[coin]))
+            continue
+    # Repleace data in JSON with merged data and save to file:
+    file = Params.PEOPLE_INFO_FILE
+    with open(file, "w") as f:
+        json.dump(people_dict, f)
+    logger.debug("update_people_info: Tags updated")
+    return "ok"
+
+
+def get_coins_from_paprika(logger):
+    """Gets list of coins from paprika and store them in file.
+    File just to MANUALLY map coins with Coinpaprika ID.
+    """
+    dest_file = generate_file_path('static/imports', 'paprika_coins')
+    # Fetch JSON file from site
+    try:
+        with urlopen("https://api.coinpaprika.com/v1/coins") as response:
+            source = response.read()
+        coins_data = json.loads(source)
+    except Exception as e:
+        logger.error("get_coins_from_paprika: Could not fetch json")
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return traceback.format_exc()
+    # Check if JSON is a list. Throw error otherwise
+    if not isinstance(coins_data, list):
+        logger.error("get_coins_from_paprika: The JSON is not a list")
+        error_notifier("get_coins_from_paprika",
+                       "The JSON is not a list",
+                       mail,
+                       logger)
+        return "get_coins_from_paprika: The JSON is not a list"
+    # Read JSON and generate file
+    with open(dest_file, "a") as f:
+        for crypto in coins_data:
+            try:
+                id = crypto["id"]
+                name = crypto["name"]
+                symbol = crypto["symbol"]
+                rank = crypto["rank"]
+                type = crypto["type"]
+                f.write(("{};{};{};{};{}\n").format(id,
+                                                    name,
+                                                    symbol,
+                                                    rank,
+                                                    type))
+            except KeyError as e:
+                logger.warning("get_coins_from_paprika: Bad JSON format for "
+                               "'{}'".format(crypto))
+                continue
+            except Exception as e:
+                logger.error("get_coins_from_paprika: Unexpected error for "
+                             "'{}'. Coin not stored"
+                             .format(crypto))
+                error_notifier(type(e).__name__,
+                               traceback.format_exc(),
+                               mail,
+                               logger)
+                continue
+    logger.debug("get_coins_from_paprika: Coins updated")
+    return "ok"
 
 
 def get_bittrex_fees(logger):
@@ -351,7 +525,11 @@ def get_bittrex_fees(logger):
     except Exception as e:
         logger.error("get_bittrex_fees [1]: Error fetching Bittrex fees from "
                      "source. URL='{}' [{}]".format(url, e))
-        return 1
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return traceback.format_exc()
     # Check if response success returns True
     if not bittrex_fees["success"]:
         logger.error("get_bittrex_fees [2]: Error fetching Bittrex fees from "
@@ -455,7 +633,11 @@ def import_exchanges(logger, file):
             f_contents = f.readlines()
     except Exception as e:
         logger.error("import_exchanges: Could not read file '{}'".format(file))
-        return 1
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return traceback.format_exc()
     # Delete previous records
     db_exch = Exchange.query.all()
     if len(f_contents) > len(db_exch) * 0.8:
@@ -488,7 +670,11 @@ def import_fees(logger, file):
             f_contents = f.readlines()
     except Exception as e:
         logger.error("import_fees: Could not read file '{}'".format(file))
-        return 1
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return traceback.format_exc()
     # Delete previous records
     db_fee = Fee.query.all()
     if len(f_contents) > len(db_fee) * 0.8:
@@ -526,7 +712,11 @@ def import_coins(logger, file):
             f_contents = f.readlines()
     except Exception as e:
         logger.error("import_coins: Could not read file '{}'".format(file))
-        return 1
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return traceback.format_exc()
     # Delete previous records
     db_coin = Coin.query.all()
     if len(f_contents) > len(db_coin) * 0.8:
@@ -536,13 +726,14 @@ def import_coins(logger, file):
                        " '{}' Vs '{}'.".format(len(f_contents), len(db_coin)))
     # Loop for each line
     for line in f_contents:
-        id, symbol, ln, url_ln, prc_id, rank, url, loc_fn, type, stat = line\
+        id, symbol, ln, url_ln, prc_id, p_id, rank, url, loc_fn, type, stat = line\
             .replace("\n", "").split("¬")
         coin = Coin(id=id,
                     symbol=symbol,
                     long_name=ln,
                     url_name=url_ln,
                     price_id=prc_id,
+                    paprika_id=p_id,
                     ranking=rank,
                     image_url=url,
                     local_fn=loc_fn,
@@ -563,7 +754,11 @@ def import_pairs(logger, file):
             f_contents = f.readlines()
     except Exception as e:
         logger.error("import_pairs: Could not read file '{}'".format(file))
-        return 1
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return traceback.format_exc()
     # Delete previous records
     db_pair = TradePair.query.all()
     if len(f_contents) > len(db_pair) * 0.8:
