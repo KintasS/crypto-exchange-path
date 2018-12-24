@@ -330,7 +330,17 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
 
 @app.route("/exchanges/search/<url_orig_coin>+<url_dest_coin>",
            methods=['GET', 'POST'])
-def exch_results_old_1(url_orig_coin=None, url_dest_coin=None):
+def exch_results_old_1a(url_orig_coin=None, url_dest_coin=None):
+    """Redirect for Old format results (1)
+    """
+    return redirect(url_for('exch_results',
+                            url_orig_coin=url_orig_coin.lower(),
+                            url_dest_coin=url_dest_coin.lower()))
+
+
+@app.route("/exchanges/result/<url_orig_coin>+<url_dest_coin>",
+           methods=['GET', 'POST'])
+def exch_results_old_1b(url_orig_coin=None, url_dest_coin=None):
     """Redirect for Old format results (1)
     """
     return redirect(url_for('exch_results',
@@ -440,6 +450,13 @@ def exchange_fees_by_exch(exch_id):
                            dep_with_fees=dep_with_fees)
 
 
+@app.route("/exchanges/fees/<exch_id>-fees", methods=['GET'])
+def exchange_fees_by_exch_old(exch_id):
+    """Redirect for Old format url
+    """
+    return redirect(url_for('exchange_fees_exch'))
+
+
 @app.route("/exchanges/fees/coins/<coin_url_name>", methods=['GET'])
 def exchange_fees_by_coin(coin_url_name):
     """Displays the fees for the coin given as as argument.
@@ -452,12 +469,6 @@ def exchange_fees_by_coin(coin_url_name):
         # Get coin fees
         coin_fees = get_coin_fees(coin.id)
         # Get coin data
-        print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-        print("{} --> {} items".format("coin_info_file", len(coin_info_file)))
-        print("{} --> {} items".format("people_info_file", len(people_info_file)))
-        print("{} --> {} items".format("tag_info_file", len(tag_info_file)))
-        # print("{} -------> {} items".format("people_info_file", people_info_file["sergey-sholom"]))
-        print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
         coin_data = get_coin_data(coin.paprika_id,
                                   coin_info_file,
                                   people_info_file,
@@ -509,6 +520,13 @@ def exchange_fees_by_coin(coin_url_name):
                            feedback_form=feedback_form,
                            coin_fees=coin_fees,
                            search_coins=search_coins)
+
+
+@app.route("/exchanges/fees/coin/<coin_url_name>-fees", methods=['GET'])
+def exchange_fees_by_coin_old(coin_url_name):
+    """Redirect for Old format url
+    """
+    return redirect(url_for('exchange_fees_coin'))
 
 
 @app.route("/update/prices_slfjh23hk353mh4567df")
