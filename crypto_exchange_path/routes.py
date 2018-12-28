@@ -234,7 +234,7 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
             fee_settings = {"CEP": input_form.cep_promos.data,
                             "Default": input_form.default_fee.data,
                             "Binance": input_form.binance_fee.data}
-            start_time = datetime.datetime.now()
+            # start_time = datetime.datetime.now()
             try:
                 paths = calc_paths(orig_loc, orig_coin, orig_amt,
                                    dest_loc, dest_coin,
@@ -505,6 +505,7 @@ def exchange_fees_by_coin(coin_url_name):
                 break
     # Catch generic exception just in case anything went wront
     except Exception as e:
+        logger.error("routes: Error procesing '{}'".format(coin_url_name))
         error_notifier(type(e).__name__,
                        traceback.format_exc(),
                        mail,

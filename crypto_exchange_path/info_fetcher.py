@@ -216,7 +216,7 @@ def update_prices(logger):
             #     db_crypto = Coin.query.filter_by(symbol=item).first()
             #     if db_crypto:
             #         db_crypto.status = "Inactive"
-            #         logger.warning("fetch_prices: '{}' flagged as inactive as "
+            #         logger.warning("fetch_prices: '{}' flagged inactive as "
             #                        "no prices could be fetched".format(item))
             db.session.commit()
             # Initialize variables to start the process again
@@ -311,10 +311,13 @@ def update_coins_info(logger):
     """
     # Get coins
     coins = get_coins(type="Crypto")
+    print("update_coins_info: Processing '{}' coins. Starting...")
     # Create return dictionary
     coins_dict = {}
     # Loop for each coin
     for index, coin in enumerate(coins):
+        print("update_coins_info: Processing coin '{}' --> {}"
+              "".format(index+1, coin))
         # Fetch JSON file from site
         try:
             coin_id = coin.paprika_id
@@ -325,8 +328,10 @@ def update_coins_info(logger):
                 source = response.read()
             coin_data = json.loads(source)
         except Exception as e:
-            logger.error("update_coins_info: Could not fetch json for"
-                         " {} [{}]".format(coin.symbol, coin.paprika_id))
+            error_desc = ("update_coins_info: Could not fetch json for"
+                          " {} [{}]".format(coin.symbol, coin.paprika_id))
+            print(error_desc)
+            logger.error(error_desc)
             error_notifier(type(e).__name__,
                            traceback.format_exc(),
                            mail,
@@ -337,6 +342,7 @@ def update_coins_info(logger):
             error_desc = ("update_coins_info: The JSON for coin '{} [{}]'"
                           " is not a list".format(coin.symbol,
                                                   coin.paprika_id))
+            print(error_desc)
             logger.error(error_desc)
             error_notifier("update_coins_info",
                            error_desc,
@@ -347,12 +353,16 @@ def update_coins_info(logger):
         try:
             id = coin_data["id"]
         except KeyError as e:
-            logger.warning("update_coins_info: No key found for {}"
-                           "".format(coin.symbol))
+            error_desc = ("update_coins_info: No key found for {}"
+                          "".format(coin.symbol))
+            print(error_desc)
+            logger.warning(error_desc)
             break
         except Exception as e:
-            logger.error("update_coins_info: Error reading '{}': {}"
-                         "".format(coin.id, coin_data))
+            error_desc = ("update_coins_info: Error reading '{}': {}"
+                          "".format(coin.id, coin_data))
+            print(error_desc)
+            logger.error(error_desc)
             error_notifier(type(e).__name__,
                            traceback.format_exc(),
                            mail,
@@ -366,6 +376,7 @@ def update_coins_info(logger):
     with open(file, "w") as f:
         json.dump(coins_dict, f)
     logger.debug("update_coins_info: Tags updated")
+    print("update_coins_info: Tags updated")
     return "ok"
 
 

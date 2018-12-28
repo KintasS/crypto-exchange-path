@@ -305,7 +305,8 @@ def get_coin_fees(coin_id):
             if maker_fee.amount == taker_fee.amount:
                 trade_fee = "{}%".format(maker_fee.amount)
             else:
-                trade_fee = "{}% / {}%".format(maker_fee.amount, taker_fee.amount)
+                trade_fee = "{}% / {}%".format(maker_fee.amount,
+                                               taker_fee.amount)
             trade_info = {"amount": trade_fee, "comments": None}
             # Generate return item
             return_list.append({"exchange": exch,

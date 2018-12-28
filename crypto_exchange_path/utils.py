@@ -525,7 +525,8 @@ def get_coin_data(paprika_id,
         if 'hash_algorithm' not in coin_data:
             coin_data['hash_algorithm'] = 'n/a'
         # Format Links
-        if 'links' not in coin_data:
+        if (('links' not in coin_data) or
+                (not isinstance(coin_data['links'], dict))):
             coin_data['links'] = None
         else:
             counter = 0
@@ -564,7 +565,8 @@ def get_coin_data(paprika_id,
                             end_pos = video_id.find("&")
                             if end_pos > -1:
                                 video_id = video_id[:end_pos]
-                            new_link = "https://www.youtube.com/embed/" + video_id
+                            new_link = "https://www.youtube.com/embed/"\
+                                + video_id
                             coin_data['links']['youtube'][0] = new_link
                         else:
                             coin_data['links']['youtube'] = None
