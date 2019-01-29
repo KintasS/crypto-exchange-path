@@ -97,7 +97,7 @@ def home():
     user_exchanges = [exch.id for exch in exchanges]
     open_fbck_modal = False
     # Get Blog information
-    posts = get_latest_posts(None, 4)
+    posts = get_latest_posts(None, 6)
     # Get Meta tags
     title = get_meta_tags('Home', 'Title')
     description = get_meta_tags('Home', 'Description')
@@ -146,7 +146,7 @@ def exchanges():
     user_exchanges = [exch.id for exch in exchanges]
     open_fbck_modal = False
     # Get Blog information
-    posts = get_latest_posts('CFS', 4)
+    posts = get_latest_posts('Exchanges', 6)
     # Get Meta tags
     title = get_meta_tags('Exchanges', 'Title')
     description = get_meta_tags('Exchanges', 'Description')
