@@ -3,7 +3,7 @@ import math
 import traceback
 from secrets import token_hex
 from flask import (render_template, url_for, redirect, request, make_response,
-                   current_app, Markup)
+                   current_app, Markup, send_from_directory)
 from flask_blogging.views import _get_blogging_engine
 from crypto_exchange_path import app, db, mail
 from crypto_exchange_path.config import Params
@@ -528,6 +528,26 @@ def exchange_fees_by_coin_old(coin_url_name):
     """Redirect for Old format url
     """
     return redirect(url_for('exchange_fees_coin'))
+
+
+""" ***********************************************************************
+***************************************************************************
+Sitemap & Robots files
+***************************************************************************
+*********************************************************************** """
+
+
+@app.route('/robots.txt')
+@app.route('/sitemap.txt')
+def static_from_root():
+    return send_from_directory(app.static_folder, request.path[1:])
+
+
+""" ***********************************************************************
+***************************************************************************
+Routes to trigger processes
+***************************************************************************
+*********************************************************************** """
 
 
 @app.route("/update/prices_slfjh23hk353mh4567df")
