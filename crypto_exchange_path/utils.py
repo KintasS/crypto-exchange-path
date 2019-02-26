@@ -75,6 +75,20 @@ def feedback_notifier(topic, subject, detail, mail, logger):
         logger.error("feedback_notifier: {}".format(topic))
 
 
+def send_email_notification(subject, body, mail, logger):
+    # Send email
+    try:
+        msg = Message('App UPDATE - {}'.format(subject),
+                      sender=Params.SENDER_EMAIL,
+                      recipients=[Params.ERROR_RECIPIENT_EMAIL])
+        if body == "":
+            body = "(Empty body)"
+        msg.body = body
+        mail.send(msg)
+    except Exception as e:
+        logger.error("send_email_notification: {}".format(e))
+
+
 def warning_notifier(topic, args_dic, mail, logger):
     # Send email
     try:
@@ -247,7 +261,8 @@ def float_to_str(f):
         digits, exp = float_string.split('e')
         digits = digits.replace('.', '').replace('-', '')
         exp = int(exp)
-        zero_padding = '0' * (abs(int(exp)) - 1)  # minus 1 for decimal point in the sci notation
+        # minus 1 for decimal point in the sci notation
+        zero_padding = '0' * (abs(int(exp)) - 1)
         sign = '-' if f < 0 else ''
         if exp > 0:
             float_string = '{}{}{}.0'.format(sign, digits, zero_padding)
@@ -300,14 +315,15 @@ def round_amount_by_price_str(amount, coin):
     """
     if amount is None:
         return "-"
-    if coin in Params.FIAT_COINS:
+    if coin.symbol in Params.FIAT_COINS:
         try:
             decs = Params.STEPS_DECIMAL_POS[coin]
             return round(amount, decs)
         except Exception as e:
             return amount
     else:
-        price = Price.query.filter_by(coin=coin, base_coin='EUR').first()
+        price = Price.query.filter_by(coin=coin.id,
+                                      base_coin='eur-euro').first()
         if price:
             price = price.price
             if price > 10000:
@@ -426,21 +442,21 @@ def load_json_file(file, logger):
     return file_info
 
 
-def get_coin_data(paprika_id,
+def get_coin_data(id,
                   coin_info_file,
                   people_info_file,
                   tag_info_file,
                   logger):
     """Gets, mixes and cleans the coin information retrieved from Coinpaprika
-    for the coin with 'paprika_id'.
+    for the coin with 'id'.
     """
     coin_data = None
-    if paprika_id:
+    if id:
         try:
-            coin_data = coin_info_file[paprika_id]
+            coin_data = coin_info_file[id]
         except KeyError as e:
             logger.warning("routes: No coin info found for '{}'"
-                           "".format(paprika_id))
+                           "".format(id))
     if coin_data:
         # For each team member, add its description and links
         try:

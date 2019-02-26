@@ -3,7 +3,7 @@ from wtforms import (StringField, SubmitField, TextAreaField, SelectField,
                      RadioField, SelectMultipleField)
 from wtforms.validators import (DataRequired, Length, ValidationError)
 from crypto_exchange_path.config import Params
-from crypto_exchange_path.utils_db import (get_active_coins,
+from crypto_exchange_path.utils_db import (get_coins,
                                            get_exch_by_coin,
                                            get_exchange_choices,
                                            get_currency_choices,
@@ -66,14 +66,14 @@ class SearchForm(FlaskForm):
             coin = get_coin_by_longname(orig_coin.data)
             if coin:
                 coin = coin.id
-            coins = get_active_coins()
+            coins = get_coins(status='Active', return_ids=True)
             if coin not in coins:
                 raise ValidationError("Unknown coin")
 
     def validate_orig_loc(self, orig_loc):
         coin = get_coin_by_longname(self.orig_coin.data)
         if coin:
-            valid_coins = get_active_coins()
+            valid_coins = get_coins(status='Active', return_ids=True)
             # Only raise error is 'orig_coin' exist
             if coin.id in valid_coins:
                 # If valid coin but no exchange, set default exchange
@@ -109,7 +109,7 @@ class SearchForm(FlaskForm):
             coin = get_coin_by_longname(dest_coin.data)
             if coin:
                 coin = coin.id
-            coins = get_active_coins()
+            coins = get_coins(status='Active', return_ids=True)
             if coin not in coins:
                 raise ValidationError("Unknown coin")
             elif (dest_coin.data == self.orig_coin.data):
@@ -118,7 +118,7 @@ class SearchForm(FlaskForm):
     def validate_dest_loc(self, dest_loc):
         coin = get_coin_by_longname(self.dest_coin.data)
         if coin:
-            valid_coins = get_active_coins()
+            valid_coins = get_coins(status='Active', return_ids=True)
             # Only raise error is 'dest_coin' exist
             if coin.id in valid_coins:
                 # If valid coin but no exchange, set default exchange

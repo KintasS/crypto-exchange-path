@@ -61,8 +61,7 @@ class CoinView(MyModelView):
     edit_modal = True
     page_size = 100  # the number of entries to display on the list view
     column_searchable_list = ['id', 'symbol', 'long_name']
-    column_filters = ['id', 'symbol', 'long_name', 'price_id',
-                      'type', 'status']
+    column_filters = ['id', 'symbol', 'long_name', 'type', 'status']
     can_export = True
     column_display_pk = True
 

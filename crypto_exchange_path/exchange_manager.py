@@ -142,7 +142,8 @@ class ExchangeManager(object):
                                         buy_coin.id))
             return None
         elif buy_amt <= 0:
-            self.logger.warning("perform_trade [3]: Trade performed with negative outcome '{}[{} {} --> {} {}]'. "
+            self.logger.warning("perform_trade [3]: Trade performed with "
+                                "negative outcome '{}[{} {} --> {} {}]'. "
                                 "Skipping trade calculation."
                                 .format(self.exchange.id,
                                         sell_amt,
@@ -226,7 +227,7 @@ class ExchangeManager(object):
                     # If same liquidity (or no available), BTC prevails
                     elif min(coinZ[1], coinZ_2[1]) == winning_coinZ.min_liq():
                         if (winning_coinZ.coin
-                                and winning_coinZ.coin.id == 'BTC'):
+                                and winning_coinZ.coin.id == 'btc-bitcoin'):
                             continue
                     winning_coinZ = CoinZ(get_coin(coinZ[0]),
                                           coinZ[1],

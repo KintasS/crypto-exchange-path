@@ -27,9 +27,12 @@ from crypto_exchange_path.utils_db import (get_exch_by_name,
                                            get_dep_with_fees_by_exch,
                                            get_coin_fees,
                                            get_coins,
-                                           get_coin_by_urlname)
+                                           get_coin_by_urlname,
+                                           get_coin_by_symbol,
+                                           get_mapping)
 from crypto_exchange_path.models import Feedback
 from crypto_exchange_path.info_fetcher import (update_prices,
+                                               update_pairs,
                                                import_exchanges,
                                                import_fees,
                                                import_coins,
@@ -92,8 +95,9 @@ def home():
         input_form.currency.data = currency
     else:
         curr = Params.DEFAULT_CURRENCY
+    curr = get_coin(curr)
     feedback_form = FeedbackForm()
-    exchanges = get_exchanges(['Exchange'])
+    exchanges = get_exchanges(['Exchange'], status='Active')
     user_exchanges = [exch.id for exch in exchanges]
     open_fbck_modal = False
     # Get Blog information
@@ -141,8 +145,9 @@ def exchanges():
         input_form.currency.data = currency
     else:
         curr = Params.DEFAULT_CURRENCY
+    curr = get_coin(curr)
     feedback_form = FeedbackForm()
-    exchanges = get_exchanges(['Exchange'])
+    exchanges = get_exchanges(['Exchange'], status='Active')
     user_exchanges = [exch.id for exch in exchanges]
     open_fbck_modal = False
     # Get Blog information
@@ -193,9 +198,10 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
     else:
         curr = Params.DEFAULT_CURRENCY
         input_form.currency.data = curr
+    curr = get_coin(curr)
     auto_search = False
     feedback_form = FeedbackForm()
-    exchanges = get_exchanges(['Exchange'])
+    exchanges = get_exchanges(['Exchange'], status='Active')
     user_exchanges = [exch.id for exch in exchanges]
     path_results = None
     open_fbck_modal = False
@@ -210,6 +216,7 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
     if input_form.search_submit.data:
         if input_form.validate():
             curr = input_form.currency.data
+            curr = get_coin(curr)
             orig_loc = get_exch_by_name(input_form.orig_loc.data)
             orig_coin = get_coin_by_longname(input_form.orig_coin.data)
             # Save 'orig_amt' as Float or integer depending on value
@@ -256,7 +263,7 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                             "orig_loc": orig_loc.id,
                             "dest_coin": dest_coin.id,
                             "dest_loc": dest_loc.id,
-                            "currency": curr}
+                            "currency": curr.id}
                 warning_notifier("Search with no results",
                                  args_dic,
                                  mail,
@@ -297,11 +304,21 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
             sorted_paths = sorted_paths[0:Params.MAX_PATHS]
     # 2) ACTIONS IF *NO* FORM WAS FILLED (DIRECT LINK!)
     else:
-        orig_coin = get_coin(url_orig_coin.upper())
-        dest_coin = get_coin(url_dest_coin.upper())
+        orig_coin = get_coin_by_symbol(url_orig_coin.upper())
+        dest_coin = get_coin_by_symbol(url_dest_coin.upper())
+        # If 'orig_coin' or 'dest_coin' are not found, try in mappings table
+        if not orig_coin:
+            new_symbol = get_mapping('Coin', 'symbol', url_orig_coin.upper())
+            if new_symbol:
+                orig_coin = get_coin_by_symbol(new_symbol)
+        if not dest_coin:
+            new_symbol = get_mapping('Coin', 'symbol', url_dest_coin.upper())
+            if new_symbol:
+                dest_coin = get_coin_by_symbol(new_symbol)
+        # Procced with function
         if orig_coin:
             input_form.orig_coin.data = orig_coin.long_name
-            amt = fx_exchange("USD", orig_coin.id, 3000, logger)
+            amt = fx_exchange('usd-us-dollars', orig_coin.id, 3000, logger)
             input_form.orig_amt.data = str(math.ceil(amt)) + " "
         if dest_coin:
             input_form.dest_coin.data = dest_coin.long_name
@@ -323,8 +340,8 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
     # Store session ID & Currency in cookie if there are not already stored
     if not session_id:
         resp.set_cookie('session', new_session_id)
-    if currency != curr:
-        resp.set_cookie('calc_currency', curr)
+    if currency != curr.id:
+        resp.set_cookie('calc_currency', curr.id)
     return resp
 
 
@@ -368,9 +385,10 @@ def exchange_fees_exch():
         curr = currency
     else:
         curr = Params.DEFAULT_CURRENCY
+    curr = get_coin(curr)
     feedback_form = FeedbackForm()
     # Get exchanges
-    exchanges = get_exchanges(['Exchange'])
+    exchanges = get_exchanges(['Exchange'], status='Active')
     # Get Meta tags
     title = get_meta_tags('Exchanges|Fees|Exch',
                           'Title')
@@ -394,9 +412,10 @@ def exchange_fees_coin():
         curr = currency
     else:
         curr = Params.DEFAULT_CURRENCY
+    curr = get_coin(curr)
     feedback_form = FeedbackForm()
     # Get exchanges
-    coins = get_coins(Params.BROWSE_FEE_COINS)
+    coins = get_coins(pos_limit=Params.BROWSE_FEE_COINS, status="Active")
     # Get Meta tags
     title = get_meta_tags('Exchanges|Fees|Coin',
                           'Title')
@@ -427,6 +446,7 @@ def exchange_fees_by_exch(exch_id):
         curr = currency
     else:
         curr = Params.DEFAULT_CURRENCY
+    curr = get_coin(curr)
     feedback_form = FeedbackForm()
     # Get Meta tags
     title = get_meta_tags('Exchanges|Fees|Exch|Exch',
@@ -465,11 +485,16 @@ def exchange_fees_by_coin(coin_url_name):
         coin = get_coin_by_urlname(coin_url_name)
         # If coin not recognized, redirect
         if not coin:
-            return redirect(url_for('exchange_fees_coin'))
+            new_url = get_mapping('Coin', 'url_name', coin_url_name)
+            if new_url:
+                return redirect(url_for('exchange_fees_by_coin',
+                                        coin_url_name=new_url))
+            else:
+                return redirect(url_for('exchange_fees_coin'))
         # Get coin fees
         coin_fees = get_coin_fees(coin.id)
         # Get coin data
-        coin_data = get_coin_data(coin.paprika_id,
+        coin_data = get_coin_data(coin.id,
                                   coin_info_file,
                                   people_info_file,
                                   tag_info_file,
@@ -480,6 +505,7 @@ def exchange_fees_by_coin(coin_url_name):
             curr = currency
         else:
             curr = Params.DEFAULT_CURRENCY
+        curr = get_coin(curr)
         feedback_form = FeedbackForm()
         # Get Meta tags
         title = get_meta_tags('Exchanges|Fees|Coin|Coin',
@@ -563,8 +589,21 @@ def update_prcs():
         return traceback.format_exc()
 
 
-@app.route("/update/exchanges_amnsdfno8234q8rfafonfd")
-def update_exchanges():
+@app.route("/update/pairs_rqoewirhkfldajvczmcxzvf")
+def update_pairs_route():
+    try:
+        update_pairs(logger)
+        return "ok"
+    except Exception as e:
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return traceback.format_exc()
+
+
+@app.route("/import/exchanges_amnsdfno8234q8rfafonfd")
+def import_exchanges_route():
     try:
         import_exchanges(logger, Params.EXCHANGES_PATH)
         return "ok"
@@ -576,8 +615,8 @@ def update_exchanges():
         return traceback.format_exc()
 
 
-@app.route("/update/fees_amnsdfno8234q8rfafonfd")
-def update_fees():
+@app.route("/import/fees_amnsdfno8234q8rfafonfd")
+def import_fees_route():
     try:
         import_fees(logger, Params.FEES_PATH)
         return "ok"
@@ -589,8 +628,8 @@ def update_fees():
         return traceback.format_exc()
 
 
-@app.route("/update/coins_amnsdfno8234q8rfafonfd")
-def update_coins():
+@app.route("/import/coins_amnsdfno8234q8rfafonfd")
+def import_coins_route():
     try:
         import_coins(logger, Params.COINS_PATH)
         return "ok"
@@ -602,8 +641,8 @@ def update_coins():
         return traceback.format_exc()
 
 
-@app.route("/update/pairs_amnsdfno8234q8rfafonfd")
-def update_pairs():
+@app.route("/import/pairs_amnsdfno8234q8rfafonfd")
+def import_pairs_route():
     try:
         import_pairs(logger, Params.PAIRS_PATH)
         return "ok"

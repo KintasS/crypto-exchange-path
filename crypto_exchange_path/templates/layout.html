@@ -103,27 +103,32 @@
                             </li>
                         </ul>
                         <div id="currency-btn" class="btn-group">
-                            {% if curr == 'KRW' %}
-                                <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="WON" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-won-sign mx-2"></i>KRW</b></button>
-                            {% elif curr == 'GBP' %}
-                                <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="GBP" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-pound-sign mx-2"></i>GBP</b></button>
-                            {% elif curr == 'JPY' %}
-                                <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="JPY" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-yen-sign mx-2"></i>JPY</b></button>
-                            {% elif curr == 'EUR' %}
-                                <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="EUR" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-euro-sign mx-2"></i>EUR</b></button>
-                            {% elif curr == 'CAD' %}
-                                <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="CAD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-dollar-sign mx-2"></i>CAD</b></button>
+                            {% if curr %}
+                                {% if curr.symbol == 'KRW' %}
+                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency-id="krw-south-korea-won" data-currency="WON" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-won-sign mx-2"></i>KRW</b></button>
+                                {% elif curr.symbol == 'GBP' %}
+                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency-id="gbp-pound-sterling" data-currency="GBP" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-pound-sign mx-2"></i>GBP</b></button>
+                                {% elif curr.symbol == 'JPY' %}
+                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency-id="jpy-japanese-yen" data-currency="JPY" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-yen-sign mx-2"></i>JPY</b></button>
+                                {% elif curr.symbol == 'EUR' %}
+                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency-id="eur-euro" data-currency="EUR" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-euro-sign mx-2"></i>EUR</b></button>
+                                {% elif curr.symbol == 'CAD' %}
+                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency-id="cad-canadian-dollar" data-currency="CAD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-dollar-sign mx-2"></i>CAD</b></button>
+                                {% elif curr.symbol == 'RUB' %}
+                                    <button class="btn btn-dark btn-sm dropdown-toggle" data-currency-id="rub-russian-ruble" data-currency="RUB" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-ruble-sign mx-2"></i>RUB</b></button>
+                                {% endif %}
                             {% else %}
-                                <button class="btn btn-dark btn-sm dropdown-toggle" data-currency="USD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-dollar-sign mx-2"></i>USD</b></button>
+                                <button class="btn btn-dark btn-sm dropdown-toggle" data-currency-id="usd-us-dollars" data-currency="USD" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b><i class="fas fa-dollar-sign mx-2"></i>USD</b></button>
                             {% endif %}
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" data-currency="USD" href="#"><i class="fas fa-dollar-sign mx-2"></i>USD</a>
-                                <a class="dropdown-item" data-currency="EUR" href="#"><i class="fas fa-euro-sign mx-2"></i>EUR</a>
-                                <a class="dropdown-item" data-currency="CAD" href="#"><i class="fas fa-dollar-sign mx-2"></i>CAD</a>
-                                <a class="dropdown-item" data-currency="GBP" href="#"><i class="fas fa-pound-sign mx-2"></i>GBP</a>
-                                <a class="dropdown-item" data-currency="JPY" href="#"><i class="fas fa-yen-sign mx-2"></i>JPY</a>
-                                <a class="dropdown-item" data-currency="KRW" href="#"><i class="fas fa-won-sign ml-2 mr-1"></i>KRW</a>
+                                <a class="dropdown-item" data-currency-id="cad-canadian-dollar" data-currency="CAD" href="#"><i class="fas fa-dollar-sign mx-2"></i>CAD</a>
+                                <a class="dropdown-item" data-currency-id="eur-euro" data-currency="EUR" href="#"><i class="fas fa-euro-sign mx-2"></i>EUR</a>
+                                <a class="dropdown-item" data-currency-id="gbp-pound-sterling" data-currency="GBP" href="#"><i class="fas fa-pound-sign mx-2"></i>GBP</a>
+                                <a class="dropdown-item" data-currency-id="jpy-japanese-yen" data-currency="JPY" href="#"><i class="fas fa-yen-sign mx-2"></i>JPY</a>
+                                <a class="dropdown-item" data-currency-id="usd-us-dollars" data-currency="USD" href="#"><i class="fas fa-dollar-sign mx-2"></i>USD</a>
+                                <a class="dropdown-item" data-currency-id="rub-russian-ruble" data-currency="RUB" href="#"><i class="fas fa-ruble-sign ml-2 mr-1"></i>RUB</a>
+                                <a class="dropdown-item" data-currency-id="krw-south-korea-won" data-currency="KRW" href="#"><i class="fas fa-won-sign ml-2 mr-1"></i>KRW</a>
                             </div>
                         </div>
                     </div>

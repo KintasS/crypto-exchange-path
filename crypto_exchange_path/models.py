@@ -64,22 +64,17 @@ class Coin(db.Model):
     symbol = db.Column(db.String(10), unique=True, nullable=False)
     long_name = db.Column(db.String(50), unique=True, nullable=False)
     url_name = db.Column(db.String(50), unique=True, nullable=False)
-    price_id = db.Column(db.String(10), unique=True, nullable=False)
-    paprika_id = db.Column(db.String(50))
     ranking = db.Column(db.Float)
-    image_url = db.Column(db.String(100))
     local_fn = db.Column(db.String(100))
     type = db.Column(db.String(30))
     status = db.Column(db.String(10))
 
     def __repr__(self):
-        return ("Coin({} [{}]: symbol={} price_id={} type={} status={})"
+        return ("Coin({} [{}]: symbol={} type={})"
                 .format(self.id,
                         self.long_name,
                         self.symbol,
-                        self.price_id,
-                        self.type,
-                        self.status))
+                        self.type))
 
 
 class Exchange(db.Model):
@@ -93,9 +88,12 @@ class Exchange(db.Model):
     trade_pairs = db.relationship('TradePair', backref='exchange_trade',
                                   lazy=True)
     fees = db.relationship('Fee', backref='exchange_fee', lazy=True)
+    status = db.Column(db.String(10))
 
     def __repr__(self):
-        return ("Exchange({} [{}])".format(self.name, self.type))
+        return ("Exchange({} ({}) [{}]".format(self.name,
+                                               self.type,
+                                               self.status))
 
 
 class Fee(db.Model):
@@ -107,10 +105,14 @@ class Fee(db.Model):
     min_amount = db.Column(db.Float)
     fee_coin = db.Column(db.String(10))
     type = db.Column(db.String(10))
+    status = db.Column(db.String(10))
 
     def __repr__(self):
-        return ("Fee({}-{}-{}: {})".format(self.exchange, self.action,
-                                           self.scope, self.amount))
+        return ("Fee({}-{}-{}: {} [{}])".format(self.exchange,
+                                                self.action,
+                                                self.scope,
+                                                self.amount,
+                                                self.status))
 
 
 class TradePair(db.Model):
@@ -149,15 +151,15 @@ class QueryRegister(db.Model):
                                                                self.id,
                                                                self.results))
 
-# class Post(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     title = db.Column(db.String(256))
-#     text = db.Column(db.Text)
-#     img_fn = db.Column(db.String(100))
-#     post_date = db.Column(db.DateTime)
-#     last_modified_date = db.Column(db.DateTime)
-#     draft = db.Column(db.SmallInteger)
-#
-#     def __repr__(self):
-#         return ("Post(id={}, title={})".format(self.id,
-#                                                self.title))
+
+class Mappings(db.Model):
+    table = db.Column(db.String(50), primary_key=True, nullable=False)
+    field = db.Column(db.String(50), primary_key=True, nullable=False)
+    old_value = db.Column(db.String(100), primary_key=True, nullable=False)
+    new_value = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return ("Mappings([{}/{}]: '{}' --> '{}')".format(self.table,
+                                                          self.field,
+                                                          self.old_value,
+                                                          self.new_value))

@@ -1,53 +1,53 @@
-from crypto_exchange_path.models import Coin, TradePair, Fee, Price, Exchange
+from crypto_exchange_path.models import (Coin, TradePair, Fee, Price,
+                                         Exchange, Mappings)
 from crypto_exchange_path import db
 from crypto_exchange_path.config import Params
 from crypto_exchange_path.utils import is_number, float_to_str
+from crypto_exchange_path.fx_manager import set_fx, get_fx
 
 
-def get_active_coins(type=None, price_id=False):
-    """Returns the complete list of active coins available in 'Coin' table.
-    By default, it returns its symbols, unless 'price_id' is set to True.
-    If type is given, only those coins are retrieved (Cryptos o Fiat)
-    """
-    if type:
-        coin_in_db = Coin.query.filter_by(type=type, status="Active").all()
-    else:
-        coin_in_db = Coin.query.filter_by(status="Active").all()
-    coin_list = []
-    if price_id:
-        for coin in coin_in_db:
-            coin_list.append(coin.price_id)
-    else:
-        for coin in coin_in_db:
-            coin_list.append(coin.id)
-    return coin_list
-
-
-def get_coins(pos_limit=9999, type=None):
+def get_coins(pos_limit=999999, type=None, status=None, return_ids=False):
     """Returns the active coins available in 'Coin' table.
     If type is given, only those coins are retrieved (Cryptos o Fiat)
     If a position limit is given, only coins ranked below that figure are
     retrieved.
     """
-    if type:
-        # coin_in_db = Coin.query.filter_by(type=type, status="Active").all()
+    if type and status:
         coin_in_db = db.session.query(Coin)\
             .filter((Coin.type == type) &
                     (Coin.ranking <= pos_limit) &
-                    (Coin.status == "Active")).all()
-    else:
-        # coin_in_db = Coin.query.filter_by(status="Active").all()
+                    (Coin.status == status)).all()
+    elif type:
+        coin_in_db = db.session.query(Coin)\
+            .filter((Coin.type == type) &
+                    (Coin.ranking <= pos_limit)).all()
+    elif status:
         coin_in_db = db.session.query(Coin)\
             .filter((Coin.ranking <= pos_limit) &
-                    (Coin.status == "Active")).all()
+                    (Coin.status == status)).all()
+    else:
+        coin_in_db = db.session.query(Coin)\
+            .filter(Coin.ranking <= pos_limit).all()
     coin_in_db = sorted(coin_in_db, key=lambda x: x.ranking)
+    if return_ids:
+        list_of_ids = []
+        for coin in coin_in_db:
+            list_of_ids.append(coin.id)
+        return list_of_ids
     return coin_in_db
 
 
 def get_coin(id):
     """Returns a Coin object given its symbol.
     """
-    coin = Coin.query.filter_by(id=id.upper()).first()
+    coin = Coin.query.filter_by(id=id).first()
+    return coin
+
+
+def get_coin_by_symbol(symbol):
+    """Returns a Coin object given its symbol.
+    """
+    coin = Coin.query.filter_by(symbol=symbol).first()
     return coin
 
 
@@ -62,13 +62,6 @@ def get_coin_by_urlname(url_name):
     """Returns a Coin object given its url name.
     """
     coin = Coin.query.filter_by(url_name=url_name).first()
-    return coin
-
-
-def get_coin_by_price_id(price_id):
-    """Returns a Coin object given its 'price_id'.
-    """
-    coin = Coin.query.filter_by(price_id=price_id).first()
     return coin
 
 
@@ -92,25 +85,29 @@ def get_exch_by_name(name):
         return None
 
 
-def get_exchanges(types=[]):
+def get_exchanges(types=[], status=None):
     """Returns the list of exchanges available in 'Exchange' table.
     """
     exchanges = []
-    if types:
+    if types and status:
+        for type in types:
+            exchanges += Exchange.query\
+                .filter_by(type=type, status=status).all()
+    elif types:
         for type in types:
             exchanges += Exchange.query.filter_by(type=type).all()
+    elif status:
+        exchanges += Exchange.query.filter_by(status=status).all()
     else:
         exchanges = Exchange.query.all()
     return exchanges
 
 
-def get_exchange_choices(types=[]):
+def get_exchange_choices(types=[], status=None):
     """Returns the list of exchanges available in 'Exchange' table,
     but in tuples so that it works with Input form choices.
     """
-    exchanges = []
-    for type in types:
-        exchanges += Exchange.query.filter_by(type=type).all()
+    exchanges = get_exchanges(types, status)
     choices = []
     for exch in exchanges:
         choices.append((exch.id, exch.name))
@@ -132,10 +129,10 @@ def get_currency_choices():
     """Returns the list of currencies available in 'Exchange' table,
     but in tuples so that it works with Input form choices.
     """
-    currencies = get_active_coins('Fiat')
+    currencies = get_coins(type='Fiat', status='Active')
     choices = []
     for currency in currencies:
-        choices.append((currency, currency))
+        choices.append((currency.id, currency.id))
     return choices
 
 
@@ -157,6 +154,28 @@ def get_exch_by_pair(coin, base_coin, logger):
     return set()
 
 
+def get_coins_in_pairs():
+    """Gets all the coins available in 'TradePair' table.
+    """
+    pairs = db.session.query(TradePair).all()
+    coins_in_pairs = set()
+    for pair in pairs:
+        coins_in_pairs.add(pair.coin)
+        coins_in_pairs.add(pair.base_coin)
+    return coins_in_pairs
+
+
+def get_coins_by_exchange(exchange):
+    """Gets the coins available in 'TradePair' for a given exchange.
+    """
+    pairs = TradePair.query.filter_by(exchange=exchange).all()
+    coins_in_exchange = set()
+    for pair in pairs:
+        coins_in_exchange.add(pair.coin)
+        coins_in_exchange.add(pair.base_coin)
+    return coins_in_exchange
+
+
 def get_exch_by_coin(coin):
     """Gets the exchanges that allows deposit or withdrawal of 'coin'.
     It is assumed that, in order for an exchange to allow the deposit of a
@@ -164,8 +183,9 @@ def get_exch_by_coin(coin):
     """
     exchs = db.session.query(Fee.exchange)\
                       .filter((Fee.action == 'Withdrawal') &
+                              (Fee.status == 'Active') &
                               (Fee.scope == coin))\
-                      .distinct(Fee.exchange).all()
+        .distinct(Fee.exchange).all()
     if exchs:
         return set([item[0] for item in exchs])
     return set()
@@ -196,8 +216,15 @@ def get_trading_fees_by_exch(exchange):
                                 "scope": 'Paying with BNB',
                                 "amount": str(fee.amount) + '%'})
         else:
+            coins = fee.scope.split("/")
+            if len(coins) == 2:
+                coin_id_a = get_coin(coins[0]).symbol
+                coin_id_b = get_coin(coins[1]).symbol
+                scope = "{}/{}".format(coin_id_a, coin_id_b)
+            else:
+                scope = fee.scope
             return_list.append({"order": 9,
-                                "scope": fee.scope,
+                                "scope": scope,
                                 "amount": str(fee.amount) + '%'})
     return_list = sorted(return_list, key=lambda x: x["order"])
     return return_list
@@ -211,6 +238,7 @@ def generate_fee_info(fee):
     # If Fee Amount == None, return n/a
     if not is_number(fee.amount):
         return {"amount": 'n/a', "comments": None}
+    coin = get_coin(fee.scope)
     # Generate fee string
     fee_str = fee.amount
     # Calculate fee info
@@ -218,12 +246,12 @@ def generate_fee_info(fee):
         fee_str = "{}%".format(fee.amount)
     else:
         fee_str = "{} {}".format(float_to_str(fee.amount),
-                                 fee.scope)
+                                 coin.symbol)
     if fee.min_amount and is_number(fee.min_amount):
         try:
             symbol = Params.CURRENCY_SYMBOLS[fee.scope]
         except Exception as e:
-            symbol = " {}".format(fee.scope)
+            symbol = " {}".format(coin.symbol)
         if symbol == '$':
             fee_str = "{}\n(Min: {}{})".format(fee_str,
                                                symbol,
@@ -240,6 +268,28 @@ def generate_fee_info(fee):
     return {"amount": fee_str, "comments": comments}
 
 
+def get_fees(exchange=None, action=None, status=None):
+    """ Gets the Fees for the given exchange and status.
+    """
+    if exchange and action and status:
+        fees = Fee.query.filter_by(exchange=exchange,
+                                   action=action,
+                                   status=status).all()
+    elif exchange and action:
+        fees = Fee.query.filter_by(exchange=exchange, action=action).all()
+    elif exchange and status:
+        fees = Fee.query.filter_by(exchange=exchange, status=status).all()
+    elif action and status:
+        fees = Fee.query.filter_by(action=action, status=status).all()
+    elif exchange:
+        fees = Fee.query.filter_by(exchange=exchange).all()
+    elif status:
+        fees = Fee.query.filter_by(status=status).all()
+    else:
+        fees = Fee.query.all()
+    return fees
+
+
 def get_dep_with_fees_by_exch(exchange):
     """Gets all the deposit and withdrawal fees for 'exchange'.
     Returns a list of dics: [{"coin": x,
@@ -250,8 +300,10 @@ def get_dep_with_fees_by_exch(exchange):
     """
     return_list = list()
     with_query = Fee.query.filter_by(exchange=exchange,
+                                     status='Active',
                                      action='Withdrawal').all()
     dep_query = Fee.query.filter_by(exchange=exchange,
+                                    status='Active',
                                     action='Deposit').all()
     for fee in with_query:
         coin_id = fee.scope
@@ -282,8 +334,10 @@ def get_coin_fees(coin_id):
     """
     return_list = list()
     with_query = Fee.query.filter_by(scope=coin_id,
+                                     status='Active',
                                      action='Withdrawal').all()
     dep_query = Fee.query.filter_by(scope=coin_id,
+                                    status='Active',
                                     action='Deposit').all()
     for fee in with_query:
         exch_id = fee.exchange
@@ -323,12 +377,13 @@ def calc_fee(action, exchange, coin, amt, logger):
     """
     fee_query = Fee.query.filter_by(exchange=exchange,
                                     action=action,
-                                    scope=coin).first()
+                                    scope=coin.id,
+                                    status='Active').first()
     if fee_query and (fee_query.amount is not None):
         # If Type == 'Absolute', just return value
         if fee_query.type == 'Absolute':
             lit = "{} {} (fixed amount)".format(fee_query.amount,
-                                                coin)
+                                                coin.symbol)
             return [fee_query.amount, lit]
         # If Type == 'Percentage', calc fee and check minimum quantity
         elif fee_query.type == 'Percentage':
@@ -337,22 +392,22 @@ def calc_fee(action, exchange, coin, amt, logger):
                 lit = "{}% (minimum fee of {} {})"\
                     .format(fee_query.amount,
                             fee_query.min_amount,
-                            coin)
+                            coin.symbol)
                 return [max(wd_fee, fee_query.min_amount), lit]
             else:
                 lit = "{}%".format(fee_query.amount)
                 return [wd_fee, lit]
         # If Type == 'Less1kUSD', get amount in USD and check if less than 1k
         elif fee_query.type == 'Less1kUSD':
-            amount_usd = fx_exchange(coin, 'USD', amt, logger)
+            amount_usd = fx_exchange(coin.id, 'usd-us-dollars', amt, logger)
             if amount_usd < 1000:
                 lit = "{} {} (fixed amount for deposits of less than $1000)"\
-                    .format(fee_query.amount, coin)
+                    .format(fee_query.amount, coin.symbol)
                 return [fee_query.amount, lit]
         # If Type == '1%+20', calc 1% and then add 20 units
         elif fee_query.type == '1%+20':
             wd_fee = round(0.01 * amt + 20, 2)
-            lit = "1% + 20 {}".format(coin)
+            lit = "1% + 20 {}".format(coin.symbol)
             return [wd_fee, lit]
     return [None, None]
 
@@ -377,11 +432,66 @@ def set_default_exch(coin_id):
         return 'Bank'
 
 
+def add_mapping(table, field, old_value, new_value):
+    """ Adds a new entry to 'Mappings' table.
+    """
+    if old_value == new_value:
+        return
+    # If there is an entry with 'new_value', delete that entry
+    mapping_in_db = Mappings.query.filter_by(table=table,
+                                             field=field,
+                                             old_value=new_value).delete()
+    # If 'old_value' was once a 'new_value', update that entry
+    mapping_in_db = Mappings.query.filter_by(table=table,
+                                             field=field,
+                                             new_value=old_value).all()
+    for mapping in mapping_in_db:
+        mapping.new_value = new_value
+    # If there is already an entry for 'old_value', update it
+    mapping_in_db = Mappings.query.filter_by(table=table,
+                                             field=field,
+                                             old_value=old_value).first()
+    if mapping_in_db:
+        mapping_in_db.new_value = new_value
+    # Else, add new entry
+    else:
+        map = Mappings(table=table,
+                       field=field,
+                       old_value=old_value,
+                       new_value=new_value)
+        db.session.add(map)
+    db.session.commit()
+
+
+def make_unique_field(field, value):
+    """Creates a unique 'symbol' or 'long_name' for a coin.
+    """
+    is_unique = False
+    if field == "symbol":
+        while(not is_unique):
+            coin_id_db = Coin.query.filter_by(symbol=value).first()
+            if coin_id_db:
+                value += "*"
+            else:
+                is_unique = True
+    elif field == "long_name":
+        while(not is_unique):
+            coin_id_db = Coin.query.filter_by(long_name=value).first()
+            if coin_id_db:
+                value += "+"
+            else:
+                is_unique = True
+    return value
+
+
 def fx_exchange(orig_coin, dest_coin, amount, logger):
     if amount is None:
         logger.warning("fx_exchange: FX could not be calculated for '{}"
                        "-{}' (amount=None)".format(orig_coin, dest_coin))
         return None
+    stored_fx = get_fx(orig_coin, dest_coin)
+    if stored_fx:
+        return round(stored_fx * amount, 8)
     # If 'orig_coin'='dest_coin', return 'amount' directly
     if orig_coin == dest_coin:
         return amount
@@ -389,27 +499,54 @@ def fx_exchange(orig_coin, dest_coin, amount, logger):
     prc = Price.query.filter_by(coin=orig_coin, base_coin=dest_coin)\
                      .first()
     if prc:
+        set_fx(orig_coin, dest_coin, prc.price)
         return round(prc.price * amount, 8)
     # If Price is found & 'dest_coin' is a 'coin', return 1/price
     prc = Price.query.filter_by(coin=dest_coin, base_coin=orig_coin)\
                      .first()
     if prc:
+        set_fx(orig_coin, dest_coin, 1 / prc.price)
         return round(1 / prc.price * amount, 8)
     # Else, triangulate FX using BTC prices (Case if Type=Crypto)
-    prc_orig_btc = Price.query.filter_by(coin=orig_coin, base_coin='BTC')\
-                              .first()
-    prc_dest_btc = Price.query.filter_by(coin=dest_coin, base_coin='BTC')\
-                              .first()
+    prc_orig_btc = Price.query.filter_by(coin=orig_coin,
+                                         base_coin='btc-bitcoin')\
+        .first()
+    prc_dest_btc = Price.query.filter_by(coin=dest_coin,
+                                         base_coin='btc-bitcoin')\
+        .first()
     if prc_orig_btc and prc_dest_btc:
+        set_fx(orig_coin,
+               dest_coin,
+               prc_orig_btc.price / prc_dest_btc.price)
         return round(prc_orig_btc.price / prc_dest_btc.price * amount, 8)
     # Else, triangulate FX using BTC prices (Case if Type=Fiat)
-    prc_orig_fiat = Price.query.filter_by(coin='BTC', base_coin=orig_coin)\
+    prc_orig_fiat = Price.query.filter_by(coin='btc-bitcoin',
+                                          base_coin=orig_coin)\
         .first()
-    prc_dest_fiat = Price.query.filter_by(coin='BTC', base_coin=dest_coin)\
+    prc_dest_fiat = Price.query.filter_by(coin='btc-bitcoin',
+                                          base_coin=dest_coin)\
         .first()
     if prc_orig_fiat and prc_dest_fiat:
+        set_fx(orig_coin,
+               dest_coin,
+               prc_dest_fiat.price / prc_orig_fiat.price)
         return round(prc_dest_fiat.price / prc_orig_fiat.price * amount, 8)
     # If the FX could not be calculated, return 'None'
     logger.warning("fx_exchange: FX could not be calculated for '{}"
-                   "-{}'".format(orig_coin, dest_coin))
+                   "/{}'".format(orig_coin, dest_coin))
+    # print(1 + " ")
+    return None
+
+
+def get_mapping(table, field, old_value):
+    """Gets the new value of a field that has been changed.
+    """
+    mapping = Mappings.query.filter_by(table=table,
+                                       field=field,
+                                       old_value=old_value).first()
+    if mapping:
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        print(mapping.new_value)
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        return mapping.new_value
     return None

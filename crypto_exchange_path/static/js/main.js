@@ -411,7 +411,6 @@ $(document).ready(function() {
 
 
 
-
     ///////////////////////////////////////////////////////////////////////////
     /////   CURRENCY SELECTION
     ///////////////////////////////////////////////////////////////////////////
@@ -425,10 +424,12 @@ $(document).ready(function() {
         selectedCurrency = $(this).attr('data-currency');
         if (currentCurrency != selectedCurrency) {
             // Replace selected currency
+            selectedCurrencyId = $(this).attr('data-currency-id');
+            $('#currency-btn button').attr('data-currency-id', selectedCurrencyId);
             $('#currency-btn button').attr('data-currency', selectedCurrency);
             $('#currency-btn button').html('<b>' + $(this).html() + '</b>');
             // Change selected option in input form
-            var $option = $('#currency option[value=' + selectedCurrency + ']');
+            var $option = $('#currency option[value=' + selectedCurrencyId + ']');
             $option.prop('selected', true);
             // Hide results
             $('#results').fadeOut(200);

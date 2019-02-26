@@ -40,19 +40,19 @@ class Path:
     def calc_transfer_fees(self, fee_lst, coin, to_curr=False):
         """ Returns a string that contains the sum of the fees provided in
         'fee_lst' (withdrawal & deposit fees).
-        If 'to_curr' is equeal to 'True', the function converts the sum
+        If 'to_curr' is equal to 'True', the function converts the sum
         to the calculation currency.
         """
         fee_sum = sum(filter(None, fee_lst))
         if fee_sum is not None:
             if to_curr:
-                fee_sum = fx_exchange(coin,
+                fee_sum = fx_exchange(coin.id,
                                       self.currency,
                                       fee_sum,
                                       self.logger)
                 return num_2_str(fee_sum, self.currency)
             else:
-                return "{} {}".format(fee_sum, coin)
+                return "{} {}".format(fee_sum, coin.symbol)
         else:
             return ""
 
@@ -204,12 +204,12 @@ class Location:
         self.withdraw_details = None
         self.amount_str = self.calc_amt_str()
         self.logger = logger
-        self.store_fee('Deposit', exchange.id, coin.id, amount)
-        self.store_fee('Withdrawal', exchange.id, coin.id, amount)
+        self.store_fee('Deposit', exchange.id, coin, amount)
+        self.store_fee('Withdrawal', exchange.id, coin, amount)
 
     def calc_amt_str(self):
-        amount = round_amount_by_price_str(self.amount, self.coin.id)
-        return "{} {}".format(amount, self.coin.id)
+        amount = round_amount_by_price_str(self.amount, self.coin)
+        return "{} {}".format(amount, self.coin.symbol)
 
     def store_fee(self, action, exchange, coin, amount):
         """ Stores the deposit or withdrawal fee.
@@ -337,15 +337,15 @@ class Trade:
         self.fee_coin = fee_coin
         self.fee_literal = fee_literal
         self.sell_amt_str = self.calc_amt_str(self.sell_amt,
-                                              self.sell_coin.id)
+                                              self.sell_coin)
         self.buy_amt_str = self.calc_amt_str(self.buy_amt,
-                                             self.buy_coin.id)
+                                             self.buy_coin)
         self.fee_amt_str = self.calc_amt_str(self.fee_amt,
-                                             self.fee_coin.id)
+                                             self.fee_coin)
 
     def calc_amt_str(self, amt, coin):
         amount = round_amount_by_price_str(amt, coin)
-        return "{} {}".format(amount, coin)
+        return "{} {}".format(amount, coin.symbol)
 
     def __repr__(self):
         return "Trade(Sell='{} {}', Buy='{} {}', Fee='{} {}')"\
