@@ -534,7 +534,6 @@ def fx_exchange(orig_coin, dest_coin, amount, logger):
     # If the FX could not be calculated, return 'None'
     logger.warning("fx_exchange: FX could not be calculated for '{}"
                    "/{}'".format(orig_coin, dest_coin))
-    # print(1 + " ")
     return None
 
 
@@ -545,8 +544,5 @@ def get_mapping(table, field, old_value):
                                        field=field,
                                        old_value=old_value).first()
     if mapping:
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-        print(mapping.new_value)
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
         return mapping.new_value
     return None
