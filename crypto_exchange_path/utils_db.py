@@ -577,12 +577,13 @@ def get_mapping(table, field, old_value):
     return None
 
 
-def get_promos():
+def get_promos(exchange=None):
     user_promos = Params.USER_PROMOS
     promos = []
     for promo in user_promos:
-        exchange = get_exchange(promo)
-        if exchange:
-            promos.append({'exchange': exchange,
-                           'promo_text': Markup(user_promos[promo])})
+        promo_exch = get_exchange(promo)
+        if promo_exch:
+            if exchange is None or promo_exch.id == exchange:
+                promos.append({'exchange': promo_exch,
+                               'promo_text': Markup(user_promos[promo])})
     return promos

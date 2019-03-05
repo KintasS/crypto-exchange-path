@@ -531,6 +531,8 @@ def exchange_fees_by_exch(exch_id):
     exch_data = get_exchange_data(exchange.id,
                                   exchange_info_file,
                                   logger)
+    # Get promos
+    promos = get_promos(exchange.id)
     # If 'calc_currency' exists in cookie, use it
     currency = request.cookies.get('calc_currency')
     if currency:
@@ -538,7 +540,9 @@ def exchange_fees_by_exch(exch_id):
     else:
         curr = Params.DEFAULT_CURRENCY
     curr = get_coin(curr)
+    # Get forms
     feedback_form = FeedbackForm()
+    promo_form = PromoForm()
     # Get Meta tags
     title = get_meta_tags('Exchanges|Fees|Exch|Exch',
                           'Title',
@@ -560,11 +564,13 @@ def exchange_fees_by_exch(exch_id):
                            title=title,
                            description=description,
                            feedback_form=feedback_form,
+                           promo_form=promo_form,
                            trading_text=trading_text,
                            withdrawal_text=withdrawal_text,
                            trading_fees=trading_fees,
                            dep_with_fees=dep_with_fees,
-                           exch_data=exch_data)
+                           exch_data=exch_data,
+                           promos=promos)
 
 
 @app.route("/exchanges/fees/<exch_id>-fees", methods=['GET', 'POST'])

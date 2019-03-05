@@ -245,9 +245,8 @@
 
     </section>
 
-
     <!--Section: Exchange Fees Review-->
-    <section class="exchange-fees-text pb-5">
+    <section class="exchange-fees-text light-gray-bg section-padding-2rem">
         <h2 class="px-3 mb-4 text-center font-weight-bold">{{ exchange.name }} Fees Review</h2>
         <div class="container">
             <div class="row d-flex justify-content-center">
@@ -262,7 +261,57 @@
     </section>
 
 
+    <!--Section: Exchange Promotions-->
+    {% if promos %}
+    <section class="exchange-promos section-padding-2rem">
+        <h2 class="px-3 text-center font-weight-bold">{{ exchange.name }} Promotions</h2>
+        <div class="container pb-4">
 
+            <div class="row d-flex justify-content-center">
+                <div class="col-12 col-xl-10">
+                    <!-- Row for each promo -->
+                    {% for promo in promos %}
+                        <div class="card my-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <img class="img-buy-coin mr-2" src="/static/img/exchanges/64/{{ promo['exchange'].img_fn }}" alt="promo['exchange'].name logo">
+                                    <div class="col">
+                                        <h3>{{ promo['exchange'].name }}</h3>
+                                        <p class="promo-text">Use <a class="ga-exchange-redirects promo-link" href="{{ promo['exchange'].site_url }}" rel="nofollow" target="_blank" data-exch="{{ promo['exchange'].name }}" data-location="URL: {{ request.path }} [link]">this link</a> {{ promo['promo_text'] }}</p>
+                                    </div>
+                                    <a class="ga-exchange-redirects d-none d-sm-block select-btn btn btn-indigo-dark m-0 py-2" href="{{ promo['exchange'].site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ promo['exchange'].name }}" data-location="URL: {{ request.path }} [button]">Use promo</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Sign-up to get alerts -->
+            <div class="lead text-center font-weight-bold font-italic">Get alerts when new promos are available for you:</div>
+
+            <form id="promo-form" class="form-inline mt-3 align-items-center justify-content-center" method="POST" action="">
+                {{ promo_form.hidden_tag() }}
+                <div class="form-group mr-3">
+                    {% if promo_form.email.errors %}
+                        {{ promo_form.email(id="promo-email", class="form-control form-control-lg is-invalid", type="email") }}
+                        <div class="invalid-feedback">
+                            {% for error in promo_form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ promo_form.email(id="promo-email", class="form-control form-control-lg", type="email", placeholder="name@example.com") }}
+                    {% endif %}
+                </div>
+                <div class="form-group" data-type="Promotions" data-location="URL: {{ request.path }} ">
+                    {{ promo_form.promo_submit(class="ga-suscription btn btn-primary py-2") }}
+                </div>
+            </form>
+
+        </div>
+    </section>
+    {% endif %}
 
 
 
