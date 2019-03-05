@@ -21,7 +21,8 @@
         <div class="mask-rgba-black-strong">
 
             <!-- Heading -->
-            <h1 class="font-weight-bold text-center py-4 px-3 my-0">{{ coin.long_name }} ({{ coin.symbol}})<br><small>Deposit, Trading & Withdrawal fees</small></h1>
+            <h1 class="font-weight-bold text-center pt-4 px-3 my-0">{{ coin.long_name }} Fees</h1>
+            <div class="subtitle text-center pt-2 pb-4 px-3 my-0">Deposit, Trading & Withdrawal fees</div>
 
         </div>
 
@@ -32,17 +33,18 @@
 
         <div class="container">
 
-            <h2 class="pt-4 px-3 mb-4 text-center font-weight-bold">{{ coin.long_name }} fees<br><small>by exchange site</small></h2>
+            <h2 class="pt-4 pt-lg-5 px-3 m-0 text-center font-weight-bold">{{ coin.long_name }} Exchange Fees</h2>
+            <div class="subtitle text-center mb-3 mb-sm-4 px-3">by exchange site</div>
 
             <div class="row d-flex justify-content-center pb-4">
 
-                <div class="col-12 col-lg-10 col-xl-9 px-2">
+                <div class="col-12 col-lg-10 col-xl-9 px-3">
 
                     <table class="table table-hover asset-table">
                         <thead class="">
                             <tr>
                                 <th scope="col"></th>
-                                <th class="align-right" scope="col">
+                                <th class="d-none d-sm-table-cell align-right" scope="col">
                                     <span class="d-sm-none">Dep.</span>
                                     <span class="d-none d-sm-inline">Deposit fees</span>
                                 </th>
@@ -54,7 +56,7 @@
                                     </a>
                                 </th>
                                 <th class="align-right" scope="col">
-                                    <span class="d-sm-none">Withdraw</span>
+                                    <span class="d-sm-none">Withdrawal</span>
                                     <span class="d-none d-sm-inline">Withdrawal fees</span>
                                 </th>
                                 <th class="align-right" scope="col"></th>
@@ -65,11 +67,12 @@
                                 <tr>
                                     <th scope="row" class="align-middle pr-0">
                                         <div class="d-flex align-items-center">
+                                            <img class="d-md-none img-exch mr-3" src="/static/img/exchanges/64/{{ fee['exchange'].img_fn }}" alt="{{ fee['exchange'].name }} logo">
                                             <img class="d-none d-sm-inline img-exch mr-3" src="/static/img/exchanges/64/{{ fee['exchange'].img_fn }}" alt="{{ fee['exchange'].name }} logo">
                                             <a class="no-link-format" href="{{ url_for('exchange_fees_by_exch', exch_id=fee['exchange'].id, _external=True) }}">{{ fee['exchange'].name }}</a>
                                         </div>
                                     </th>
-                                    <td class="align-middle align-right">
+                                    <td class="d-none d-sm-table-cell align-middle align-right">
                                             {% if fee["deposit"]["comments"] %}
                                                 <a class="no-link-tooltip text-right" data-toggle="tooltip" data-html="true" data-placement="top" title="{{ fee['deposit']['comments'] }}">
                                                     <span class="dotted-underline">{{ fee["deposit"]["amount"] }}</span>
@@ -122,10 +125,21 @@
 
     </section>
 
+
+    <!--Section: Exchange Promos-->
+    <div class="light-gray-bg section-padding-2rem">
+        <h2 class="mb-3 text-center font-weight-bold">Crypto Exchange Promotions</h2>
+        {% include '_promotions.html' %}
+    </div>
+
+
+
+
+
     <!--Section: Buy-Sell Coin-->
     <section class="exchange-fees section-padding-2rem">
 
-        <h2 class="mb-3 text-center font-weight-bold">Cheapest sites for {{ coin.long_name }}</h2>
+        <h2 class="mb-3 text-center font-weight-bold">Cheapest exchanges for {{ coin.long_name }}</h2>
 
         <div class="container">
 
@@ -180,7 +194,8 @@
 
     </section>
 
-    <!--Section: Buy-Sell Coin-->
+
+    <!--Section: Coin detail-->
     <section class="coin-detail section-padding-2rem">
 
         {% if coin_data %}
@@ -441,7 +456,6 @@
             <i class="fas fa-chevron-circle-up fa-3x"></i>
         </a>
     </section>
-
 
 {% endblock main %}
 

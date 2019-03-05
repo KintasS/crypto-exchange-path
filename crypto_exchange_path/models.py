@@ -39,14 +39,14 @@ class User(db.Model, UserMixin):
 class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     datetime = db.Column(db.DateTime, nullable=False)
-    topic = db.Column(db.String(50), nullable=False)
-    subject = db.Column(db.String(50))
-    detail = db.Column(db.String(200))
+    page = db.Column(db.String(256), nullable=False)
+    text = db.Column(db.String(500), nullable=False)
+    status = db.Column(db.String(30))
 
     def __repr__(self):
         date = self.datetime.strftime("%Y%m%d")
         return ("Feedback({} [{}]: {})"
-                .format(date, self.topic, self.subject))
+                .format(date, self.page, self.text))
 
 
 class Price(db.Model):
@@ -163,3 +163,15 @@ class Mappings(db.Model):
                                                           self.field,
                                                           self.old_value,
                                                           self.new_value))
+
+
+class Subscriber(db.Model):
+    email = db.Column(db.String(120), primary_key=True)
+    subscription = db.Column(db.String(20), primary_key=True)
+    date = db.Column(db.DateTime)
+    status = db.Column(db.String(30))
+
+    def __repr__(self):
+        return ("Subscriber: '{}' --> {} [{}]".format(self.email,
+                                                      self.subscription,
+                                                      self.status))

@@ -7,7 +7,7 @@ from flask import (render_template, url_for, redirect, request, make_response,
 from flask_blogging.views import _get_blogging_engine
 from crypto_exchange_path import app, db, mail
 from crypto_exchange_path.config import Params
-from crypto_exchange_path.forms import SearchForm, FeedbackForm
+from crypto_exchange_path.forms import SearchForm, FeedbackForm, PromoForm
 from crypto_exchange_path.path_calculator import calc_paths
 from crypto_exchange_path.utils import (set_logger,
                                         error_notifier,
@@ -16,7 +16,8 @@ from crypto_exchange_path.utils import (set_logger,
                                         get_meta_tags,
                                         get_exch_text,
                                         load_json_file,
-                                        get_coin_data)
+                                        get_coin_data,
+                                        get_exchange_data)
 from crypto_exchange_path.utils_db import (get_exch_by_name,
                                            get_exchanges,
                                            get_coin_by_longname,
@@ -27,10 +28,12 @@ from crypto_exchange_path.utils_db import (get_exch_by_name,
                                            get_dep_with_fees_by_exch,
                                            get_coin_fees,
                                            get_coins,
+                                           get_promos,
                                            get_coin_by_urlname,
                                            get_coin_by_symbol,
                                            get_mapping)
-from crypto_exchange_path.models import Feedback
+from crypto_exchange_path.models import (Feedback,
+                                         Subscriber)
 from crypto_exchange_path.info_fetcher import (update_prices,
                                                update_pairs,
                                                import_exchanges,
@@ -48,6 +51,7 @@ logger = set_logger('Main', Params.LOGGER_DETAIL)
 coin_info_file = load_json_file(Params.COIN_INFO_FILE, logger)
 people_info_file = load_json_file(Params.PEOPLE_INFO_FILE, logger)
 tag_info_file = load_json_file(Params.TAG_INFO_FILE, logger)
+exchange_info_file = load_json_file(Params.EXCHANGE_INFO_FILE, logger)
 
 
 @app.errorhandler(404)
@@ -55,17 +59,38 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
-def manage_feedback_form(feedback_form):
+def manage_feedback_form(feedback_form, page):
     date = datetime.datetime.now()
-    topic = feedback_form.topic.data
-    subject = feedback_form.subject.data
-    detail = feedback_form.detail.data
+    text = feedback_form.text.data
+    if not text or len(text) == 0:
+        return
+    if len(text) > 500:
+        text = text[0:500]
+    if app.debug:
+        status = 'Debug'
+    else:
+        status = 'Production'
     feedback = Feedback(datetime=date,
-                        topic=topic,
-                        subject=subject,
-                        detail=detail)
-    feedback_notifier(topic, subject, detail, mail, logger)
+                        page=page,
+                        text=text,
+                        status=status)
+    feedback_notifier(text, page, mail, logger)
     db.session.add(feedback)
+    db.session.commit()
+
+
+def manage_promo_form(promo_form, subscription):
+    date = datetime.datetime.now()
+    email = promo_form.email.data
+    if app.debug:
+        status = 'Debug'
+    else:
+        status = 'Production'
+    subscriber = Subscriber(email=email,
+                            subscription=subscription,
+                            date=date,
+                            status=status)
+    db.session.add(subscriber)
     db.session.commit()
 
 
@@ -96,31 +121,34 @@ def home():
     else:
         curr = Params.DEFAULT_CURRENCY
     curr = get_coin(curr)
-    feedback_form = FeedbackForm()
     exchanges = get_exchanges(['Exchange'], status='Active')
     user_exchanges = [exch.id for exch in exchanges]
-    open_fbck_modal = False
     # Get Blog information
     posts = get_latest_posts(None, 6)
     # Get Meta tags
     title = get_meta_tags('Home', 'Title')
     description = get_meta_tags('Home', 'Description')
+    # Get forms
+    feedback_form = FeedbackForm()
+    promo_form = PromoForm()
+    # Get promos
+    promos = get_promos()
+    # Actions if Feedback Form was filled
+    if promo_form.promo_submit.data:
+        if promo_form.validate():
+            manage_promo_form(promo_form, 'Promos')
     # Actions if Feedback Form was filled
     if feedback_form.feedback_submit.data:
-        # If form was filled, but with errors, open modal again
-        open_fbck_modal = True
         if feedback_form.validate():
-            # If form was properly filled, close modal again
-            open_fbck_modal = False
-            manage_feedback_form(feedback_form)
-            return redirect(url_for('home'))
+            manage_feedback_form(feedback_form, request.path)
     resp = make_response(render_template('home.html', form=input_form,
                                          curr=curr, exchanges=exchanges,
                                          user_exchanges=user_exchanges,
                                          title=title,
                                          description=description,
                                          feedback_form=feedback_form,
-                                         open_feedback_modal=open_fbck_modal,
+                                         promo_form=promo_form,
+                                         promos=promos,
                                          url_orig_coin=url_orig_coin,
                                          url_dest_coin=url_dest_coin,
                                          add_flaticon_link=True,
@@ -149,19 +177,21 @@ def exchanges():
     feedback_form = FeedbackForm()
     exchanges = get_exchanges(['Exchange'], status='Active')
     user_exchanges = [exch.id for exch in exchanges]
-    open_fbck_modal = False
     # Get Blog information
     posts = get_latest_posts('Exchanges', 6)
     # Get Meta tags
     title = get_meta_tags('Exchanges', 'Title')
     description = get_meta_tags('Exchanges', 'Description')
+    # Actions if Feedback Form was filled
+    if feedback_form.feedback_submit.data:
+        if feedback_form.validate():
+            manage_feedback_form(feedback_form, request.path)
     resp = make_response(render_template('exchanges.html', form=input_form,
                                          curr=curr, exchanges=exchanges,
                                          user_exchanges=user_exchanges,
                                          title=title,
                                          description=description,
                                          feedback_form=feedback_form,
-                                         open_feedback_modal=open_fbck_modal,
                                          url_orig_coin=url_orig_coin,
                                          url_dest_coin=url_dest_coin,
                                          posts=posts))
@@ -171,6 +201,50 @@ def exchanges():
         resp.set_cookie('session', token_hex(8))
         session_id = request.cookies.get('session')
     return resp
+
+
+@app.route("/crypto-promotions", methods=['GET', 'POST'])
+def promotions():
+    try:
+        # If 'calc_currency' exists in cookie, use it
+        currency = request.cookies.get('calc_currency')
+        if currency:
+            curr = currency
+        else:
+            curr = Params.DEFAULT_CURRENCY
+        curr = get_coin(curr)
+        # Get forms
+        feedback_form = FeedbackForm()
+        promo_form = PromoForm()
+        # Get Meta tags
+        title = get_meta_tags('Promotions', 'Title')
+        description = get_meta_tags('Promotions', 'Description')
+        # Get promos
+        promos = get_promos()
+        # Actions if Feedback Form was filled
+        if promo_form.promo_submit.data:
+            if promo_form.validate():
+                manage_promo_form(promo_form, 'Promos')
+        # Actions if Feedback Form was filled
+        if feedback_form.feedback_submit.data:
+            if feedback_form.validate():
+                manage_feedback_form(feedback_form, request.path)
+    # Catch generic exception just in case anything went wront
+    except Exception as e:
+        logger.error("routes: Error procesing 'crypto-promotions'")
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return redirect(url_for('home'))
+    # Load page
+    return render_template('promotions.html',
+                           curr=curr,
+                           title=title,
+                           description=description,
+                           feedback_form=feedback_form,
+                           promo_form=promo_form,
+                           promos=promos)
 
 
 @app.route("/exchanges/search/<url_orig_coin>-to-<url_dest_coin>",
@@ -199,12 +273,13 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
         curr = Params.DEFAULT_CURRENCY
         input_form.currency.data = curr
     curr = get_coin(curr)
+    if not curr:
+        curr = get_coin('usd-us-dollars')
     auto_search = False
     feedback_form = FeedbackForm()
     exchanges = get_exchanges(['Exchange'], status='Active')
     user_exchanges = [exch.id for exch in exchanges]
     path_results = None
-    open_fbck_modal = False
     # Get Meta tags (in case form was not filled)
     title = get_meta_tags('Exchanges|Results',
                           'Title',
@@ -323,6 +398,10 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
         if dest_coin:
             input_form.dest_coin.data = dest_coin.long_name
         auto_search = True
+    # Actions if Feedback Form was filled
+    if feedback_form.feedback_submit.data:
+        if feedback_form.validate():
+            manage_feedback_form(feedback_form, request.path)
     resp = make_response(render_template('exch_results.html',
                                          form=input_form,
                                          curr=curr,
@@ -334,7 +413,6 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                                          feedback_form=feedback_form,
                                          title=title,
                                          description=description,
-                                         open_feedback_modal=open_fbck_modal,
                                          url_orig_coin=url_orig_coin,
                                          url_dest_coin=url_dest_coin))
     # Store session ID & Currency in cookie if there are not already stored
@@ -394,6 +472,10 @@ def exchange_fees_exch():
                           'Title')
     description = get_meta_tags('Exchanges|Fees|Exch',
                                 'Description')
+    # Actions if Feedback Form was filled
+    if feedback_form.feedback_submit.data:
+        if feedback_form.validate():
+            manage_feedback_form(feedback_form, request.path)
     return render_template('exchange_fees_exch.html',
                            curr=curr,
                            title=title,
@@ -421,6 +503,10 @@ def exchange_fees_coin():
                           'Title')
     description = get_meta_tags('Exchanges|Fees|Coin',
                                 'Description')
+    # Actions if Feedback Form was filled
+    if feedback_form.feedback_submit.data:
+        if feedback_form.validate():
+            manage_feedback_form(feedback_form, request.path)
     # Load page
     return render_template('exchange_fees_coin.html',
                            curr=curr,
@@ -430,7 +516,7 @@ def exchange_fees_coin():
                            coins=coins)
 
 
-@app.route("/exchanges/fees/<exch_id>", methods=['GET'])
+@app.route("/exchanges/fees/<exch_id>", methods=['GET', 'POST'])
 def exchange_fees_by_exch(exch_id):
     """Displays the fees of the exchange given as argument.
     """
@@ -438,8 +524,13 @@ def exchange_fees_by_exch(exch_id):
     # If exchange not recognnized, redirect
     if not exchange:
         return redirect(url_for('exchange_fees_exch'))
+    # Get Exchange fees
     trading_fees = get_trading_fees_by_exch(exch_id)
     dep_with_fees = get_dep_with_fees_by_exch(exch_id)
+    # Get Exchange data
+    exch_data = get_exchange_data(exchange.id,
+                                  exchange_info_file,
+                                  logger)
     # If 'calc_currency' exists in cookie, use it
     currency = request.cookies.get('calc_currency')
     if currency:
@@ -458,6 +549,11 @@ def exchange_fees_by_exch(exch_id):
     # Get Texts
     trading_text = Markup(get_exch_text(exch_id, 'Trade'))
     withdrawal_text = Markup(get_exch_text(exch_id, 'Withdrawal'))
+    # Actions if Feedback Form was filled
+    if feedback_form.feedback_submit.data:
+        if feedback_form.validate():
+            manage_feedback_form(feedback_form, request.path)
+    # Load page
     return render_template('exchange_fees_by_exch.html',
                            exchange=exchange,
                            curr=curr,
@@ -467,17 +563,18 @@ def exchange_fees_by_exch(exch_id):
                            trading_text=trading_text,
                            withdrawal_text=withdrawal_text,
                            trading_fees=trading_fees,
-                           dep_with_fees=dep_with_fees)
+                           dep_with_fees=dep_with_fees,
+                           exch_data=exch_data)
 
 
-@app.route("/exchanges/fees/<exch_id>-fees", methods=['GET'])
+@app.route("/exchanges/fees/<exch_id>-fees", methods=['GET', 'POST'])
 def exchange_fees_by_exch_old(exch_id):
     """Redirect for Old format url
     """
     return redirect(url_for('exchange_fees_exch'))
 
 
-@app.route("/exchanges/fees/coins/<coin_url_name>", methods=['GET'])
+@app.route("/exchanges/fees/coins/<coin_url_name>", methods=['GET', 'POST'])
 def exchange_fees_by_coin(coin_url_name):
     """Displays the fees for the coin given as as argument.
     """
@@ -506,14 +603,18 @@ def exchange_fees_by_coin(coin_url_name):
         else:
             curr = Params.DEFAULT_CURRENCY
         curr = get_coin(curr)
+        # Get forms
         feedback_form = FeedbackForm()
+        promo_form = PromoForm()
         # Get Meta tags
         title = get_meta_tags('Exchanges|Fees|Coin|Coin',
                               'Title',
-                              [coin.long_name, coin.symbol])
+                              [coin.long_name])
         description = get_meta_tags('Exchanges|Fees|Coin|Coin',
                                     'Description',
-                                    [coin.long_name, coin.symbol])
+                                    [coin.long_name,
+                                     coin.long_name,
+                                     coin.symbol])
         # Get search coins
         if (coin.type == 'Crypto'):
             quick_search_coins = Params.QUICK_SEARCH_COINS['Crypto']
@@ -529,6 +630,16 @@ def exchange_fees_by_coin(coin_url_name):
             # If for items have been gathered, exit loop
             if search_count == 4:
                 break
+        # Get promos
+        promos = get_promos()
+        # Actions if Feedback Form was filled
+        if promo_form.promo_submit.data:
+            if promo_form.validate():
+                manage_promo_form(promo_form, 'Promos')
+        # Actions if Feedback Form was filled
+        if feedback_form.feedback_submit.data:
+            if feedback_form.validate():
+                manage_feedback_form(feedback_form, request.path)
     # Catch generic exception just in case anything went wront
     except Exception as e:
         logger.error("routes: Error procesing '{}'".format(coin_url_name))
@@ -545,11 +656,14 @@ def exchange_fees_by_coin(coin_url_name):
                            title=title,
                            description=description,
                            feedback_form=feedback_form,
+                           promo_form=promo_form,
                            coin_fees=coin_fees,
-                           search_coins=search_coins)
+                           search_coins=search_coins,
+                           promos=promos)
 
 
-@app.route("/exchanges/fees/coin/<coin_url_name>-fees", methods=['GET'])
+@app.route("/exchanges/fees/coin/<coin_url_name>-fees",
+           methods=['GET', 'POST'])
 def exchange_fees_by_coin_old(coin_url_name):
     """Redirect for Old format url
     """

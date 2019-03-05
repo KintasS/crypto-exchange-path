@@ -56,23 +56,22 @@ def error_notifier(error_type, error_traceback, mail, logger):
         logger.error("error_notifier: {}".format(traceback.format_exc()))
 
 
-def feedback_notifier(topic, subject, detail, mail, logger):
+def feedback_notifier(text, page, mail, logger):
     # Send email
     try:
-        msg = Message('App FEEDBACK - {}'.format(topic),
+        msg = Message("App FEEDBACK - Page '{}'".format(page),
                       sender=Params.SENDER_EMAIL,
                       recipients=[Params.ERROR_RECIPIENT_EMAIL])
         msg.body = f'''Feedback recibido:
 
-        Topic: {topic}
-        Subject: {subject}
+        Page: {page}
 
-        Detail: {detail}
+        Detail: {text}
 
         '''
         mail.send(msg)
     except Exception as e:
-        logger.error("feedback_notifier: {}".format(topic))
+        logger.error("feedback_notifier: {}".format(page))
 
 
 def send_email_notification(subject, body, mail, logger):
@@ -440,6 +439,30 @@ def load_json_file(file, logger):
     except Exception as e:
         logger.error("routes: Could not read '{}'".format(file))
     return file_info
+
+
+def get_exchange_data(id, exchange_info_file, logger):
+    """Gets the Exchange information retrieved from Coinpaprika
+    for the exchange with 'id'.
+    """
+    exch_data = None
+    if id:
+        try:
+            exch_data = exchange_info_file[id]
+        except KeyError as e:
+            logger.warning("routes: No exchange info found for '{}'"
+                           "".format(id))
+    # Format Adjusted Volume
+    if exch_data["quotes"]["USD"]["adjusted_volume_24h"]:
+        no_formatted = exch_data["quotes"]["USD"]["adjusted_volume_24h"]
+        formatted = num_2_str(no_formatted, 'usd-us-dollars')
+        exch_data["quotes"]["USD"]["adjusted_volume_24h"] = formatted
+    # Format Reported Volume
+    if exch_data["quotes"]["USD"]["reported_volume_24h"]:
+        no_formatted = exch_data["quotes"]["USD"]["reported_volume_24h"]
+        formatted = num_2_str(no_formatted, 'usd-us-dollars')
+        exch_data["quotes"]["USD"]["reported_volume_24h"] = formatted
+    return exch_data
 
 
 def get_coin_data(id,

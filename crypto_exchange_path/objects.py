@@ -269,8 +269,8 @@ class Hop:
         """Checks whether the exchange has a user promo, in which case adds
         the promo text. Otherwise it returns None.
         """
-        if exchange.id in Params.USER_PROMOS:
-            return Markup(Params.USER_PROMOS[exchange.id])
+        if exchange.id in Params.USER_PROMOS_FOR_RESULTS:
+            return Markup(Params.USER_PROMOS_FOR_RESULTS[exchange.id])
         else:
             return None
 

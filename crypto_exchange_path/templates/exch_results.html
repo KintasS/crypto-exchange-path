@@ -351,7 +351,7 @@
                                                 </div>
                                                 <div class="ml-3">
                                                     <div>
-                                                        <a class="referral-summary-link exchange-format font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank">{{ path.hop_1.exchange.name }}</a>
+                                                        <a class="ga-exchange-redirects exchange-format font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank" data-exch="{{ path.hop_1.exchange.name }}" data-location="Exchange Search Results - Exchange name">{{ path.hop_1.exchange.name }}</a>
                                                     </div>
                                                     <div class="d-flex align-items-center mt-2">
                                                         <small class="d-flex align-items-center dark-grey-color">
@@ -440,11 +440,11 @@
                                         </div>
                                         <div class="d-flex justify-content-center mt-2 mt-lg-1">
                                             {% if path.hop_1.exchange.affiliate == 'Yes' %}
-                                                <a class="referral-result-btn select-btn btn btn-indigo-dark m-0" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}">Select</a>
+                                                <a class="ga-exchange-redirects select-btn btn btn-indigo-dark m-0" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}" data-location="Exchange Search Results - Result button">Select</a>
                                             {% elif path.hop_2 and path.hop_2.exchange.affiliate == 'Yes' %}
-                                                <a class="referral-result-btn select-btn btn btn-indigo-dark m-0" href="{{ path.hop_2.exchange.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ path.hop_2.exchange.name }}">Select</a>
+                                                <a class="ga-exchange-redirects select-btn btn btn-indigo-dark m-0" href="{{ path.hop_2.exchange.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ path.hop_2.exchange.name }}" data-location="Exchange Search Results - Result button">Select</a>
                                             {% else %}
-                                                <a class="referral-result-btn select-btn btn btn-indigo-dark m-0" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}">Select</a>
+                                                <a class="ga-exchange-redirects select-btn btn btn-indigo-dark m-0" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}" data-location="Exchange Search Results - Result button">Select</a>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -461,7 +461,7 @@
                                         {% set promotions_displayed = promotions_displayed.append( path.hop_1.exchange.id ) %}
                                         <div class="d-flex justify-content-center mx-3">
                                             <div class="promo text-center">
-                                                <span class="badge badge-dark mr-1">Promo</span><span class="text-dark font-italic smaller-font"> Use <a class="promo-link" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank" data-exch="{{ path.hop_1.exchange.name }}">this link</a> {{ path.hop_1.exch_promo }}</span>
+                                                <span class="badge badge-dark mr-1">Promo</span><span class="text-dark font-italic smaller-font"> Use <a class="ga-exchange-redirects promo-link" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank" data-exch="{{ path.hop_1.exchange.name }}" data-location="Exchange Search Results - Promo link">this link</a> {{ path.hop_1.exch_promo }}</span>
                                             </div>
                                         </div>
                                     {% endif %}
@@ -471,7 +471,7 @@
                                         {% set promotions_displayed = promotions_displayed.append( path.hop_2.exchange.id ) %}
                                         <div class="d-flex justify-content-center mx-3">
                                             <div class="promo text-center">
-                                                <span class="badge badge-dark mr-1">Promo</span><span class="text-dark font-italic smaller-font"> Use <a class="promo-link" href="{{ path.hop_2.exchange.site_url }}" rel="nofollow" target="_blank" data-exch="{{ path.hop_2.exchange.name }}">this link</a> {{ path.hop_2.exch_promo }}</span>
+                                                <span class="badge badge-dark mr-1">Promo</span><span class="text-dark font-italic smaller-font"> Use <a class="ga-exchange-redirects promo-link" href="{{ path.hop_2.exchange.site_url }}" rel="nofollow" target="_blank" data-exch="{{ path.hop_2.exchange.name }}" data-location="Exchange Search Results - Promo link">this link</a> {{ path.hop_2.exch_promo }}</span>
                                             </div>
                                         </div>
                                     {% endif %}
@@ -560,7 +560,7 @@
                                                 <div class="d-flex align-items-center justify-content-end">
                                                     <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/64/{{ path.origin.exchange.img_fn }}" alt="{{ path.origin.exchange.name }} logo">
                                                     {% if path.origin.exchange.site_url != '' %}
-                                                        <a class="referral-detail-link-2 font-weight-bold" href="{{ path.origin.exchange.site_url }}" rel="nofollow" target="_blank" role="button">{{ path.origin.exchange.name }}</a>
+                                                        <a class="ga-exchange-redirects referral-detail-link font-weight-bold" href="{{ path.origin.exchange.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ path.origin.exchange.name }}" data-location="Exchange Search Results - Links in details">{{ path.origin.exchange.name }}</a>
                                                     {% else %}
                                                         <span class="font-weight-bold">{{ path.origin.exchange.name }}</span>
                                                     {% endif %}
@@ -574,7 +574,7 @@
                                                 <div class="d-flex flex-column justify-content-end">
                                                     <div class="d-flex align-items-center justify-content-end">
                                                         <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/64/{{ path.hop_1.exchange.img_fn }}" alt="{{ path.hop_1.exchange.name }} logo">
-                                                        <a class="referral-detail-link-3 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a>
+                                                        <a class="ga-exchange-redirects referral-detail-link font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}" data-location="Exchange Search Results - Links in details">{{ path.hop_1.exchange.name }}</a>
                                                     </div>
                                                     <div class="text-right">{{ path.hop_1.trade.sell_amt_str }}</div>
                                                 </div>
@@ -609,7 +609,7 @@
                                             <div class="d-flex flex-column justify-content-end">
                                                 <div class="d-flex align-items-center justify-content-end">
                                                     <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/64/{{ path.hop_1.exchange.img_fn }}" alt="{{ path.hop_1.exchange.name }} logo">
-                                                    <a class="referral-detail-link-2 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a>
+                                                    <a class="ga-exchange-redirects referral-detail-link font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}" data-location="Exchange Search Results - Links in details">{{ path.hop_1.exchange.name }}</a>
                                                 </div>
                                                 <span class="text-right">{{ path.hop_1.trade.sell_amt_str }}</span>
                                             </div>
@@ -621,7 +621,7 @@
                                             <div class="d-flex flex-column justify-content-end">
                                                 <div class="d-flex align-items-center justify-content-end">
                                                     <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/64/{{ path.hop_1.exchange.img_fn }}" alt="{{ path.hop_1.exchange.name }} logo">
-                                                    <a class="referral-detail-link-3 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a>
+                                                    <a class="ga-exchange-redirects referral-detail-link font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}" data-location="Exchange Search Results - Links in details">{{ path.hop_1.exchange.name }}</a>
                                                 </div>
                                                 <span class="text-right">{{ path.hop_1.trade.buy_amt_str }}</span>
                                             </div>
@@ -669,7 +669,7 @@
                                                 <div class="d-flex flex-column justify-content-end">
                                                     <div class="d-flex align-items-center justify-content-end">
                                                         <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/64/{{ path.hop_1.exchange.img_fn }}" alt="{{ path.hop_1.exchange.name }} logo">
-                                                        <a class="referral-detail-link-2 font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank" role="button">{{ path.hop_1.exchange.name }}</a>
+                                                        <a class="ga-exchange-redirects referral-detail-link font-weight-bold" href="{{ path.hop_1.exchange.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ path.hop_1.exchange.name }}" data-location="Exchange Search Results - Links in details">{{ path.hop_1.exchange.name }}</a>
                                                     </div>
                                                     <span class="text-right">{{ path.hop_1.trade.buy_amt_str }}</span>
                                                 </div>
@@ -682,7 +682,7 @@
                                                     <div class="d-flex align-items-center justify-content-end">
                                                         <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/64/{{ step2b_dest.img_fn }}" alt="{{ step2b_dest.name }} logo">
                                                         {% if step2b_dest.site_url != '' %}
-                                                            <a class="referral-detail-link-3 font-weight-bold" href="{{ step2b_dest.site_url }}" rel="nofollow" target="_blank" role="button">{{ step2b_dest.name }}</a>
+                                                            <a class="ga-exchange-redirects referral-detail-link font-weight-bold" href="{{ step2b_dest.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ step2b_dest.name }}" data-location="Exchange Search Results - Links in details">{{ step2b_dest.name }}</a>
                                                         {% else %}
                                                             <span class="font-weight-bold">{{ step2b_dest.name }}</span>
                                                         {% endif %}
@@ -721,7 +721,7 @@
                                                 <div class="d-flex flex-column justify-content-end">
                                                     <div class="d-flex align-items-center justify-content-end">
                                                         <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/64/{{ path.hop_2.exchange.img_fn }}" alt="{{ path.hop_2.exchange.name }} logo">
-                                                        <a class="referral-detail-link-2 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" rel="nofollow" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a>
+                                                        <a class="ga-exchange-redirects referral-detail-link font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ path.hop_2.exchange.name }}" data-location="Exchange Search Results - Links in details">{{ path.hop_2.exchange.name }}</a>
                                                     </div>
                                                     <span class="text-right">{{ path.hop_2.trade.sell_amt_str }}</span>
                                                 </div>
@@ -733,7 +733,7 @@
                                                 <div class="d-flex flex-column justify-content-end">
                                                     <div class="d-flex align-items-center justify-content-end">
                                                         <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/64/{{ path.hop_2.exchange.img_fn }}" alt="{{ path.hop_2.exchange.name }} logo">
-                                                        <a class="referral-detail-link-3 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" rel="nofollow" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a>
+                                                        <a class="ga-exchange-redirects referral-detail-link font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ path.hop_2.exchange.name }}" data-location="Exchange Search Results - Links in details">{{ path.hop_2.exchange.name }}</a>
                                                     </div>
                                                     <span class="text-right">{{ path.hop_2.trade.buy_amt_str }}</span>
                                                 </div>
@@ -774,7 +774,7 @@
                                                 <div class="d-flex flex-column justify-content-end">
                                                     <div class="d-flex align-items-center justify-content-end">
                                                         <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/64/{{ path.hop_2.exchange.img_fn }}" alt="{{ path.hop_2.exchange.name }} logo">
-                                                        <a class="referral-detail-link-2 font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" rel="nofollow" target="_blank" role="button">{{ path.hop_2.exchange.name }}</a>
+                                                        <a class="ga-exchange-redirects referral-detail-link font-weight-bold" href="{{ path.hop_2.exchange.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ path.hop_2.exchange.name }}" data-location="Exchange Search Results - Links in details">{{ path.hop_2.exchange.name }}</a>
                                                     </div>
                                                     <span class="text-right">{{ path.hop_2.trade.buy_amt_str }}</span>
                                                 </div>
@@ -787,7 +787,7 @@
                                                     <div class="d-flex align-items-center justify-content-end">
                                                         <img class="img-exchange-sm mr-1 mr-sm-2" src="/static/img/exchanges/64/{{ path.destination.exchange.img_fn }}" alt="{{ path.destination.exchange.name }} logo">
                                                         {% if path.destination.exchange.site_url != '' %}
-                                                            <a class="referral-detail-link-3 font-weight-bold" href="{{ path.destination.exchange.site_url }}" rel="nofollow" target="_blank" role="button">{{ path.destination.exchange.name }}</a>
+                                                            <a class="ga-exchange-redirects referral-detail-link font-weight-bold" href="{{ path.destination.exchange.site_url }}" rel="nofollow" target="_blank" role="button" data-exch="{{ path.destination.exchange.name }}" data-location="Exchange Search Results - Links in details">{{ path.destination.exchange.name }}</a>
                                                         {% else %}
                                                             <span class="font-weight-bold">{{ path.destination.exchange.name }}</span>
                                                         {% endif %}
@@ -836,7 +836,6 @@
     </section>
 
 {% endblock main %}
-
 
 
 

@@ -1,8 +1,10 @@
+from flask import Markup
 from crypto_exchange_path.models import (Coin, TradePair, Fee, Price,
-                                         Exchange, Mappings)
+                                         Exchange, Mappings, Subscriber)
 from crypto_exchange_path import db
 from crypto_exchange_path.config import Params
-from crypto_exchange_path.utils import is_number, float_to_str
+from crypto_exchange_path.utils import (is_number,
+                                        float_to_str)
 from crypto_exchange_path.fx_manager import set_fx, get_fx
 
 
@@ -100,7 +102,7 @@ def get_exchanges(types=[], status=None):
         exchanges += Exchange.query.filter_by(status=status).all()
     else:
         exchanges = Exchange.query.all()
-    return exchanges
+    return sorted(exchanges, key=lambda x: x.id)
 
 
 def get_exchange_choices(types=[], status=None):
@@ -111,17 +113,6 @@ def get_exchange_choices(types=[], status=None):
     choices = []
     for exch in exchanges:
         choices.append((exch.id, exch.name))
-    return choices
-
-
-def get_feedback_topics():
-    """Gets the feedback topics from the configuration file and builds
-    a list of tuples.
-    """
-    topics = Params.FEEDBACK_TOPICS
-    choices = [('(Select a topic)', '(Select a topic)')]
-    for topic in topics:
-        choices.append((topic, topic))
     return choices
 
 
@@ -230,6 +221,19 @@ def get_trading_fees_by_exch(exchange):
     return return_list
 
 
+def get_subscriber(email, subscription=None):
+    """Gets the subscriber object for the given email.
+    A type can optionally be returned.
+    """
+    if subscription:
+        subscriber = Subscriber.query.filter_by(email=email,
+                                                subscription=subscription)\
+            .first()
+    else:
+        subscriber = Subscriber.query.filter_by(email=email).all()
+    return subscriber
+
+
 def generate_fee_info(fee):
     """Aux function for 'dep_get_with_fees_by_exch(exchange)' and
     'get_coin_fees(coin_id)'.
@@ -245,8 +249,18 @@ def generate_fee_info(fee):
     if fee.type == 'Percentage':
         fee_str = "{}%".format(fee.amount)
     else:
-        fee_str = "{} {}".format(float_to_str(fee.amount),
-                                 coin.symbol)
+        # Check in which coin the fee is paid
+        if fee.fee_coin and fee.fee_coin != "-":
+            fee_coin = get_coin(fee.fee_coin)
+            if fee_coin:
+                fee_str = "{} {}".format(float_to_str(fee.amount),
+                                         fee_coin.symbol)
+            else:
+                fee_str = "{} {}".format(float_to_str(fee.amount),
+                                         coin.symbol)
+        else:
+            fee_str = "{} {}".format(float_to_str(fee.amount),
+                                     coin.symbol)
     if fee.min_amount and is_number(fee.min_amount):
         try:
             symbol = Params.CURRENCY_SYMBOLS[fee.scope]
@@ -382,6 +396,21 @@ def calc_fee(action, exchange, coin, amt, logger):
     if fee_query and (fee_query.amount is not None):
         # If Type == 'Absolute', just return value
         if fee_query.type == 'Absolute':
+            # Check if fee is provided in another coin
+            if ((fee_query.fee_coin != '-') and
+                    (fee_query.fee_coin != fee_query.scope)):
+                fee_coin = get_coin(fee_query.fee_coin)
+                if fee_coin:
+                    fx_amt = fx_exchange(fee_coin.id,
+                                         coin.id,
+                                         fee_query.amount,
+                                         logger)
+                    fx_amt = round(fx_amt, 2)
+                    lit = "{} {} ({} {} equivalent)".format(fx_amt,
+                                                            coin.symbol,
+                                                            fee_query.amount,
+                                                            fee_coin.symbol)
+                    return [fx_amt, lit]
             lit = "{} {} (fixed amount)".format(fee_query.amount,
                                                 coin.symbol)
             return [fee_query.amount, lit]
@@ -546,3 +575,14 @@ def get_mapping(table, field, old_value):
     if mapping:
         return mapping.new_value
     return None
+
+
+def get_promos():
+    user_promos = Params.USER_PROMOS
+    promos = []
+    for promo in user_promos:
+        exchange = get_exchange(promo)
+        if exchange:
+            promos.append({'exchange': exchange,
+                           'promo_text': Markup(user_promos[promo])})
+    return promos

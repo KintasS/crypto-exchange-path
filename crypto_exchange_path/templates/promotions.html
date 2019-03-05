@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+
+{% block style %}
+{% endblock style %}
+
+
+{% block activepage %}
+    <div id="navlink-selector" class="d-none" data-active="nav-link-promos"></div>
+{% endblock activepage %}
+
+{% block og_image %}
+<meta property="og:image" content="https://www.cryptofeesaver.com/static/img/blog/tags/cfs_promotions.png">
+<meta name="twitter:image" content="https://www.cryptofeesaver.com/static/img/blog/tags/cfs_promotions_landscape.png">
+{% endblock og_image %}
+
+
+{% block main %}
+
+    <section class="exchange-fees-hero">
+        <div class="mask-rgba-black-strong">
+
+            <!-- Heading -->
+            <h1 class="font-weight-bold text-center pt-4 px-3 my-0">Crypto Promotions</h1>
+            <div class="subtitle text-center pt-2 pb-4 px-3 my-0">Find the best deals available for you</div>
+
+        </div>
+
+    </section>
+
+    <!--Section: Exchange Promos-->
+    <div class="section-padding-2rem">
+        {% include '_promotions.html' %}
+    </div>
+
+
+{% endblock main %}
+
+
+
+
+
+
+
+
+
+{% block js %}
+    <!-- typeahead -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap3-typeahead.min.js', _external=True) }}"></script>
+    <!-- Site styles -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js', _external=True) }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/exchange_fees.js', _external=True) }}"></script>
+{% endblock %}

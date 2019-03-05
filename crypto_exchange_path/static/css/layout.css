@@ -201,7 +201,7 @@ img {
     h2, h3 {
         font-size: 1.5rem;
     }
-    h4 {
+    h4, .h4 {
         font-size: 1.25rem;
     }
     h5, h6 {
@@ -286,10 +286,10 @@ img {
 }
 
 /* /////////////////////////////////////////////////////////
-////////////  BACK TO TOP //////////////////////////////////
+////////////  FEEDBACK % BACK TO TOP BUTTONS ///////////////
 ///////////////////////////////////////////////////////// */
 
-#myBtn {
+#feedback-btn {
     display: none;
     /* Hidden by default */
     position: fixed;
@@ -300,7 +300,42 @@ img {
     /* Place the button 30px from the right */
     z-index: 99;
     /* Make sure it does not overlap */
+    color: white;
+}
+
+i.fa-in-circle {
+    display: inline-block;
+    border-radius: 50px;
+    /* box-shadow: 0px 0px 2px #888; */
+    padding: 0.25em 0.25em;
+    background-color: #343a40;
+}
+
+/* Back to top button */
+
+#myBtn {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Fixed/sticky position */
+    bottom: 75px;
+    /* Place the button at the bottom of the page */
+    right: 30px;
+    /* Place the button 30px from the right */
+    z-index: 99;
+    /* Make sure it does not overlap */
     color: #343a40;
+}
+
+@media (max-width: 450px) {
+    #feedback-btn {
+        bottom: 10px;
+        right: 15px;
+    }
+    #myBtn {
+        bottom: 60px;
+        right: 15px;
+    }
 }
 
 /* /////////////////////////////////////////////////////////
@@ -899,6 +934,15 @@ section.exchange-fees-hero {
     color: white;
 }
 
+section.exchange-fees-hero .subtitle {
+    font-weight: 400;
+    font-size: 1.75rem;
+}
+
+section.exchange-fees .subtitle {
+    font-size: 1.5rem;
+}
+
 section.exchange-fees .img-coin {
     width: 32px;
     height: 32px;
@@ -916,6 +960,7 @@ section.exchange-fees .table td, section.exchange-fees .table th {
 section.exchange-fees .card {
     border: 1px solid #5c6bc0;
     border-radius: 0.5rem;
+    /* background-color: #f7f7ff; */
 }
 
 section.exchange-fees .card-body {
@@ -945,6 +990,12 @@ section.exchange-fees .card-link:hover {
 }
 
 @media (max-width: 575px) {
+    section.exchange-fees-hero .subtitle {
+        font-size: 1.25rem;
+    }
+    section.exchange-fees .subtitle {
+        font-size: 1.15rem;
+    }
     section.exchange-fees .card-body {
         padding: 0.75rem 0.25rem;
         font-size: 1rem;
@@ -971,6 +1022,58 @@ section.exchange-fees .card-link:hover {
         max-width: 400px !important;
         margin-left: auto;
         margin-right: auto;
+    }
+}
+
+section.exchange-promos .card {
+    border: 1px solid #5c6bc0;
+    border-radius: 0.5rem;
+    background-color: #f7f7ff;
+}
+
+section.exchange-promos p.promo-text {
+    margin-bottom: 0;
+    font-size: 1.15rem;
+}
+
+section.exchange-promos h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+section.exchange-promos .form-control-lg {
+    font-size: 1rem;
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    section.exchange-promos .card-body {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    section.exchange-promos .card-body .col {
+        padding-left: 0.5rem;
+        padding-right: 1rem;
+    }
+    section.exchange-promos p.promo-text {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 575px) {
+    section.exchange-promos .card-body {
+        padding-left: 1rem;
+        padding-right: 0.25rem;
+    }
+    section.exchange-promos .card-body .col {
+        padding-left: 0.5rem;
+        padding-right: 0.25rem;
+    }
+    section.exchange-promos p.promo-text {
+        font-size: 1rem;
+    }
+    section.exchange-promos h3 {
+        margin-bottom: 0rem;
     }
 }
 

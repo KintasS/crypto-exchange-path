@@ -1,17 +1,17 @@
 from flask_wtf import FlaskForm
 from wtforms import (StringField, SubmitField, TextAreaField, SelectField,
                      RadioField, SelectMultipleField)
-from wtforms.validators import (DataRequired, Length, ValidationError)
+from wtforms.validators import (DataRequired, ValidationError, Email)
 from crypto_exchange_path.config import Params
 from crypto_exchange_path.utils_db import (get_coins,
                                            get_exch_by_coin,
                                            get_exchange_choices,
                                            get_currency_choices,
-                                           get_feedback_topics,
                                            get_coin_by_longname,
                                            get_exch_by_name,
                                            set_default_exch,
-                                           get_exchange)
+                                           get_exchange,
+                                           get_subscriber)
 from crypto_exchange_path.utils import is_number
 
 
@@ -149,16 +149,17 @@ class SearchForm(FlaskForm):
 
 
 class FeedbackForm(FlaskForm):
-    topic = SelectField('Topic',
-                        choices=get_feedback_topics())
-    subject = StringField('Subject',
-                          validators=[Length(max=50), DataRequired()])
-    detail = TextAreaField('Detail',
-                           validators=[Length(max=200), DataRequired()],
-                           filters=[lambda x: x or None])
-    feedback_submit = SubmitField('Submit')
+    text = TextAreaField('Detail',
+                         filters=[lambda x: x or None])
+    feedback_submit = SubmitField('Send feedback')
 
-    def validate_topic(self, topic):
-        topics = Params.FEEDBACK_TOPICS
-        if topic.data not in topics:
-            raise ValidationError("Please, select a topic")
+
+class PromoForm(FlaskForm):
+    email = StringField('Email',
+                        validators=[DataRequired(), Email()])
+    promo_submit = SubmitField('Get alerts')
+
+    def validate_email(self, email):
+        email = get_subscriber(email.data, 'Promos')
+        if email:
+            raise ValidationError("Email already registered")

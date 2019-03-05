@@ -6,10 +6,18 @@ from flask_security import Security, SQLAlchemyUserDatastore
 from flask_admin import helpers as admin_helpers
 from flask_blogging import SQLAStorage, BloggingEngine
 from crypto_exchange_path.config import AppConfig
-from crypto_exchange_path.admin_view import (ExchangeView, FeeView, CoinView,
-                                             TradePairView, PriceView,
-                                             FeedbackView, QueryRegisterView,
-                                             UserView, RoleView, PostView,
+from crypto_exchange_path.admin_view import (ExchangeView,
+                                             FeeView,
+                                             CoinView,
+                                             TradePairView,
+                                             MappingsView,
+                                             SubscriberView,
+                                             PriceView,
+                                             FeedbackView,
+                                             QueryRegisterView,
+                                             UserView,
+                                             RoleView,
+                                             PostView,
                                              TagView)
 
 app = Flask(__name__)
@@ -26,7 +34,8 @@ admin = Admin(app, name='CFS Admin',
 
 from crypto_exchange_path import routes
 from crypto_exchange_path.models import (User, Role, Exchange, Fee, Coin,
-                                         TradePair, Price, Feedback,
+                                         TradePair, Mappings, Subscriber,
+                                         Price, Feedback,
                                          QueryRegister)
 
 # Create Blogging
@@ -47,7 +56,9 @@ admin.add_view(ExchangeView(Exchange, db.session, category="Site Data"))
 admin.add_view(FeeView(Fee, db.session, category="Site Data"))
 admin.add_view(CoinView(Coin, db.session, category="Site Data"))
 admin.add_view(TradePairView(TradePair, db.session, category="Site Data"))
+admin.add_view(MappingsView(Mappings, db.session, category="Site Data"))
 admin.add_view(PriceView(Price, db.session, category="Site Data"))
+admin.add_view(SubscriberView(Subscriber, db.session))
 admin.add_view(UserView(User, db.session, category="User Config"))
 admin.add_view(RoleView(Role, db.session, category="User Config"))
 admin.add_view(FeedbackView(Feedback, db.session))

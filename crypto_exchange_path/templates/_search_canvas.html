@@ -5,10 +5,10 @@
 
                 <div class="container">
 
-                    <h1 class="font-weight-bold text-center px-2 pb-md-4">Find the cheapest sites to buy or exchange cryptocurrencies</h1>
+                    <h1 class="home-title font-weight-bold text-center px-2 pb-md-4">Find the cheapest sites to buy or exchange cryptocurrencies</h1>
 
-                    <h5 class="slogan text-center mt-4 mb-4 mb-md-2">Start saving money by choosing the best Crypto Exchanges to perform each operation<span class="d-none d-md-inline">.</span></h5>
-                    <h5 class="slogan text-center mt-1 mb-5 d-none d-md-block">Our Crypto Search Engine does all the magic for you</h5>
+                    <!-- <h5 class="slogan text-center mt-3 mt-sm-4 mb-1 mb-sm-4 mb-md-2">Start saving money by choosing the best Crypto Exchanges to perform each operation<span class="d-none d-md-inline">.</span></h5>
+                    <h5 class="slogan text-center mt-1 mb-5 d-none d-md-block">Our Crypto Search Engine does all the magic for you</h5> -->
 
                     <div class="row no-gutters d-flex justify-content-center">
                         <div class="col-12 col-lg-10 col-xl-8">
@@ -17,9 +17,9 @@
                                 {{ form.hidden_tag() }}
 
 
-                                <div class="search-box mt-4 mb-4 px-3 pt-4 pb-3">
+                                <div class="search-box my-4 px-3 pt-4 pb-3">
 
-                                    <h4 class="text-center font-italic mt-0 mb-4">Find the cheapest route to exchange:</h4>
+                                    <div class="h4 light-grey-color text-center font-italic mt-0 mb-4">Find the cheapest site to exchange:</div>
 
                                     <!-- VISIBLE FORM ELEMENTS -->
                                     <div class="d-flex flex-wrap justify-content-center align-items-center">
@@ -85,11 +85,6 @@
                                         {{ form.currency(class="form-control", type="text", placeholder="Location", autocomplete="off") }}
                                     </div>
                                 </div>
-
-
-
-
-
 
                                 <!-- ADVANCED SEARCH -->
                                 <div class="row no-gutters mt-1 mt-lg-4 mb-3 d-none">
@@ -227,6 +222,14 @@
                             </form>
                         </div>
                     </div>
+
+                    <div class="d-flex flex-column text-center">
+                        <div class="find-promotions d-flex justify-content-center">Or find the Best Crypto Exchange Promotions available for you:</div>
+                        <div class="d-flex justify-content-center">
+                            <a class="ga-find-promos btn btn-deep-orange btn-rounded" href="{{ url_for('promotions', _external=True) }}" role="button">Yes, Find Promos!</a>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="container learn-more text-center">

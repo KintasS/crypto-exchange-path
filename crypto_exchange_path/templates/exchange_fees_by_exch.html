@@ -21,30 +21,143 @@
         <div class="mask-rgba-black-strong">
 
             <!-- Heading -->
-            <h1 class="font-weight-bold text-center py-4 mx-3 my-0">{{ exchange.name }}<br><small>Deposit, Trading & Withdrawal fees</small></h1>
+            <h1 class="font-weight-bold text-center pt-4 px-3 my-0">{{ exchange.name }} Fees</h1>
+            <div class="subtitle text-center pt-2 pb-4 px-3 my-0">Deposit, Trading & Withdrawal fees</div>
 
         </div>
 
     </section>
 
-    <section class="d-none d-md-block exchange-fees-text section-padding-2rem">
-        <div class="container">
-            <div class="row d-flex justify-content-center">
-                <div class="col-12 col-lg-10 col-xl-10">
-                    <div class="lead mb-0 mb-lg-3">
-                        {{ trading_text }}
-                        {{ withdrawal_text }}
+
+    <!--Section: Exchange detail-->
+    <section class="exchange-detail section-padding-2rem">
+
+        {% if exch_data %}
+
+            <div class="container">
+
+                <h2 class="text-center font-weight-bold">{{ exchange.name }} Exchange</h2>
+
+                <!-- Exch description -->
+                {% if exch_data["description"] %}
+                    <div class="row d-flex justify-content-center mt-3">
+                        <div class="col-12 col-lg-11 col-xl-10 text-center">
+                            <p class="lead mb-0 mb-sm-2">{{ exch_data["description"] }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="row d-flex justify-content-center">
+                    <div class="col-12 col-lg-10 col-xl-9 px-2">
+
+                        <!-- EXCHANGE INFORMATION TABLE -->
+                        <div class="row no-gutters mt-3">
+                            <div class="col-6 col-md-3 mt-2 pb-md-3 pl-3 pl-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom font-weight-bold">Rank</span>
+                                    {% if exch_data["adjusted_rank"] %}
+                                        <span class="text-center">{{ exch_data["adjusted_rank"] }}</span>
+                                    {% else %}
+                                        <span class="text-center">-</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mt-2 pb-md-3 pl-3 pl-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom font-weight-bold">Website</span>
+                                    {% if exch_data["links"]["website"] %}
+                                        <div class="text-center">
+                                            {% for item in exch_data["links"]["website"] %}
+                                                <div><a class="" href="{{ item }}" rel="nofollow" target="_blank">{{ item.replace("https://", "") }}</a></div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <span class="text-center">-</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mt-2 pb-md-3 pl-3 pl-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom font-weight-bold">Twitter</span>
+                                    {% if exch_data["links"]["twitter"] %}
+                                        <div class="text-center">
+                                            {% for item in exch_data["links"]["twitter"] %}
+                                                <div><a class="" href="{{ item }}" rel="nofollow" target="_blank">{{ item.replace("https://twitter.com/", "") }}</a></div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <span class="text-center">-</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mt-2 pb-md-3 pr-3 pr-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom font-weight-bold">Fiats</span>
+                                    {% if exch_data["fiats"] %}
+                                        <span class="text-center">
+                                        {% for item in exch_data["fiats"] %}
+                                            {{ item["symbol"] }}
+                                        {% endfor %}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-center">-</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mt-2 pb-md-3 pr-3 pr-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom font-weight-bold">Volume</span>
+                                    {% if exch_data["quotes"]["USD"]["reported_volume_24h"] %}
+                                        <span class="text-center">{{ exch_data["quotes"]["USD"]["reported_volume_24h"] }}</span>
+                                    {% else %}
+                                        <span class="text-center">-</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mt-2 pb-md-3 pr-3 pr-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom font-weight-bold">Volume (Adj.)</span>
+                                    {% if exch_data["quotes"]["USD"]["adjusted_volume_24h"] %}
+                                        <span class="text-center">{{ exch_data["quotes"]["USD"]["adjusted_volume_24h"] }}</span>
+                                    {% else %}
+                                        <span class="text-center">-</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mt-2 pb-md-3 pr-3 pr-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom font-weight-bold"># Cryptos</span>
+                                    {% if exch_data["currencies"] %}
+                                        <span class="text-center">{{ exch_data["currencies"] }}</span>
+                                    {% else %}
+                                        <span class="text-center">-</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mt-2 pb-md-3 pr-3 pr-md-0">
+                                <div class="d-flex flex-column">
+                                    <span class="text-center grey-border-bottom font-weight-bold"># Markets</span>
+                                    {% if exch_data["markets"] %}
+                                        <span class="text-center">{{ exch_data["markets"] }}</span>
+                                    {% else %}
+                                        <span class="text-center">-</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
-        </div>
+
+        {% endif %}
+
     </section>
 
-
     <!--Section: Trading Fees-->
-    <section class="exchange-fees">
+    <section class="exchange-fees mt-2 mt-sm-0">
 
-        <h2 class="pt-5 pt-md-0 mb-4 px-3 text-center font-weight-bold">{{ exchange.name }} Trading fees</h2>
+        <h2 class="mb-3 mb-sm-4 px-3 text-center font-weight-bold">{{ exchange.name }} Trading fees</h2>
 
         <div class="container">
 
@@ -76,7 +189,7 @@
 
             <div class="row d-flex justify-content-center pb-4">
 
-                <div class="col-12 col-sm-11 col-md-8 col-lg-6 col-xl-5">
+                <div class="col-12 col-md-9 col-lg-7 col-xl-6">
 
                     <table class="table table-hover exch-table">
                         <thead class="">
@@ -133,6 +246,27 @@
     </section>
 
 
+    <!--Section: Exchange Fees Review-->
+    <section class="exchange-fees-text pb-5">
+        <h2 class="px-3 mb-4 text-center font-weight-bold">{{ exchange.name }} Fees Review</h2>
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-12 col-lg-10 col-xl-10">
+                    <div class="lead mb-0 mb-lg-3">
+                        {{ trading_text }}
+                        {{ withdrawal_text }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+
+
     <!-- Back to top button -->
     <section id="back-to-top-btn">
         <a id="myBtn" class="" href="#">
@@ -141,7 +275,6 @@
     </section>
 
 {% endblock main %}
-
 
 
 

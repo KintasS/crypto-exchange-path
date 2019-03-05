@@ -36,7 +36,7 @@ class ExchangeView(MyModelView):
     can_export = True
     column_display_pk = True
     form_columns = ('id', 'name', 'type', 'img_fn', 'site_url',
-                    'affiliate', 'language')
+                    'affiliate', 'language', 'status')
 
 
 class FeeView(MyModelView):
@@ -80,6 +80,28 @@ class TradePairView(MyModelView):
     form_columns = column_list
 
 
+class MappingsView(MyModelView):
+    can_create = True
+    can_delete = True
+    edit_modal = True
+    page_size = 100  # the number of entries to display on the list view
+    column_searchable_list = ['table', 'field', 'old_value', 'new_value']
+    column_filters = ['table', 'field', 'old_value', 'new_value']
+    can_export = True
+    column_display_pk = True
+
+
+class SubscriberView(MyModelView):
+    can_create = True
+    can_delete = True
+    edit_modal = True
+    page_size = 100  # the number of entries to display on the list view
+    column_searchable_list = ['email', 'subscription', 'date', 'status']
+    column_filters = ['email', 'subscription', 'date', 'status']
+    can_export = True
+    column_display_pk = True
+
+
 class PriceView(MyModelView):
     can_create = False
     can_delete = False  # disable model deletion
@@ -96,8 +118,8 @@ class FeedbackView(MyModelView):
     can_delete = True  # disable model deletion
     edit_modal = True
     page_size = 100  # the number of entries to display on the list view
-    column_searchable_list = ['datetime', 'topic', 'subject', 'detail']
-    column_filters = ['datetime', 'topic', 'subject', 'detail']
+    column_searchable_list = ['datetime', 'text', 'page', 'status']
+    column_filters = ['datetime', 'text', 'page', 'status']
     can_export = True
     column_display_pk = True
 

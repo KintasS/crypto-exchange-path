@@ -727,37 +727,6 @@ $(document).ready(function() {
     });
 
 
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    /////   BLOCK LINKS (IN RESULTS)
-    ///////////////////////////////////////////////////////////////////////////
-
-
-    // Show URL on Mouse Hover
-    // Open in new window
-    // $(".referral-summary-link").click(function() {
-    //     window.open($(this).find("a:first").attr("href"));
-    //     return false;
-    // });
-    // $(".referral-summary-link").hover(function() {
-    //     $(this).find("a:first").css({
-    //         color: '#4285F4'
-    //     });
-    //     return false;
-    // }, function() {
-    //     $(this).find("a:first").css({
-    //         color: '#212529'
-    //     });
-    //     return false;
-    // });
-
-
-
-
-
-
-
     ///////////////////////////////////////////////////////////////////////////
     /////   OPEN COLLAPSES AUTOMATICALLY
     ///////////////////////////////////////////////////////////////////////////
@@ -788,7 +757,7 @@ $(document).ready(function() {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    /////   BACK TO TOP BUTTON
+    /////   BACK TO TOP BUTTON & FEEDBACK
     ///////////////////////////////////////////////////////////////////////////
 
     // When the user scrolls down 400px from the top of the document, show the button
@@ -815,6 +784,8 @@ $(document).ready(function() {
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     });
 
+    // Deley the appearance of the Feedback Button
+    $('#feedback-btn').delay(5000).fadeIn();
 
     ///////////////////////////////////////////////////////////////////////////
     /////   GOOGLE ANALYTICS EVENTS (Search for 'gtag' in the rest of code!)
@@ -822,6 +793,14 @@ $(document).ready(function() {
 
 
     // WEB ACTIONS //
+
+    // 'Find Promos Click
+    $(".ga-find-promos").click(function() {
+        gtag('event', 'Find Promos Button', {
+            'event_category': 'Click',
+            'event_label': 'Home --> Find Promos'
+        });
+    });
 
     // 'Trending Searches Click' Event
     $(".trending-searches-btn").click(function() {
@@ -842,15 +821,10 @@ $(document).ready(function() {
 
     // 'Send Feedback' Event
     $(".send-feedback-btn").click(function() {
-        var feedbackTopic = $("#feedback-topic").val();
-        var feedbackSuject = $("#feedback-subject").val();
-        var feedbackText = $("#feedback-text").val();
-        if ((feedbackTopic != '(Select a topic)') && (feedbackSuject != '') && (feedbackText != '')) {
-            gtag('event', 'Send feedback', {
-                'event_category': 'Click',
-                'event_label': 'Send feedback: ' + String(feedbackTopic)
-            });
-        }
+        gtag('event', 'Send feedback', {
+            'event_category': 'Click',
+            'event_label': 'Send feedback'
+        });
     });
 
     // SEARCH RESULT EVENTS //
@@ -867,15 +841,6 @@ $(document).ready(function() {
 
     // REDIRECT EVENTS //
 
-    // 'Referral Popular Exchanges Button' Event
-    $(".referral-popular-exch").click(function() {
-        var exchangeName = $(this).attr("data-exch");
-        gtag('event', exchangeName, {
-            'event_category': 'Redirect - Exchange',
-            'event_label': 'Home - Popular exchanges'
-        });
-    });
-
     // 'Referral Popular Wallet Button' Event
     $(".referral-popular-wallet").click(function() {
         var walletName = $(this).attr("data-wallet");
@@ -885,47 +850,27 @@ $(document).ready(function() {
         });
     });
 
-    // 'Referral Result Button' Event
-    $(".referral-result-btn").click(function() {
+    // Track Exchange redirects
+    $(".ga-exchange-redirects").click(function() {
         var exchangeName = $(this).attr("data-exch");
-        gtag('event', exchangeName, {
+        var exchEvent = 'Redirect - Exchange -> ' + exchangeName;
+        var eventLocation = $(this).attr("data-location");
+        gtag('event', exchEvent, {
             'event_category': 'Redirect - Exchange',
-            'event_label': 'Result button'
+            'event_label': eventLocation
         });
     });
 
-    // 'Referral Result summary link' Event
-    $(".referral-summary-link").click(function() {
-        var exchangeName = $(this).attr("data-exch");
-        gtag('event', exchangeName, {
-            'event_category': 'Redirect - Exchange',
-            'event_label': 'Result Summary link'
-        });
-    });
+    // SUBSCRIPTION EVENTS //
 
-    // 'Referral Result promo link' Event
-    $("#results .promo-link").click(function() {
-        var exchangeName = $(this).attr("data-exch");
-        gtag('event', exchangeName, {
-            'event_category': 'Redirect - Exchange',
-            'event_label': 'Result Promo link'
-        });
-    });
-
-    // 'Referral Result detail link 2' Event (2 = first detail column)
-    $(".referral-detail-link-2").click(function() {
-        var exchangeName = $(this).html();
-        gtag('event', exchangeName, {
-            'event_category': 'Redirect - Exchange',
-            'event_label': 'Result Detail link (Column 2)'
-        });
-    });
-    // 'Referral Result detail link 3' Event (3 = first detail column)
-    $(".referral-detail-link-3").click(function() {
-        var exchangeName = $(this).html();
-        gtag('event', exchangeName, {
-            'event_category': 'Redirect - Exchange',
-            'event_label': 'Result Detail link (Column 3)'
+    // Track Subscriptions
+    $(".ga-suscription").click(function() {
+        var subsType = $(this).parent().attr("data-type");
+        var exchEvent = 'Email subscription -> ' + subsType;
+        var eventLocation = $(this).parent().attr("data-location");
+        gtag('event', exchEvent, {
+            'event_category': 'Email subscription',
+            'event_label': eventLocation
         });
     });
 
@@ -956,12 +901,6 @@ $(document).ready(function() {
 
     // Activate tooltips
     $('[data-toggle="tooltip"]').tooltip()
-
-    // If errors in feedback, open modal directly
-    var cond = $('#modalFeedbackForm').attr('data-modal-open')
-    if (cond == "True") {
-        $('#modalFeedbackForm').modal('show');
-    }
 
 
 

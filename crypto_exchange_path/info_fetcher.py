@@ -282,6 +282,8 @@ def update_pairs(logger):
                 source = response.read()
             exch_pairs = json.loads(source)
         except Exception as e:
+            if exch.status == 'Inactive':
+                continue
             error_desc = ("update_pairs: Could not fetch pairs for"
                           " {}".format(exch.id))
             logger.error(error_desc)
@@ -631,6 +633,71 @@ def update_prices(logger):
 JSON FILES UPDATE FUNCTIONS
 ***************************************************************************
 *********************************************************************** """
+
+
+def update_exchanges_info(logger):
+    """Gets the Exchanges info from Coinpaprika.
+    """
+    # Create return dictionary
+    exchs_dict = {}
+    # Loop for Each active Exchange in the DB
+    exchanges = get_exchanges(types=['Exchange'], status='Active')
+    for index, exchange in enumerate(exchanges):
+        # Fetch JSON file from site
+        try:
+            url = "https://api.coinpaprika.com/v1/exchanges/{}"\
+                .format(exchange.id)
+            with urlopen(url) as response:
+                source = response.read()
+            exch_data = json.loads(source)
+        except Exception as e:
+            logger.error("update_exchanges_info: Could not fetch "
+                         "json for {}".format(exchange.id))
+            error_notifier(type(e).__name__,
+                           traceback.format_exc(),
+                           mail,
+                           logger)
+            return traceback.format_exc()
+        # Check if JSON is a list. Throw error otherwise
+        if not isinstance(exch_data, dict):
+            error_desc = "update_exchanges_info: The JSON is not a dictionary"
+            logger.error(error_desc)
+            error_notifier("update_exchanges_info",
+                           error_desc,
+                           mail,
+                           logger)
+            return error_desc
+        # Read JSON file
+        try:
+            id = exch_data["id"]
+        except KeyError as e:
+            error_desc = ("update_exchanges_info: No key found for {}"
+                          "".format(exchange.id))
+            print(error_desc)
+            logger.warning(error_desc)
+            break
+        except Exception as e:
+            error_desc = ("update_exchanges_info: Error reading '{}': {}"
+                          "".format(exchange.id, exch_data))
+            print(error_desc)
+            logger.error(error_desc)
+            error_notifier(type(e).__name__,
+                           traceback.format_exc(),
+                           mail,
+                           logger)
+            return traceback.format_exc()
+        exchs_dict[id] = exch_data
+        logger.debug("New exchange added: {} ({})".format(exchange.name,
+                                                          index+1))
+        print("New exchange added: {} ({})".format(exchange.name,
+                                                   index+1))
+    # Repleace data in JSON with merged data and save to file:
+    file = Params.EXCHANGE_INFO_FILE
+    with open(file, "w") as f:
+        json.dump(exchs_dict, f)
+    logger.debug("update_exchanges_info: Exchanges updated")
+    print("update_exchanges_info: Exchanges updated")
+    return "ok"
 
 
 def update_tags_info(logger):
