@@ -747,13 +747,15 @@ def update_coins_info(logger):
     """
     # Get coins
     coins = get_coins(type="Crypto", status="Active")
-    logger.info("update_coins_info: Processing '{}' coins. Starting...")
+    coins += get_coins(type="Crypto", status="Inactive")
+    logger.info("update_coins_info: Processing '{}' coins. Starting..."
+                "".format(len(coins)))
     # Create return dictionary
     coins_dict = {}
     # Loop for each coin
     for index, coin in enumerate(coins):
         logger.info("update_coins_info: Processing coin '{}' --> {}"
-                    "".format(index+1, coin))
+                    "".format(index+1, coin.long_name))
         # Fetch JSON file from site
         try:
             coin_id = coin.id
@@ -806,7 +808,6 @@ def update_coins_info(logger):
             return traceback.format_exc()
         coins_dict[id] = coin_data
         logger.debug("New coin added: {} ({})".format(coin.symbol, index+1))
-        print("New coin added: {} ({})".format(coin.symbol, index+1))
     # Repleace data in JSON with merged data and save to file:
     file = Params.COIN_INFO_FILE
     with open(file, "w") as f:

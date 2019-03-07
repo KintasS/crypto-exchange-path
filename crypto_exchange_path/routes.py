@@ -257,151 +257,135 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
          calculation is triggered. It is done like this to let the user
          load the page as soon as possible.
     """
-    session_id = request.cookies.get('session')
-    if not session_id:
-        new_session_id = token_hex(8)
-    sorted_paths = []
-    input_form = SearchForm()
-    # Choose currency: 1) Form 2) Cookie 3) Default
-    currency = request.cookies.get('calc_currency')
-    if input_form.currency.data != 'Empty':
-        curr = input_form.currency.data
-    elif currency:
-        curr = currency
-        input_form.currency.data = curr
-    else:
-        curr = Params.DEFAULT_CURRENCY
-        input_form.currency.data = curr
-    curr = get_coin(curr)
-    if not curr:
-        curr = get_coin('usd-us-dollars')
-    auto_search = False
-    feedback_form = FeedbackForm()
-    exchanges = get_exchanges(['Exchange'], status='Active')
-    user_exchanges = [exch.id for exch in exchanges]
-    path_results = None
-    # Get Meta tags (in case form was not filled)
-    title = get_meta_tags('Exchanges|Results',
-                          'Title',
-                          [url_orig_coin.upper(), url_dest_coin.upper()])
-    description = get_meta_tags('Exchanges|Results',
-                                'Description',
-                                [url_orig_coin.upper(), url_dest_coin.upper()])
-    # 1) ACTIONS IF *SEARCH* FORM WAS FILLED
-    if input_form.search_submit.data:
-        if input_form.validate():
+    try:
+        session_id = request.cookies.get('session')
+        if not session_id:
+            new_session_id = token_hex(8)
+        sorted_paths = []
+        input_form = SearchForm()
+        # Choose currency: 1) Form 2) Cookie 3) Default
+        currency = request.cookies.get('calc_currency')
+        if input_form.currency.data != 'Empty':
             curr = input_form.currency.data
-            curr = get_coin(curr)
-            orig_loc = get_exch_by_name(input_form.orig_loc.data)
-            orig_coin = get_coin_by_longname(input_form.orig_coin.data)
-            # Save 'orig_amt' as Float or integer depending on value
-            num = float(input_form.orig_amt.data)
-            if num % 1 == 0:
-                num = int(num)
-            orig_amt = num
-            dest_loc = get_exch_by_name(input_form.dest_loc.data)
-            dest_coin = get_coin_by_longname(input_form.dest_coin.data)
-            user_exchanges = input_form.exchanges.data
-            # Get Meta tags (again, if form was filled)
-            title = get_meta_tags('Exchanges|Results',
-                                  'Title',
-                                  [orig_coin.symbol, dest_coin.symbol])
-            description = get_meta_tags('Exchanges|Results',
-                                        'Description',
-                                        [orig_coin.long_name,
-                                         dest_coin.long_name])
-            # If user selected all Exchanges or none of them, don't filter
-            if len(user_exchanges) == len(exchanges):
-                user_exchanges = []
-            fee_settings = {"CEP": input_form.cep_promos.data,
-                            "Default": input_form.default_fee.data,
-                            "Binance": input_form.binance_fee.data}
-            # start_time = datetime.datetime.now()
-            try:
-                paths = calc_paths(orig_loc, orig_coin, orig_amt,
-                                   dest_loc, dest_coin,
-                                   curr, fee_settings, logger)
-                path_results = len(paths)
-            # Catch generic exception just in case anything went wront in logic
-            except Exception as e:
-                db.session.rollback()
-                error_notifier(type(e).__name__,
-                               traceback.format_exc(),
-                               mail,
-                               logger)
-                paths = []
-                path_results = -1
-            # If no results were found, send worning email
-            if path_results == 0:
-                args_dic = {"orig_amt": orig_amt,
-                            "orig_coin": orig_coin.id,
-                            "orig_loc": orig_loc.id,
-                            "dest_coin": dest_coin.id,
-                            "dest_loc": dest_loc.id,
-                            "currency": curr.id}
-                warning_notifier("Search with no results",
-                                 args_dic,
-                                 mail,
-                                 logger)
-            # Register query
-            # finish_time = datetime.datetime.now()
-            # results = len(paths)
-            # exchs = ""
-            # for exch in user_exchanges:
-            #     exchs += exch + '|'
-            # exchs = exchs[:-1]
-            # try:
-            #     query = QueryRegister(session_id=session_id,
-            #                           orig_amt=orig_amt,
-            #                           orig_coin=orig_coin.id,
-            #                           orig_loc=orig_loc.id,
-            #                           dest_coin=dest_coin.id,
-            #                           dest_loc=dest_loc.id,
-            #                           currency=curr,
-            #                           connection_type=connection_type,
-            #                           exchanges=exchs,
-            #                           results=results,
-            #                           start_time=start_time,
-            #                           finish_time=finish_time)
-            #     db.session.add(query)
-            #     db.session.commit()
-            # except Exception as e:
-            #     db.session.rollback()
-            #     error_notifier(type(e).__name__,
-            #                    traceback.format_exc(),
-            #                    mail,
-            #                    logger)
-            # Select all Exchanges if no partial selection was made
-            if not user_exchanges:
-                user_exchanges = [exch.id for exch in exchanges]
-            # Return capped list of results
-            sorted_paths = sorted(paths, key=lambda x: x.total_fees)
-            sorted_paths = sorted_paths[0:Params.MAX_PATHS]
-    # 2) ACTIONS IF *NO* FORM WAS FILLED (DIRECT LINK!)
-    else:
-        orig_coin = get_coin_by_symbol(url_orig_coin.upper())
-        dest_coin = get_coin_by_symbol(url_dest_coin.upper())
-        # If 'orig_coin' or 'dest_coin' are not found, try in mappings table
-        if not orig_coin:
-            new_symbol = get_mapping('Coin', 'symbol', url_orig_coin.upper())
-            if new_symbol:
-                orig_coin = get_coin_by_symbol(new_symbol)
-        if not dest_coin:
-            new_symbol = get_mapping('Coin', 'symbol', url_dest_coin.upper())
-            if new_symbol:
-                dest_coin = get_coin_by_symbol(new_symbol)
-        # Procced with function
-        if orig_coin:
-            input_form.orig_coin.data = orig_coin.long_name
-            amt = fx_exchange('usd-us-dollars', orig_coin.id, 3000, logger)
-            input_form.orig_amt.data = str(math.ceil(amt)) + " "
-        if dest_coin:
-            input_form.dest_coin.data = dest_coin.long_name
-        auto_search = True
-    # Actions if Feedback Form was filled
-    if feedback_form.feedback_submit.data:
-        if feedback_form.validate():
-            manage_feedback_form(feedback_form, request.path)
+        elif currency:
+            curr = currency
+            input_form.currency.data = curr
+        else:
+            curr = Params.DEFAULT_CURRENCY
+            input_form.currency.data = curr
+        curr = get_coin(curr)
+        if not curr:
+            curr = get_coin('usd-us-dollars')
+        auto_search = False
+        feedback_form = FeedbackForm()
+        exchanges = get_exchanges(['Exchange'], status='Active')
+        user_exchanges = [exch.id for exch in exchanges]
+        path_results = None
+        # Get Meta tags (in case form was not filled)
+        title = get_meta_tags('Exchanges|Results',
+                              'Title',
+                              [url_orig_coin.upper(), url_dest_coin.upper()])
+        description = get_meta_tags('Exchanges|Results',
+                                    'Description',
+                                    [url_orig_coin.upper(), url_dest_coin.upper()])
+        # 1) ACTIONS IF *SEARCH* FORM WAS FILLED
+        if input_form.search_submit.data:
+            if input_form.validate():
+                curr = input_form.currency.data
+                curr = get_coin(curr)
+                orig_loc = get_exch_by_name(input_form.orig_loc.data)
+                orig_coin = get_coin_by_longname(input_form.orig_coin.data)
+                # Save 'orig_amt' as Float or integer depending on value
+                num = float(input_form.orig_amt.data)
+                if num % 1 == 0:
+                    num = int(num)
+                orig_amt = num
+                dest_loc = get_exch_by_name(input_form.dest_loc.data)
+                dest_coin = get_coin_by_longname(input_form.dest_coin.data)
+                user_exchanges = input_form.exchanges.data
+                # Get Meta tags (again, if form was filled)
+                title = get_meta_tags('Exchanges|Results',
+                                      'Title',
+                                      [orig_coin.symbol, dest_coin.symbol])
+                description = get_meta_tags('Exchanges|Results',
+                                            'Description',
+                                            [orig_coin.long_name,
+                                             dest_coin.long_name])
+                # If user selected all Exchanges or none of them, don't filter
+                if len(user_exchanges) == len(exchanges):
+                    user_exchanges = []
+                fee_settings = {"CEP": input_form.cep_promos.data,
+                                "Default": input_form.default_fee.data,
+                                "Binance": input_form.binance_fee.data}
+                # start_time = datetime.datetime.now()
+                try:
+                    paths = calc_paths(orig_loc, orig_coin, orig_amt,
+                                       dest_loc, dest_coin,
+                                       curr, fee_settings, logger)
+                    path_results = len(paths)
+                # Catch generic exception just in case anything went wront in logic
+                except Exception as e:
+                    db.session.rollback()
+                    error_notifier(type(e).__name__,
+                                   traceback.format_exc(),
+                                   mail,
+                                   logger)
+                    paths = []
+                    path_results = -1
+                # If no results were found, send worning email
+                if path_results == 0:
+                    args_dic = {"orig_amt": orig_amt,
+                                "orig_coin": orig_coin.id,
+                                "orig_loc": orig_loc.id,
+                                "dest_coin": dest_coin.id,
+                                "dest_loc": dest_loc.id,
+                                "currency": curr.id}
+                    warning_notifier("Search with no results",
+                                     args_dic,
+                                     mail,
+                                     logger)
+                # Select all Exchanges if no partial selection was made
+                if not user_exchanges:
+                    user_exchanges = [exch.id for exch in exchanges]
+                # Return capped list of results
+                sorted_paths = sorted(paths, key=lambda x: x.total_fees)
+                sorted_paths = sorted_paths[0:Params.MAX_PATHS]
+        # 2) ACTIONS IF *NO* FORM WAS FILLED (DIRECT LINK!)
+        else:
+            orig_coin = get_coin_by_symbol(url_orig_coin.upper())
+            dest_coin = get_coin_by_symbol(url_dest_coin.upper())
+            # If 'orig_coin' or 'dest_coin' are not found, try in mappings table
+            if not orig_coin:
+                new_symbol = get_mapping('Coin', 'symbol', url_orig_coin.upper())
+                if new_symbol:
+                    orig_coin = get_coin_by_symbol(new_symbol)
+            if not dest_coin:
+                new_symbol = get_mapping('Coin', 'symbol', url_dest_coin.upper())
+                if new_symbol:
+                    dest_coin = get_coin_by_symbol(new_symbol)
+            # Procced with function
+            if orig_coin:
+                input_form.orig_coin.data = orig_coin.long_name
+                amt = fx_exchange('usd-us-dollars', orig_coin.id, 3000, logger)
+                if amt:
+                    input_form.orig_amt.data = str(math.ceil(amt)) + " "
+            if dest_coin:
+                input_form.dest_coin.data = dest_coin.long_name
+            auto_search = True
+        # Actions if Feedback Form was filled
+        if feedback_form.feedback_submit.data:
+            if feedback_form.validate():
+                manage_feedback_form(feedback_form, request.path)
+    # Catch generic exception just in case anything went wront in logic
+    except Exception as e:
+        db.session.rollback()
+        logger.error("Routes: Non-handled exception at '{}'"
+                     .format(request.url))
+        error_notifier(type(e).__name__,
+                       traceback.format_exc(),
+                       mail,
+                       logger)
+        return redirect(url_for('exchanges'))
     resp = make_response(render_template('exch_results.html',
                                          form=input_form,
                                          curr=curr,
