@@ -153,6 +153,10 @@ class FeedbackForm(FlaskForm):
                          filters=[lambda x: x or None])
     feedback_submit = SubmitField('Send feedback')
 
+    def validate_text(self, text):
+        if len(text.data) > 300:
+            raise ValidationError("Max 200 characters")
+
 
 class PromoForm(FlaskForm):
     email = StringField('Email',

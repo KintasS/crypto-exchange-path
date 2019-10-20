@@ -784,7 +784,7 @@ $(document).ready(function() {
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     });
 
-    // Deley the appearance of the Feedback Button
+    // Delay the appearance of the Feedback Button
     $('#feedback-btn').delay(5000).fadeIn();
 
     ///////////////////////////////////////////////////////////////////////////

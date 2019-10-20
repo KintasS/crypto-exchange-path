@@ -533,7 +533,7 @@ def fx_exchange(orig_coin, dest_coin, amount, logger):
     # If Price is found & 'dest_coin' is a 'coin', return 1/price
     prc = Price.query.filter_by(coin=dest_coin, base_coin=orig_coin)\
                      .first()
-    if prc:
+    if prc and (prc.price != 0):
         set_fx(orig_coin, dest_coin, 1 / prc.price)
         return round(1 / prc.price * amount, 8)
     # Else, triangulate FX using BTC prices (Case if Type=Crypto)
