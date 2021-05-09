@@ -500,7 +500,7 @@ def make_unique_field(field, value):
         while(not is_unique):
             coin_id_db = Coin.query.filter_by(symbol=value).first()
             if coin_id_db:
-                value += "*"
+                value += "+"
             else:
                 is_unique = True
     elif field == "long_name":

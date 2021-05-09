@@ -51,7 +51,7 @@ def error_notifier(error_type, error_traceback, mail, logger):
         {error_traceback}
 
         '''
-        mail.send(msg)
+        # mail.send(msg)
     except Exception as e:
         logger.error("error_notifier: {}".format(traceback.format_exc()))
 

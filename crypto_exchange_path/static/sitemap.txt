@@ -27,7 +27,6 @@ https://www.cryptofeesaver.com/exchanges/fees/bittrex
 https://www.cryptofeesaver.com/exchanges/fees/coinbase-pro
 https://www.cryptofeesaver.com/exchanges/fees/coinegg
 https://www.cryptofeesaver.com/exchanges/fees/coinsquare
-https://www.cryptofeesaver.com/exchanges/fees/cobinhood
 https://www.cryptofeesaver.com/exchanges/fees/exmo
 https://www.cryptofeesaver.com/exchanges/fees/gemini
 https://www.cryptofeesaver.com/exchanges/fees/huobi
@@ -833,7 +832,6 @@ https://www.cryptofeesaver.com/exchanges/fees/coins/bitpark-coin
 https://www.cryptofeesaver.com/exchanges/fees/coins/jinbi-token
 https://www.cryptofeesaver.com/exchanges/fees/coins/vslice
 https://www.cryptofeesaver.com/exchanges/fees/coins/funcoin
-https://www.cryptofeesaver.com/exchanges/fees/coins/cobinhood
 https://www.cryptofeesaver.com/exchanges/fees/coins/dollar-online
 https://www.cryptofeesaver.com/exchanges/fees/coins/energi
 https://www.cryptofeesaver.com/exchanges/fees/coins/maincoin
