@@ -14,7 +14,10 @@ from crypto_exchange_path.utils_db import (get_exch_by_coin,
                                            get_coins_in_pairs,
                                            get_coins_by_exchange,
                                            add_mapping,
-                                           make_unique_field)
+                                           make_unique_field,
+                                           get_coin_by_symbol,
+                                           get_coin_by_longname,
+                                           get_coin_by_urlname)
 from crypto_exchange_path.utils import (generate_file_path,
                                         resize_image,
                                         error_notifier)
@@ -96,7 +99,7 @@ def update_coins(logger):
                 coins_in_pairs.remove(crypto.id)
                 continue
             try:
-                symbol = coin_info["symbol"]
+                symbol = crypto.symbol  # coin_info["symbol"] No actalizar sym.
                 long_name = coin_info["name"]
                 ranking = coin_info["rank"]
             except KeyError as e:
@@ -153,7 +156,9 @@ def update_coins(logger):
             if ranking > 0:
                 crypto.ranking = ranking
             res = store_coin_image(crypto.id, crypto.url_name, logger)
-            if not res:
+            if res:
+                crypto.local_fn = crypto.url_name + ".png"
+            else:
                 crypto.local_fn = "__default.png"
             db.session.commit()
             coins_in_pairs.remove(crypto.id)
@@ -203,8 +208,28 @@ def update_coins(logger):
                  local_fn=local_fn,
                  type="Crypto",
                  status="Active")
-        db.session.add(c)
-        db.session.commit()
+        # Check if for any reason Coin exists in DB (it shoudn't)
+        db_symbol_coin = get_coin_by_symbol(symbol)
+        db_longname_coin = get_coin_by_longname(long_name)
+        db_url_name_coin = get_coin_by_urlname(url_name)
+        if db_symbol_coin or db_longname_coin or db_url_name_coin:
+            error_desc = ("update_coins: Error storing"
+                          " {}. It already exists".format(c))
+            continue
+        # Store coin in DB
+        try:
+            db.session.add(c)
+            db.session.commit()
+        except Exception as e:
+            error_desc = ("update_coins: Error storing"
+                          " {}".format(c))
+            logger.error(error_desc)
+            error_notifier(type(e).__name__,
+                           traceback.format_exc(),
+                           mail,
+                           logger)
+            db.session.rollback()
+            continue
         added_coins += "Added coin --> {} | {} | {} | {}\n"\
                        "".format(c.id,
                                  c.symbol,
@@ -231,8 +256,8 @@ def store_coin_image(id, url_name, logger):
     logger.debug("store_coin_images: Starting process for '{}'".format(id))
     opener = urllib.request.build_opener()
     opener.addheaders = [
-        ('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36'
-         ' (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
+        ('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) '
+            'Gecko/20100101 Firefox/88.0')]
     urllib.request.install_opener(opener)
     try:
         # Save original image in local drive
@@ -472,44 +497,44 @@ def update_fees(logger):
                                                                     f.scope)
                 added_fees_count += 1
             # Deposit fees - Review fees (Only for Bitfinex!)
-            if exch.id == 'bitfinex':
-                exch_coins = get_coins_by_exchange(exch.id)
-                fees = get_fees(exchange=exch.id, action='Deposit')
-                for fee in fees:
-                    # If coin not in 'TradePair', mark as inactive
-                    if fee.scope not in exch_coins:
-                        if fee.status != 'Inactive':
-                            fee.status = 'Inactive'
-                            inactive_fees += "Changed to inactive --> "\
-                                "{} | {} | {}\n".format(fee.exchange,
-                                                        fee.action,
-                                                        fee.scope)
-                            inactive_fees_count += 1
-                    else:
-                        if fee.status == 'Inactive':
-                            fee.status = 'Reactivated'
-                            active_fees += "Changed to active --> {} | {} | {}"\
-                                "\n".format(fee.exchange,
-                                            fee.action,
-                                            fee.scope)
-                            active_fees_count += 1
-                        exch_coins.remove(fee.scope)
-                # Add new 'Deposit' fees to 'Fee' table
-                for coin in exch_coins:
-                    f = Fee(exchange=exch.id,
-                            action="Deposit",
-                            scope=coin,
-                            amount=None,
-                            min_amount=None,
-                            fee_coin="-",
-                            type="Less1kUSD",
-                            status="Pending")
-                    db.session.add(f)
-                    added_fees += "Added fee --> {} | {} | {}\n"\
-                        "".format(f.exchange,
-                                  f.action,
-                                  f.scope)
-                    added_fees_count += 1
+            # if exch.id == 'bitfinex':
+            #     exch_coins = get_coins_by_exchange(exch.id)
+            #     fees = get_fees(exchange=exch.id, action='Deposit')
+            #     for fee in fees:
+            #         # If coin not in 'TradePair', mark as inactive
+            #         if fee.scope not in exch_coins:
+            #             if fee.status != 'Inactive':
+            #                 fee.status = 'Inactive'
+            #                 inactive_fees += "Changed to inactive --> "\
+            #                     "{} | {} | {}\n".format(fee.exchange,
+            #                                             fee.action,
+            #                                             fee.scope)
+            #                 inactive_fees_count += 1
+            #         else:
+            #             if fee.status == 'Inactive':
+            #                 fee.status = 'Reactivated'
+            #                 active_fees += "Changed to active --> {} | {} | {}"\
+            #                     "\n".format(fee.exchange,
+            #                                 fee.action,
+            #                                 fee.scope)
+            #                 active_fees_count += 1
+            #             exch_coins.remove(fee.scope)
+            #     # Add new 'Deposit' fees to 'Fee' table
+            #     for coin in exch_coins:
+            #         f = Fee(exchange=exch.id,
+            #                 action="Deposit",
+            #                 scope=coin,
+            #                 amount=None,
+            #                 min_amount=None,
+            #                 fee_coin="-",
+            #                 type="Less1kUSD",
+            #                 status="Pending")
+            #         db.session.add(f)
+            #         added_fees += "Added fee --> {} | {} | {}\n"\
+            #             "".format(f.exchange,
+            #                       f.action,
+            #                       f.scope)
+            #         added_fees_count += 1
         db.session.commit()
     # Notify changes
     body = added_fees + inactive_fees + active_fees
@@ -769,12 +794,7 @@ def update_coins_info(logger):
             error_desc = ("update_coins_info: Could not fetch json for"
                           " {} [{}]".format(coin.symbol, coin.id))
             print(error_desc)
-            logger.error(error_desc)
-            error_notifier(type(e).__name__,
-                           traceback.format_exc(),
-                           mail,
-                           logger)
-            return traceback.format_exc()
+            logger.info(error_desc)
         # Check if JSON is a list. Throw error otherwise
         if not isinstance(coin_data, dict):
             error_desc = ("update_coins_info: The JSON for coin '{} [{}]'"
@@ -813,7 +833,7 @@ def update_coins_info(logger):
     with open(file, "w") as f:
         json.dump(coins_dict, f)
     logger.debug("update_coins_info: Tags updated")
-    print("update_coins_info: Tags updated")
+    print("update_coins_info: Coins updated")
     return "ok"
 
 
@@ -900,7 +920,7 @@ def update_people_info(logger):
     file = Params.PEOPLE_INFO_FILE
     with open(file, "w") as f:
         json.dump(people_dict, f)
-    logger.debug("update_people_info: Tags updated")
+    logger.debug("update_people_info: People updated")
     return "ok"
 
 
