@@ -441,7 +441,7 @@ def load_json_file(file, logger):
     return file_info
 
 
-def get_exchange_data(id, exchange_info_file, logger):
+def get_exchange_data(id, site_url, exchange_info_file, logger):
     """Gets the Exchange information retrieved from Coinpaprika
     for the exchange with 'id'.
     """
@@ -462,6 +462,10 @@ def get_exchange_data(id, exchange_info_file, logger):
         no_formatted = exch_data["quotes"]["USD"]["reported_volume_24h"]
         formatted = num_2_str(no_formatted, 'usd-us-dollars')
         exch_data["quotes"]["USD"]["reported_volume_24h"] = formatted
+    # Replace Web address for my link
+    if exch_data["links"]["website"]:
+        clean_url = site_url.replace("https://", "").split("/")[0]
+        exch_data["links"]["website"] = {"clean_url": clean_url, "site_url": site_url}
     return exch_data
 
 
