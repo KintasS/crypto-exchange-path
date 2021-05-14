@@ -67,9 +67,7 @@
                                     <span class="text-center grey-border-bottom font-weight-bold">Website</span>
                                     {% if exch_data["links"]["website"] %}
                                         <div class="text-center">
-                                            {% for item in exch_data["links"]["website"] %}
-                                                <div><a class="" href="{{ item }}" rel="nofollow" target="_blank">{{ item.replace("https://", "") }}</a></div>
-                                            {% endfor %}
+                                            <div><a class="" href='{{ exch_data["links"]["website"]["site_url"] }}' rel="nofollow" target="_blank">{{ exch_data["links"]["website"]["clean_url"] }}</a></div>
                                         </div>
                                     {% else %}
                                         <span class="text-center">-</span>

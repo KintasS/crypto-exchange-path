@@ -513,6 +513,7 @@ def exchange_fees_by_exch(exch_id):
     dep_with_fees = get_dep_with_fees_by_exch(exch_id)
     # Get Exchange data
     exch_data = get_exchange_data(exchange.id,
+                                  exchange.site_url,
                                   exchange_info_file,
                                   logger)
     # Get promos
