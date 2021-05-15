@@ -536,18 +536,19 @@ def fx_exchange(orig_coin, dest_coin, amount, logger):
     if prc and (prc.price != 0):
         set_fx(orig_coin, dest_coin, 1 / prc.price)
         return round(1 / prc.price * amount, 8)
-    # Else, triangulate FX using BTC prices (Case if Type=Crypto)
-    prc_orig_btc = Price.query.filter_by(coin=orig_coin,
-                                         base_coin='btc-bitcoin')\
+    # Else, triangulate FX using USD prices (Case if Type=Crypto)
+    prc_orig_usd = Price.query.filter_by(coin=orig_coin,
+                                         base_coin='usd-us-dollars')\
         .first()
-    prc_dest_btc = Price.query.filter_by(coin=dest_coin,
-                                         base_coin='btc-bitcoin')\
+    prc_dest_usd = Price.query.filter_by(coin=dest_coin,
+                                         base_coin='usd-us-dollars')\
         .first()
-    if prc_orig_btc and prc_dest_btc:
-        set_fx(orig_coin,
-               dest_coin,
-               prc_orig_btc.price / prc_dest_btc.price)
-        return round(prc_orig_btc.price / prc_dest_btc.price * amount, 8)
+    fx_triangulation = 0
+    if prc_dest_usd.price != 0:
+        fx_triangulation = prc_orig_usd.price / prc_dest_usd.price
+    if prc_orig_usd and prc_dest_usd:
+        set_fx(orig_coin, dest_coin, fx_triangulation)
+        return round(prc_orig_usd.price / prc_dest_usd.price * amount, 8)
     # Else, triangulate FX using BTC prices (Case if Type=Fiat)
     prc_orig_fiat = Price.query.filter_by(coin='btc-bitcoin',
                                           base_coin=orig_coin)\
@@ -555,10 +556,13 @@ def fx_exchange(orig_coin, dest_coin, amount, logger):
     prc_dest_fiat = Price.query.filter_by(coin='btc-bitcoin',
                                           base_coin=dest_coin)\
         .first()
+    fx_triangulation = 0
+    if prc_dest_fiat.price != 0:
+        fx_triangulation = prc_dest_fiat.price / prc_orig_fiat.price
     if prc_orig_fiat and prc_dest_fiat:
         set_fx(orig_coin,
                dest_coin,
-               prc_dest_fiat.price / prc_orig_fiat.price)
+               fx_triangulation)
         return round(prc_dest_fiat.price / prc_orig_fiat.price * amount, 8)
     # If the FX could not be calculated, return 'None'
     logger.warning("fx_exchange: FX could not be calculated for '{}"
