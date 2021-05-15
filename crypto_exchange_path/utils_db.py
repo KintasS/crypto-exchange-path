@@ -544,7 +544,7 @@ def fx_exchange(orig_coin, dest_coin, amount, logger):
                                          base_coin='usd-us-dollars')\
         .first()
     fx_triangulation = 0
-    if prc_dest_usd.price != 0:
+    if prc_dest_usd and (prc_dest_usd.price != 0):
         fx_triangulation = prc_orig_usd.price / prc_dest_usd.price
     if prc_orig_usd and prc_dest_usd:
         set_fx(orig_coin, dest_coin, fx_triangulation)
@@ -557,7 +557,7 @@ def fx_exchange(orig_coin, dest_coin, amount, logger):
                                           base_coin=dest_coin)\
         .first()
     fx_triangulation = 0
-    if prc_dest_fiat.price != 0:
+    if prc_dest_fiat and (prc_dest_fiat.price != 0):
         fx_triangulation = prc_dest_fiat.price / prc_orig_fiat.price
     if prc_orig_fiat and prc_dest_fiat:
         set_fx(orig_coin,
