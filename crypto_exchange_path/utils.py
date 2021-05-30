@@ -374,6 +374,56 @@ def round_amount(number, decs=None):
         return number
 
 
+def round_number(number):
+    """Returns a rounded amount depending on the valuation of the coin.
+    """
+    if number is None or not is_number(number):
+        return number
+    elif number > 100:
+        return int(number)
+    elif number > 10:
+        decs = 2
+    elif number > 1:
+        decs = 2
+    elif number > 0.1:
+        decs = 3
+    elif number > 0.01:
+        decs = 4
+    elif number > 0.001:
+        decs = 5
+    elif number > 0.0001:
+        decs = 6
+    elif number > 0.00001:
+        decs = 7
+    else:
+        decs = 8
+    return round(number, decs)
+
+
+def round_big_number(number):
+    """Returns a rounded big amount
+    """
+    if number is None or not is_number(number):
+        return number
+    elif number < 10:
+        return number
+    elif number < 50:
+        coef = 5
+    elif number < 200:
+        coef = 25
+    elif number < 500:
+        coef = 100
+    elif number < 1000:
+        coef = 250
+    elif number < 5000:
+        coef = 1000
+    elif number < 10000:
+        coef = 2500
+    else:
+        coef = 5000
+    return int(round(number / coef, 0)) * coef
+
+
 def str_2_float(str_number):
     """Converts a String in a float number.
     Solves the problem when casting a string with commas.
@@ -466,7 +516,8 @@ def get_exchange_data(id, site_url, exchange_info_file, logger):
     # Replace Web address for my link
     if exch_data["links"]["website"]:
         clean_url = site_url.replace("https://", "").split("/")[0]
-        exch_data["links"]["website"] = {"clean_url": clean_url, "site_url": site_url}
+        exch_data["links"]["website"] = {"clean_url": clean_url,
+                                         "site_url": site_url}
     return exch_data
 
 

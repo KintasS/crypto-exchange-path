@@ -832,7 +832,7 @@ def update_coins_info(logger):
     file = Params.COIN_INFO_FILE
     with open(file, "w") as f:
         json.dump(coins_dict, f)
-    logger.debug("update_coins_info: Tags updated")
+    logger.debug("update_coins_info: Coins updated")
     print("update_coins_info: Coins updated")
     return "ok"
 

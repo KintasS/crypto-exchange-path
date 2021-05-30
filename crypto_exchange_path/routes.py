@@ -17,7 +17,9 @@ from crypto_exchange_path.utils import (set_logger,
                                         get_exch_text,
                                         load_json_file,
                                         get_coin_data,
-                                        get_exchange_data)
+                                        get_exchange_data,
+                                        round_number,
+                                        round_big_number)
 from crypto_exchange_path.utils_db import (get_exch_by_name,
                                            get_exchanges,
                                            get_coin_by_longname,
@@ -287,7 +289,8 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                               [url_orig_coin.upper(), url_dest_coin.upper()])
         description = get_meta_tags('Exchanges|Results',
                                     'Description',
-                                    [url_orig_coin.upper(), url_dest_coin.upper()])
+                                    [url_orig_coin.upper(),
+                                     url_dest_coin.upper()])
         # 1) ACTIONS IF *SEARCH* FORM WAS FILLED
         if input_form.search_submit.data:
             if input_form.validate():
@@ -323,7 +326,7 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                                        dest_loc, dest_coin,
                                        curr, fee_settings, logger)
                     path_results = len(paths)
-                # Catch generic exception just in case anything went wront in logic
+                # Catch generic exception if anything went wrong in logic
                 except Exception as e:
                     db.session.rollback()
                     error_notifier(type(e).__name__,
@@ -332,6 +335,30 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                                    logger)
                     paths = []
                     path_results = -1
+                # If no results were found, check "orign_amt" to try again
+                if path_results == 0:
+                    amount_usd = fx_exchange(orig_coin.id,
+                                             'usd-us-dollars',
+                                             orig_amt,
+                                             logger)
+                    if amount_usd < 20:
+                        orig_amt = round_number(orig_amt * 20 / amount_usd)
+                        orig_amt = round_big_number(orig_amt)
+                        input_form.orig_amt.data = orig_amt
+                        try:
+                            paths = calc_paths(orig_loc, orig_coin, orig_amt,
+                                               dest_loc, dest_coin,
+                                               curr, fee_settings, logger)
+                            path_results = len(paths)
+                        # Catch generic exception if anything went wrong
+                        except Exception as e:
+                            db.session.rollback()
+                            error_notifier(type(e).__name__,
+                                           traceback.format_exc(),
+                                           mail,
+                                           logger)
+                            paths = []
+                            path_results = -1
                 # If no results were found, send worning email
                 if path_results == 0:
                     args_dic = {"orig_amt": orig_amt,
@@ -354,13 +381,17 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
         else:
             orig_coin = get_coin_by_symbol(url_orig_coin.upper())
             dest_coin = get_coin_by_symbol(url_dest_coin.upper())
-            # If 'orig_coin' or 'dest_coin' are not found, try in mappings table
+            # If 'orig_coin' or 'dest_coin' not found, try in mappings table
             if not orig_coin:
-                new_symbol = get_mapping('Coin', 'symbol', url_orig_coin.upper())
+                new_symbol = get_mapping('Coin',
+                                         'symbol',
+                                         url_orig_coin.upper())
                 if new_symbol:
                     orig_coin = get_coin_by_symbol(new_symbol)
             if not dest_coin:
-                new_symbol = get_mapping('Coin', 'symbol', url_dest_coin.upper())
+                new_symbol = get_mapping('Coin',
+                                         'symbol',
+                                         url_dest_coin.upper())
                 if new_symbol:
                     dest_coin = get_coin_by_symbol(new_symbol)
             # Procced with function
@@ -368,6 +399,7 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                 input_form.orig_coin.data = orig_coin.long_name
                 amt = fx_exchange('usd-us-dollars', orig_coin.id, 3000, logger)
                 if amt:
+                    amt = round_big_number(amt)
                     input_form.orig_amt.data = str(math.ceil(amt)) + " "
             if dest_coin:
                 input_form.dest_coin.data = dest_coin.long_name
