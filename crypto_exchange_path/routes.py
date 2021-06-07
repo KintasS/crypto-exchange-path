@@ -341,7 +341,7 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                                              'usd-us-dollars',
                                              orig_amt,
                                              logger)
-                    if amount_usd < 20:
+                    if amount_usd and amount_usd < 20:
                         orig_amt = round_number(orig_amt * 20 / amount_usd)
                         orig_amt = round_big_number(orig_amt)
                         input_form.orig_amt.data = orig_amt
@@ -483,6 +483,8 @@ def exchange_fees_exch():
     feedback_form = FeedbackForm()
     # Get exchanges
     exchanges = get_exchanges(['Exchange'], status='Active')
+    # Get promos
+    promos = get_promos()
     # Get Meta tags
     title = get_meta_tags('Exchanges|Fees|Exch',
                           'Title')
@@ -497,7 +499,8 @@ def exchange_fees_exch():
                            title=title,
                            description=description,
                            feedback_form=feedback_form,
-                           exchanges=exchanges)
+                           exchanges=exchanges,
+                           promos=promos)
 
 
 @app.route("/exchanges/fees/coins", methods=['GET', 'POST'])
@@ -549,7 +552,7 @@ def exchange_fees_by_exch(exch_id):
                                   exchange_info_file,
                                   logger)
     # Get promos
-    promos = get_promos(exchange.id)
+    promos = get_promos()
     # If 'calc_currency' exists in cookie, use it
     currency = request.cookies.get('calc_currency')
     if currency:
