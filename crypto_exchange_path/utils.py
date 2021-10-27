@@ -75,6 +75,25 @@ def feedback_notifier(text, page, mail, logger):
         logger.error("feedback_notifier: {}".format(e))
 
 
+def check_feedback(text):
+    # Check feedback format and content to filter spam
+    if not text or len(text) < 10 or len(text) > 500:
+        return False
+    if text.find("http") >= 0 and text.find("cryptofeesaver") == -1:
+        return False
+    if text.find("FROM(") >= 0:
+        return False
+    if text.find("CONCAT(") >= 0:
+        return False
+    if text.find("CHR(") >= 0:
+        return False
+    if text.find("write(") >= 0:
+        return False
+    if text.find("SELECT NULL") >= 0:
+        return False
+    return True
+
+
 def send_email_notification(subject, body, mail, logger):
     # Send email
     try:

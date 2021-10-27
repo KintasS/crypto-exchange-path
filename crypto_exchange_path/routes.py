@@ -19,7 +19,8 @@ from crypto_exchange_path.utils import (set_logger,
                                         get_coin_data,
                                         get_exchange_data,
                                         round_number,
-                                        round_big_number)
+                                        round_big_number,
+                                        check_feedback)
 from crypto_exchange_path.utils_db import (get_exch_by_name,
                                            get_exchanges,
                                            get_coin_by_longname,
@@ -64,21 +65,19 @@ def page_not_found(e):
 def manage_feedback_form(feedback_form, page):
     date = datetime.datetime.now()
     text = feedback_form.text.data
-    if not text or len(text) == 0:
-        return
-    if len(text) > 500:
-        text = text[0:500]
-    if app.debug:
-        status = 'Debug'
-    else:
-        status = 'Production'
-    feedback = Feedback(datetime=date,
-                        page=page,
-                        text=text,
-                        status=status)
-    feedback_notifier(text, page, mail, logger)
-    db.session.add(feedback)
-    db.session.commit()
+    feedback_status = check_feedback(text)
+    if feedback_status:
+        if app.debug:
+            status = 'Debug'
+        else:
+            status = 'Production'
+        feedback = Feedback(datetime=date,
+                            page=page,
+                            text=text,
+                            status=status)
+        feedback_notifier(text, page, mail, logger)
+        db.session.add(feedback)
+        db.session.commit()
 
 
 def manage_promo_form(promo_form, subscription):
@@ -283,6 +282,7 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
         exchanges = get_exchanges(['Exchange'], status='Active')
         user_exchanges = [exch.id for exch in exchanges]
         path_results = None
+        amt_warning = None
         # Get Meta tags (in case form was not filled)
         title = get_meta_tags('Exchanges|Results',
                               'Title',
@@ -341,8 +341,8 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                                              'usd-us-dollars',
                                              orig_amt,
                                              logger)
-                    if amount_usd and amount_usd < 20:
-                        orig_amt = round_number(orig_amt * 20 / amount_usd)
+                    if amount_usd and amount_usd < 50:
+                        orig_amt = round_number(orig_amt * 50 / amount_usd)
                         orig_amt = round_big_number(orig_amt)
                         input_form.orig_amt.data = orig_amt
                         try:
@@ -350,6 +350,7 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                                                dest_loc, dest_coin,
                                                curr, fee_settings, logger)
                             path_results = len(paths)
+                            amt_warning = True
                         # Catch generic exception if anything went wrong
                         except Exception as e:
                             db.session.rollback()
@@ -424,6 +425,7 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                                          exchanges=exchanges,
                                          user_exchanges=user_exchanges,
                                          paths=sorted_paths,
+                                         amt_warning=amt_warning,
                                          path_results=path_results,
                                          auto_search=auto_search,
                                          feedback_form=feedback_form,
