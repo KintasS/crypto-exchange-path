@@ -44,6 +44,9 @@ class Path:
         to the calculation currency.
         """
         fee_sum = sum(filter(None, fee_lst))
+        # Remove decimals if round number
+        if fee_sum - round(fee_sum) == 0:
+            fee_sum = round(fee_sum)
         if fee_sum is not None:
             if to_curr:
                 fee_sum = fx_exchange(coin.id,

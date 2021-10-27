@@ -336,7 +336,7 @@ def round_amount_by_price_str(amount, coin):
         return "-"
     if coin.symbol in Params.FIAT_COINS:
         try:
-            decs = Params.STEPS_DECIMAL_POS[coin]
+            decs = Params.STEPS_DECIMAL_POS[coin.symbol]
             return round(amount, decs)
         except Exception as e:
             return amount

@@ -341,8 +341,9 @@ def exch_results(url_orig_coin=None, url_dest_coin=None):
                                              'usd-us-dollars',
                                              orig_amt,
                                              logger)
-                    if amount_usd and amount_usd < 50:
-                        orig_amt = round_number(orig_amt * 50 / amount_usd)
+                    if amount_usd and amount_usd < Params.RECALC_AMOUNT:
+                        orig_amt = round_number(orig_amt * Params.RECALC_AMOUNT
+                                                / amount_usd)
                         orig_amt = round_big_number(orig_amt)
                         input_form.orig_amt.data = orig_amt
                         try:
